@@ -1,0 +1,10 @@
+
+Ejecutar la app
+	1. Puesto que las variables de configuración no están en el código, hay que ejecutarlas directo en la consola:
+		export FLASK_APP=flaskr
+		export FLASK_ENV=development
+	2. Hay que generar la BD SQLite (sólo se ejecuta una vez):
+		flask init-db
+
+		Al ejecutar este último, la consola devuelve "Initialized the database", y en la carpeta raíz del proyecto se genera una carpeta "instance" con un archivo flaskr.sqlite
+	3. flask run
