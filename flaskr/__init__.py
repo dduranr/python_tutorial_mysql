@@ -7,10 +7,12 @@ from flask import Flask
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
     SECRET_KEY = environ.get('SECRET_KEY')
+    ALFABETA = environ.get('ALFABETA')
 	# instance_relative_config=True le dice a la app que los archivos de configuración son relativos a la carpeta de instancia (instance). Ésta esta ubicada fuera del paquete "flaskr" y puede almacenar datos que no deberían entrar en el sistema de control de versiones, tales como key secrets y archivos de BD. El archivo de configuraciones .flaskenv automáticamente es leído si se ubica en la raíz del proyecto.
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY = SECRET_KEY,
+        ALFABETA = ALFABETA,
         # DATABASE es la ruta donde se guarda el archivo de BD SQLite. It’s under app.instance_path, which is the path that Flask has chosen for the instance folder. You’ll learn more about the database in the next section.
         DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
@@ -18,10 +20,16 @@ def create_app(test_config=None):
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
+        app.config.from_pyfile('settings.py')
+        pass
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
+
+
+    # print('VARIABLE ENV: ', app.config['ENV'])
+    # print('VARIABLE ALFABETA: ', app.config['ALFABETA'])
+    # print('VARIABLE SQLALCHEMY_DATABASE_URI: ', app.config['SQLALCHEMY_DATABASE_URI'])
 
     # Flask no crea automáticamente un "instance folder", pero necesita crearse porque el proyecto guardará ahí el archivo de BD SQLite
     try:

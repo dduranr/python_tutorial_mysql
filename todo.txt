@@ -1,0 +1,18 @@
+DÓNDE ESTOY
+DÓNDE ESTOY
+DÓNDE ESTOY
+
+		El proyecto flask-tutorial-mysql es el mismo que ofrece el tutorial de Flask oficial, salvo que las variables de entorno ya no se declaran desde la consola, sino desde el archivo .flaskenv. Por lo que para ejecutar el proyecto, simplemente:
+			flask run
+
+
+		Sigo con:
+
+			1. En este link https://dev.to/kubona_my/dealing-with-environment-variables-in-flask-o1 se ve cómo generar los archivos importantes:
+				1. .flaskenv
+				2. .env
+				Ya tengo controlado cómo hacer lo primero. Falta ver cómo hacer lo segundo.
+			2. Modificar el módulo auth para que muestre el HTML tal como lo tengo en FLASK_CONTACTS
+			3. Hacer que el archivo /flaskr/auth.py esté en /flaskr/modulos/auth/auth.py
+			4. ver cómo modificar todo para que la BD sea MySQL y no SQLite
+
