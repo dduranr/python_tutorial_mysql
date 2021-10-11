@@ -1,11 +1,30 @@
-import functools
+# -------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+# Descripción de las clases importadas en este controlador
+# -------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
+
+#   flask_sqlalchemy    ORM para SQL
+#   render_template     Permite utilizar archivos HTML
+#   request             Para obtener los datos de la petición de un form
+#   redirect            Para hacer redirecciones
+#   url_for             Para hacer redirecciones
+#   flash               Manda mensajes entre vistas
+#   session             Para gestionar sesiones
+#   functools
+#   bcrypt              Para encriptar/desemcriptar contrasaeñas
+#   sys                 Para obtener el tipo de excepción
+
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from flaskr.db import get_db
+from flaskr.formularios.auth import AuthFormLogin
+import functools
+import bcrypt
+import sys
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -18,67 +37,91 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 # RUTAS
 # RUTAS
 # RUTAS
-@bp.route('/register', methods=('GET', 'POST'))
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        db = get_db()
-        error = None
-
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-
-        if error is None:
-            try:
-                db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
-                )
-                db.commit()
-            except db.IntegrityError:
-                error = f"User {username} is already registered."
-            else:
-                return redirect(url_for("auth.login"))
-
-        flash(error)
-
-    return render_template('auth/register.html')
-
-
-
-@bp.route('/login', methods=('GET', 'POST'))
+@bp.route('/login', methods=['GET'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        db = get_db()
-        error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+    try:
+        if 'user_id' in session:
+            return redirect(url_for('auth.welcome'))
+        else:
+            formulario = AuthFormLogin()
+            return render_template('back/auth/login.html', formulario=formulario)
 
-        if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
-
-        if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('index'))
-
-        flash(error)
-
-    return render_template('auth/login.html')
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('back/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('back/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('back/errores/error.html', error=error)
 
 
 
+@bp.route('/store', methods=['POST'])
+def store():
+    try:
+        if request.method == 'POST':
+            email = request.form['email']
+            contrasena = request.form['contrasena']
+            db = get_db()
+            error = None
 
-# Al comienzo de cada solicitud, si un usuario está conectado, su información debe cargarse y ponerse a disposición de otras vistas.
-# bp.before_app_request() registra una función que se ejecuta antes que la función de visualización, sin importar qué URL se solicite. load_logged_in_user comprueba si una identificación de usuario está almacenada en el session y obtiene los datos de ese usuario de la base de datos, almacenándolos en g.user, lo que dura la duración de la solicitud. Si no hay una identificación de usuario, o si la identificación no existe, g.user valdrá None.
+            user = db.execute(
+                'SELECT * FROM user WHERE email = ?', (email,)
+            ).fetchone()
+
+            if user is None:
+                error = 'El email es incorrecto'
+            elif not check_password_hash(user['contrasena'], contrasena):
+                error = 'La contraseña es incorrecta.'
+
+            if error is None:
+                session.clear()
+                session['user_id'] = user['id']
+                session['user_nombre'] = user['nombre']
+                session['user_email'] = user['email']
+                return redirect(url_for('auth.welcome'))
+
+            # Si se lee esto, es porque hubo un error y no se pudo hacer el return de success
+            flash(error, 'danger')
+            return redirect(url_for('auth.login'))
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('back/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('back/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('back/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('back/errores/error.html', error=error)
+
+
+
+@bp.route('/welcome', methods=['GET'])
+def welcome():
+    try:
+        if request.method == 'GET':
+            return render_template('back/auth/welcome.html')
+
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('back/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('back/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('back/errores/error.html', error=error)
+
+
+
+# Al comienzo de cada solicitud (en toda la app), si un usuario está logueado, su información debe cargarse y ponerse a disposición de cualquier vista.
+# bp.before_app_request() registra una función que se ejecuta antes que la función de visualización, sin importar qué URL se solicite. load_logged_in_user comprueba si una identificación de usuario está almacenada en la session y obtiene los datos de ese usuario de la base de datos, almacenándolos en g.user, lo que dura la duración de la solicitud. Si no hay una identificación de usuario, o si la identificación no existe, g.user valdrá None.
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
@@ -92,12 +135,26 @@ def load_logged_in_user():
 
 
 
-
 # Para cerrar la sesión, debe eliminar la identificación de usuario del archivo session. Entonces load_logged_in_user no cargará un usuario en solicitudes posteriores.
-@bp.route('/logout')
+@bp.route('/logout', methods=['GET'])
 def logout():
-    session.clear()
-    return redirect(url_for('index'))
+    try:
+        if request.method == 'GET':
+            session.clear()
+            return redirect(url_for('index'))
+
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('back/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('back/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('back/errores/error.html', error=error)
+
+
+
 
 
 
@@ -113,16 +170,3 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
-
-
-
-
-
-
-
-
-
-
-
-
-

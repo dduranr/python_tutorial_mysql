@@ -37,20 +37,19 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
     # Esto sirve para llamar la BD
     from . import db
     db.init_app(app)
 
 
     # Registro de blueprints
+    from . import front
     from . import auth
+    from . import user
     from . import blog
+    app.register_blueprint(front.bp)
     app.register_blueprint(auth.bp)
+    app.register_blueprint(user.bp)
     app.register_blueprint(blog.bp)
     # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
     app.add_url_rule('/', endpoint='index')

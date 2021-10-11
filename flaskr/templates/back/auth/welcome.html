@@ -1,0 +1,32 @@
+{% extends "back/layout/base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Bienvenido{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+	<div class="col-md-12">
+		<div class="alert alert-primary">
+			<p>Datos del usuario logueado:</p>
+			<table class="table table-small">
+				<tbody>
+					<tr>
+						<td>ID:</td>
+						<td>{{ session['user_id'] }}</td>
+					</tr>
+					<tr>
+						<td>NOMBRE:</td>
+						<td>{{ session['user_nombre'] }}</td>
+					</tr>
+					<tr>
+						<td>EMAIL:</td>
+						<td>{{ session['user_email'] }}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p></p>
+			<p></p>
+			<p></p>
+		</div>
+	</div>
+{% endblock %}

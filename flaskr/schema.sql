@@ -3,8 +3,9 @@ DROP TABLE IF EXISTS post;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL
+  email TEXT UNIQUE NOT NULL,
+  nombre TEXT NOT NULL,
+  contrasena TEXT NOT NULL
 );
 
 CREATE TABLE post (
@@ -12,6 +13,6 @@ CREATE TABLE post (
   author_id INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   title TEXT NOT NULL,
-  body TEXT NOT NULL,
+  contenido TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );

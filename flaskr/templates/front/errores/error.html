@@ -1,0 +1,13 @@
+{% extends "back/layout/base.html" %}
+
+{% block contenido %}
+<div class="col-md-12 text-center">
+    <div class="alert alert-danger">
+        <h2>Ooops!</h2>
+        <p>Hubo un error</p>
+        <p>Intenta en otro momento</p>
+        <hr>
+        <small>{{ error }}</small>
+    </div>
+</div>
+{% endblock %}
