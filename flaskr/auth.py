@@ -41,20 +41,20 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 def login():
     try:
         if 'user_id' in session:
-            return redirect(url_for('auth.welcome'))
+            return redirect(url_for('backend.auth.welcome'))
         else:
             formulario = AuthFormLogin()
-            return render_template('back/auth/login.html', formulario=formulario)
+            return render_template('backend/auth/login.html', formulario=formulario)
 
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -81,24 +81,24 @@ def store():
                 session['user_id'] = user['id']
                 session['user_nombre'] = user['nombre']
                 session['user_email'] = user['email']
-                return redirect(url_for('auth.welcome'))
+                return redirect(url_for('backend.auth.welcome'))
 
             # Si se lee esto, es porque hubo un error y no se pudo hacer el return de success
             flash(error, 'danger')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('backend.auth.login'))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('back/errores/error.html', error="SQLAlchemyError: "+error)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -106,17 +106,17 @@ def store():
 def welcome():
     try:
         if request.method == 'GET':
-            return render_template('back/auth/welcome.html')
+            return render_template('backend/auth/welcome.html')
 
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -145,13 +145,13 @@ def logout():
 
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -165,7 +165,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('backend.auth.login'))
 
         return view(**kwargs)
 

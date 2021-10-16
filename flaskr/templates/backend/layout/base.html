@@ -23,12 +23,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('user.create') }}">Users</a>
+                            <a class="nav-link" href="{{ url_for('backend.user.create') }}">Users</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Blog</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('blog.create') }}">Crear</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('backend.blog.create') }}">Crear</a></li>
                                 <li><a class="dropdown-item" href="#">Ver todos</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
@@ -41,7 +41,7 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link btn btn-success text-white" href="{{ url_for('auth.login') }}">Log In</a>
+                            <a class="nav-link btn btn-success text-white" href="{{ url_for('backend.auth.login') }}">Log In</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -56,7 +56,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Salir</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('backend.auth.logout') }}">Salir</a></li>
                     </ul>
                 </div>
             </div>

@@ -43,14 +43,21 @@ def create_app(test_config=None):
 
 
     # Registro de blueprints
-    from . import front
+    from . import backend
+    from . import frontend
     from . import auth
     from . import user
     from . import blog
-    app.register_blueprint(front.bp)
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(user.bp)
-    app.register_blueprint(blog.bp)
+
+    # Anidamos los blueprints del back al blueprint "backend" para que así todas las urls del back tengan como prefijo "backend"
+    backend.bp.register_blueprint(auth.bp)
+    backend.bp.register_blueprint(user.bp)
+    backend.bp.register_blueprint(blog.bp)
+
+    # Registramos los blueprints del back y front
+    app.register_blueprint(backend.bp)
+    app.register_blueprint(frontend.bp)
+
     # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
     app.add_url_rule('/', endpoint='index')
 

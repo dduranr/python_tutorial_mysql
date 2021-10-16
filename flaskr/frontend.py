@@ -22,7 +22,7 @@ from flask import (
 from werkzeug.exceptions import abort
 from flaskr.db import get_db
 
-bp = Blueprint('front', __name__)
+bp = Blueprint('frontend', __name__)
 
 
 
@@ -31,7 +31,7 @@ bp = Blueprint('front', __name__)
 # RUTAS
 @bp.route('/')
 def index():
-    return render_template('front/home/index.html')
+    return render_template('frontend/home/index.html')
 
 @bp.route('/blog')
 def blog():
@@ -41,4 +41,4 @@ def blog():
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('front/blog/index.html', posts=posts)
+    return render_template('frontend/blog/index.html', posts=posts)

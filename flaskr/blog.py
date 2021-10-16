@@ -35,17 +35,17 @@ bp = Blueprint('blog', __name__, url_prefix='/blog')
 def create():
     try:
         formulario = BlogFormCreate()
-        return render_template('back/blog/create.html', formulario=formulario)
+        return render_template('backend/blog/create.html', formulario=formulario)
 
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -70,9 +70,9 @@ def store():
                 (title, contenido, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('blog.create'))
+            return redirect(url_for('backend.blog.create'))
 
-    return redirect(url_for('blog.create'))
+    return redirect(url_for('backend.blog.create'))
 
 
 
@@ -126,7 +126,7 @@ def update(id):
                 (title, contenido, id)
             )
             db.commit()
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('backend.blog.index'))
 
     return render_template('blog/update.html', post=post)
 
@@ -140,4 +140,4 @@ def delete(id):
     db = get_db()
     db.execute('DELETE FROM post WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('blog.index'))
+    return redirect(url_for('backend.blog.index'))

@@ -17,9 +17,8 @@ MarkupSafe==2.0.1
 mysqlclient==2.0.3
 phonenumbers==8.12.34
 pycparser==2.20
-WTForms==2.3.3
-Werkzeug==2.0.1
+python-dotenv==0.19.0
 six==1.16.0
 SQLAlchemy==1.4.25
-python-dotenv==0.19.0
-
+Werkzeug==2.0.1
+WTForms==2.3.3

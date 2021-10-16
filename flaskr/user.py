@@ -41,17 +41,17 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 def create():
     try:
         formulario = UserFormCreate()
-        return render_template('back/user/create.html', formulario=formulario)
+        return render_template('backend/user/create.html', formulario=formulario)
 
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -80,21 +80,21 @@ def store():
                         (nombre, email, generate_password_hash(contrasena)),
                     )
                     db.commit()
-                    return redirect(url_for("auth.login"))
+                    return redirect(url_for("backend.auth.login"))
                 except db.IntegrityError:
                     error = f"El usuario {email} ya está registrado."
 
             flash(error, 'danger')
-            return redirect(url_for("user.create"))
+            return redirect(url_for("backend.user.create"))
 
     except db.IntegrityError:
         error = f"User {email} is already posted."
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
-        return render_template('back/errores/error.html', error="TypeError: "+error)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
     except ValueError as e:
         error = "Excepción ValueError: " + str(e)
-        return render_template('back/errores/error.html', error="ValueError: "+error)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
         error = "Excepción general: " + str(e.__class__)
-        return render_template('back/errores/error.html', error=error)
+        return render_template('backend/errores/error.html', error=error)
