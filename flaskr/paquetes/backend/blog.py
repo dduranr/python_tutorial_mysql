@@ -20,9 +20,9 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-from flaskr.auth import login_required
+from flaskr.paquetes.backend.auth import login_required
 from flaskr.db import get_db
-from flaskr.formularios.blog import BlogFormCreate
+from flaskr.paquetes.backend.formularios.blog import BlogFormCreate
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
 

@@ -1,6 +1,5 @@
 SIGO CON
 SIGO CON
 SIGO CON
-			1. Hacer que los archivos de controladores estén dentro de /app/modulos/
 			2. ver cómo modificar todo para que la BD sea MySQL y no SQLite
 
