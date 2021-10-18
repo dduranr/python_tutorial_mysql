@@ -20,7 +20,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-from flaskr.db import get_db
+# from flaskr.db import get_db
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
 import functools
 import bcrypt
@@ -57,7 +57,7 @@ def create():
 
 @bp.route('/store', methods=['POST'])
 def store():
-    db = get_db()
+    # db = get_db()
     try:
         if request.method == 'POST':
 

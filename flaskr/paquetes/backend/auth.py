@@ -14,17 +14,21 @@
 #   functools
 #   bcrypt              Para encriptar/desemcriptar contrasaeñas
 #   sys                 Para obtener el tipo de excepción
+#   g                   Es un objecto especial que es único para cada petición. Es usado para almacenar datos que pueden ser accedidos desde múltiples funciones durante la petición. La conexión es almacenada y reusada en vez de crear una nueva conexión.
 
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-from flaskr.db import get_db
+# from flaskr.db import get_db
 from flaskr.paquetes.backend.formularios.auth import AuthFormLogin
 import functools
 import bcrypt
 import sys
+
+# Importamos los modelos a usar
+from flaskr.paquetes.backend.modelos.user import *
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -62,30 +66,34 @@ def login():
 def store():
     try:
         if request.method == 'POST':
-            email = request.form['email']
-            contrasena = request.form['contrasena']
-            db = get_db()
-            error = None
+            formulario = AuthFormLogin()
+            if formulario.validate_on_submit():
+                email = request.form['email']
+                contrasena = request.form['contrasena']
+                contrasena_encode = contrasena.encode('utf-8')
 
-            user = db.execute(
-                'SELECT * FROM user WHERE email = ?', (email,)
-            ).fetchone()
+                usuario = User.getByEmail(email)
 
-            if user is None:
-                error = 'El email es incorrecto'
-            elif not check_password_hash(user['contrasena'], contrasena):
-                error = 'La contraseña es incorrecta.'
+                if usuario:
+                    bd_contrasena = usuario.contrasena
+                    bd_contrasena = bd_contrasena.encode('utf-8')
 
-            if error is None:
-                session.clear()
-                session['user_id'] = user['id']
-                session['user_nombre'] = user['nombre']
-                session['user_email'] = user['email']
-                return redirect(url_for('backend.auth.welcome'))
-
-            # Si se lee esto, es porque hubo un error y no se pudo hacer el return de success
-            flash(error, 'danger')
-            return redirect(url_for('backend.auth.login'))
+                    # Si en la BD se guarda un texto cualquiera y no un hash (p.e. abc), el navegador devuelve: ValueError: Invalid salt
+                    if(bcrypt.checkpw(contrasena_encode, bd_contrasena)):
+                        session.clear()
+                        session['user_id'] = usuario.id
+                        session['user_nombre'] = usuario.nombre
+                        session['user_email'] = usuario.email
+                        return redirect(url_for('backend.auth.welcome'))
+                    else:
+                        flash('Usuario/contraseña incorrectos', 'danger')
+                        return redirect(url_for('backend.auth.login'))
+                else :
+                    flash('Usuario/contraseña incorrectos', 'danger')
+                    return redirect(url_for('backend.auth.login'))
+            else:
+                flash('Imposible crear sesión. Algún dato es incorrecto', 'danger')
+                return redirect(url_for('backend.auth.login'))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)
@@ -129,9 +137,11 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        # g.user = get_db().execute(
+        #     'SELECT * FROM user WHERE id = ?', (user_id,)
+        # ).fetchone()
+
+        g.user = User.getById(user_id)
 
 
 

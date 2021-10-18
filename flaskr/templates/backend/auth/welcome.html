@@ -7,7 +7,7 @@
 {% block content %}
 	<div class="col-md-12">
 		<div class="alert alert-primary">
-			<p>Datos del usuario logueado:</p>
+			<p>Datos del usuario logueado (variables de sesión):</p>
 			<table class="table table-small">
 				<tbody>
 					<tr>
@@ -24,6 +24,26 @@
 					</tr>
 				</tbody>
 			</table>
+            {% if g.user %}
+				<p>Datos del usuario logueado (objeto G):</p>
+				<table class="table table-small">
+					<tbody>
+						<tr>
+							<td>ID:</td>
+							<td>{{ g.user['id'] }}</td>
+						</tr>
+						<tr>
+							<td>NOMBRE:</td>
+							<td>{{ g.user['nombre'] }}</td>
+						</tr>
+						<tr>
+							<td>EMAIL:</td>
+							<td>{{ g.user['email'] }}</td>
+						</tr>
+					</tbody>
+				</table>
+            {% else %}
+            {% endif %}
 			<p></p>
 			<p></p>
 			<p></p>

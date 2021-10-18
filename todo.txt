@@ -1,5 +1,11 @@
 SIGO CON
 SIGO CON
 SIGO CON
-			2. ver cómo modificar todo para que la BD sea MySQL y no SQLite
+			1. El login ya se arma con MySQL, también los posts mostrados en el blog del frontend
+			2. Pero quedan muchos lugares que aún llaman a SQLite. Cambiar todo a MySQL.
+			3. Implementar el paquete Flask-Login
+				https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login-es
+			4. Probar si funciona poner una carpeta templates en los blueprints. Si no funciona, no importa porque ahora todas las vistas están bien ordenadas en la carpeta base /templates
+			5. Asegurarme que funcionen las vistas de errores
+			6. Migraciones
 

@@ -4,16 +4,25 @@ import os
 from os import environ
 from flask import Flask
 
+
+
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
     SECRET_KEY = environ.get('SECRET_KEY')
-	# instance_relative_config=True le dice a la app que los archivos de configuración son relativos a la carpeta de instancia (instance). Ésta esta ubicada fuera del paquete "flaskr" y puede almacenar datos que no deberían entrar en el sistema de control de versiones, tales como key secrets y archivos de BD. El archivo de configuraciones .flaskenv automáticamente es leído si se ubica en la raíz del proyecto.
+    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+	# instance_relative_config le dice a la app que los archivos de configuración son relativos a la carpeta de instancia (instance). Ésta esta ubicada fuera del paquete "flaskr" y puede almacenar datos que no deberían entrar en el sistema de control de versiones, tales como key secrets y archivos de BD. El archivo de configuraciones .flaskenv automáticamente es leído si se ubica en la raíz del proyecto.
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY = SECRET_KEY,
         # DATABASE es la ruta donde se guarda el archivo de BD SQLite. It’s under app.instance_path, which is the path that Flask has chosen for the instance folder. You’ll learn more about the database in the next section.
-        DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
+        # DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
+        SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     )
+
+
+    # print('SECRET_KEY: ', app.config['SECRET_KEY'])
+    # print('SQLALCHEMY_DATABASE_URI: ', app.config['SQLALCHEMY_DATABASE_URI'])
+
 
 
     if test_config is None:
@@ -31,9 +40,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Esto sirve para llamar la BD
-    from . import db
-    db.init_app(app)
+    # Esto sirve para llamar la BD SQLite
+    # from . import db
+    # db.init_app(app)
 
 
     # Recuperamos los archivos blueprints
@@ -59,5 +68,11 @@ def create_app(test_config=None):
 
 
 
-    # Finalmente hacemos que este función "application factory" devuelva la app
+    # Finalmente hacemos que este función "application factory" devuelva la app.
+    # IMPORTANTE. Puesto que las variables de configuración son variables de entorno, así presisamente podrán ser recuperadas en cualquier otro lugar de la app:
+    #       import os
+    #       SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+    # Hasta donde sé, no es posible recuperar la variable app, digamos así:
+    #       from ....__init__ import create_app
+    #       create_app.app
     return app
