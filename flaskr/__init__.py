@@ -20,11 +20,6 @@ def create_app(test_config=None):
     )
 
 
-    # print('SECRET_KEY: ', app.config['SECRET_KEY'])
-    # print('SQLALCHEMY_DATABASE_URI: ', app.config['SQLALCHEMY_DATABASE_URI'])
-
-
-
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('settings.py')
@@ -46,11 +41,11 @@ def create_app(test_config=None):
 
 
     # Recuperamos los archivos blueprints
-    from . paquetes.frontend import frontend
-    from . paquetes.backend import backend
-    from . paquetes.backend import auth
-    from . paquetes.backend import user
-    from . paquetes.backend import blog
+    from . paquetes.frontend.controladores import frontend
+    from . paquetes.backend.controladores import backend
+    from . paquetes.backend.controladores import auth
+    from . paquetes.backend.controladores import user
+    from . paquetes.backend.controladores import blog
 
     # Anidamos los blueprints del back al blueprint "backend" para que así todas las urls del back tengan como prefijo "backend"
     backend.bp.register_blueprint(auth.bp)

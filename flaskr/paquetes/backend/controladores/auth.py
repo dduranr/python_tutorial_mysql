@@ -10,7 +10,7 @@
 #   redirect            Para hacer redirecciones
 #   url_for             Para hacer redirecciones
 #   flash               Manda mensajes entre vistas
-#   session             Para gestionar sesiones
+#   session             Es un dict que almacena datos entre solicitudes. Cuando la validación tiene éxito, el ID de usuario se almacena en una nueva sesión. Los datos se almacenan en una cookie que se envía al navegador y, a continuación, el navegador los devuelve con las solicitudes posteriores. Flask firma los datos de forma segura para que no puedan ser manipulados.
 #   functools
 #   bcrypt              Para encriptar/desemcriptar contrasaeñas
 #   sys                 Para obtener el tipo de excepción
@@ -21,20 +21,13 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-# from flaskr.db import get_db
 from flaskr.paquetes.backend.formularios.auth import AuthFormLogin
+from flaskr.paquetes.backend.modelos.user import *
 import functools
 import bcrypt
 import sys
 
-# Importamos los modelos a usar
-from flaskr.paquetes.backend.modelos.user import *
-
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-
-
-# session es un dict que almacena datos entre solicitudes. Cuando la validación tiene éxito, el ID de usuario se almacena en una nueva sesión. Los datos se almacenan en una cookie que se envía al navegador y, a continuación, el navegador los devuelve con las solicitudes posteriores. Flask firma los datos de forma segura para que no puedan ser manipulados.
 
 
 
@@ -137,15 +130,11 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        # g.user = get_db().execute(
-        #     'SELECT * FROM user WHERE id = ?', (user_id,)
-        # ).fetchone()
-
         g.user = User.getById(user_id)
 
 
 
-# Para cerrar la sesión, debe eliminar la identificación de usuario del archivo session. Entonces load_logged_in_user no cargará un usuario en solicitudes posteriores.
+# Para cerrar la sesión, debe eliminar la identificación de usuario del archivo session. Entonces load_logged_in_user() no cargará un usuario en solicitudes posteriores.
 @bp.route('/logout', methods=['GET'])
 def logout():
     try:

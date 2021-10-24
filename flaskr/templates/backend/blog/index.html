@@ -8,21 +8,29 @@
 {% endblock %}
 
 {% block content %}
-    {% for post in posts %}
-        <article>
-            <header>
-                <div>
-                    <h1>{{ post['title'] }}</h1>
-                    <div>by {{ post['email'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
-                </div>
-                {% if g.user['id'] == post['author_id'] %}
-                <a href="{{ url_for('backend.blog.update', id=post['id']) }}">Edit</a>
-                {% endif %}
-            </header>
-            <p>{{ post['contenido'] }}</p>
-        </article>
-        {% if not loop.last %}
-            <hr>
-        {% endif %}
-    {% endfor %}
+
+    {% if blogposts is defined %}
+        {% for post in blogposts %}
+            <article>
+                <header>
+                    <div>
+                        <h1>{{ post.blog.title }}</h1>
+                        <div>Creado por <a href="mailto:{{ post.user.email }}">{{ post.user.nombre }}</a> el {{ post.blog.created_at.strftime('%Y-%m-%d') }}</div>
+                    </div>
+                    {% if g.user['id'] == post.blog.author_id %}
+                    <a href="{{ url_for('backend.blog.edit', id=post['id']) }}">Edit</a>
+                    {% endif %}
+                </header>
+                <p>{{ post['contenido'] }}</p>
+            </article>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+
+        {% endfor %}
+
+    {% else %}
+        <p>La variable blogsposts no está definida.</p>
+    {% endif %}
+
 {% endblock %}
