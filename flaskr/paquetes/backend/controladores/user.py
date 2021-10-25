@@ -22,6 +22,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 # from flaskr.db import get_db
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
+from sqlalchemy import exc
 import functools
 import bcrypt
 import sys
@@ -87,8 +88,9 @@ def store():
             flash(error, 'danger')
             return redirect(url_for("backend.user.create"))
 
-    except db.IntegrityError:
-        error = f"User {email} is already posted."
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
         return render_template('backend/errores/error.html', error="TypeError: "+error)

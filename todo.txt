@@ -1,10 +1,71 @@
 SIGO CON
 SIGO CON
 SIGO CON
+
+			El datatable de http://localhost:5000/backend/blog/index ya se muestra, pero no está funcionando bien: pone triplicado cada fila de la BD. Alternativas:
+				1. Hacerlo más estilo PDO:
+					https://docs.sqlalchemy.org/en/14/orm/queryguide.html
+					https://docs.sqlalchemy.org/en/14/dialects/mysql.html
+				2. Sólo si no puedo de la forma anterior, implementar las queries tal como lo hace el tutorial
+
+					@app.route("/ajaxfile",methods=["POST","GET"])
+						def ajaxfile():
+							conn = mysql.connect()
+							cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+							if request.method == 'POST':
+								draw = request.form['draw']
+								row = int(request.form['start'])
+								rowperpage = int(request.form['length'])
+								searchValue = request.form["search[value]"]
+
+								## Total number of records without filtering
+								cursor.execute("select count(*) as allcount from employee")
+								rsallcount = cursor.fetchone()
+								totalRecords = rsallcount['allcount']
+
+								## Total number of records with filtering
+								likeString = "%" + searchValue +"%"
+								cursor.execute("SELECT count(*) as allcount from employee WHERE name LIKE %s OR position LIKE %s OR office LIKE %s", (likeString, likeString, likeString))
+								rsallcount = cursor.fetchone()
+								totalRecordwithFilter = rsallcount['allcount']
+
+								## Fetch records
+								if searchValue=='':
+									cursor.execute("SELECT * FROM employee ORDER BY name asc limit %s, %s;", (row, rowperpage))
+									employeelist = cursor.fetchall()
+								else:
+									cursor.execute("SELECT * FROM employee WHERE name LIKE %s OR position LIKE %s OR office LIKE %s limit %s, %s;", (likeString, likeString, likeString, row, rowperpage))
+									employeelist = cursor.fetchall()
+
+								data = []
+								for row in employeelist:
+									data.append({
+										'name': row['name'],
+										'position': row['position'],
+										'age': row['age'],
+										'salary': row['salary'],
+										'office': row['office'],
+									})
+
+								response = {
+									'draw': draw,
+									'iTotalRecords': totalRecords,
+									'iTotalDisplayRecords': totalRecordwithFilter,
+									'aaData': data,
+								}
+
+								return jsonify(response)
+
+
+
+
 			1. El login ya se arma con MySQL, también los posts mostrados en el blog del frontend. Pero quedan muchos lugares que aún llaman a SQLite. Cambiar todo a MySQL.
 			2. Probar si funciona poner una carpeta templates en los blueprints. Si no funciona, no importa porque ahora todas las vistas están bien ordenadas en la carpeta /templates
 			3. Asegurarme que funcionen las vistas de errores
 			4. Implementar el paquete Flask-Login
 				https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login-es
 			5. Migraciones
+			6. Poner slug a los blogposts
+			7. Si un nuevo post viene con un slug ya existente, al final del slug se agregue: -2
 

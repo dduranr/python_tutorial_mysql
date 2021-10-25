@@ -1,13 +1,17 @@
 {% extends "backend/layout/base.html" %}
 
-{% block contenido %}
-<div class="col-md-12 text-center">
-    <div class="alert alert-danger">
-        <h2>Ooops!</h2>
-        <p>Hubo un error</p>
-        <p>Intenta en otro momento</p>
-        <hr>
-        <small>{{ error }}</small>
+{% block header %}
+    <h1>{% block title %}Crear blogpost{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12 text-center">
+        <div class="alert alert-danger">
+            <h2>Ooops!</h2>
+            <p>Hubo un error</p>
+            <p>Intenta en otro momento</p>
+            <hr>
+            <small>{{ error }}</small>
+        </div>
     </div>
-</div>
 {% endblock %}

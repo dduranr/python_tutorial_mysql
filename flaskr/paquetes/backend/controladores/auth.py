@@ -23,6 +23,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.paquetes.backend.formularios.auth import AuthFormLogin
 from flaskr.paquetes.backend.modelos.user import *
+from sqlalchemy import exc
 import functools
 import bcrypt
 import sys
@@ -125,12 +126,27 @@ def welcome():
 # bp.before_app_request() registra una función que se ejecuta antes que la función de visualización, sin importar qué URL se solicite. load_logged_in_user comprueba si una identificación de usuario está almacenada en la session y obtiene los datos de ese usuario de la base de datos, almacenándolos en g.user, lo que dura la duración de la solicitud. Si no hay una identificación de usuario, o si la identificación no existe, g.user valdrá None.
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    try:
+        user_id = session.get('user_id')
 
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = User.getById(user_id)
+        if user_id is None:
+            g.user = None
+        else:
+            g.user = User.getById(user_id)
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
+
 
 
 

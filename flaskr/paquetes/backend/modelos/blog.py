@@ -8,14 +8,18 @@
 #   config              Mi archivo que guarda las configuraciones generales del aplicativo
 #   datetime            Para manejar fechas y horas
 #   sqlalchemy          ORM para SQL
+#       create_engine
+#       exc             Para poder recuperar los errores devueltos
+#       or_             Sirve para implementar el operador OR dentro del filter
 
 
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, exc
+from sqlalchemy import create_engine, exc, or_
 from sqlalchemy.orm import sessionmaker, aliased
 from sqlalchemy import Column, Integer, String, DateTime
 from flaskr.paquetes.backend.modelos.user import *
+from sqlalchemy.dialects import postgresql
 import os
 
 
@@ -42,66 +46,51 @@ class Blog(Base):
 
 
 
-    # Este método se encarga de recuperar todos los posts de la tabla 'blog'. Recupera también los datos del user que creó el blogpost.
+    # Este método se encarga de recuperar todos los posts de la tabla 'blog'. Recupera también los datos del user que creó cada post. Los parámetros son opcionales: si se ponen, devuelve los registros paginados; si no se ponen, devuelve todos los registros.
     # Esta es la query que ejecuta:
     #   SELECT * FROM blog b JOIN user u
     #   ON b.author_id = u.id
-    def getAll():
-        # for b, u in sessionDB.query(Blog, User).\
-        #                     filter(Blog.author_id==User.id).\
-        #                     all():
-        #      print(b)
-        #      print(u)
+    #   LIMIT ? OFFSET ?
+    # El método devuelve objetos, por lo que los datos se recuperan:
+    #   {% for post in blogposts %}
+    #       {{ post.blog.title }}
+    #       {{ post.user.email }}
+    #   {% endfor %}
+    def getAll(row=0, rowperpage=0):
+        t1 = aliased(Blog, name='blog')
+        t2 = aliased(User, name='user')
+        resultado = sessionDB.query(t1, t2).\
+            slice(row, rowperpage).\
+            all()
 
+        # cadena1 = str(resultado.statement.compile(dialect=mysql.dialect()))
+        cadena2 = str(resultado)
+        # print('KKKKKKKKKKKKKKKKKKKK 1: ', cadena1)
+        print('KKKKKKKKKKKKKKKKKKKK 2: ', cadena2)
 
+        return resultado
 
-
+    def getAll2(row=0, rowperpage=0, likeString=''):
         t1 = aliased(Blog, name='blog')
         t2 = aliased(User, name='user')
         return sessionDB.query(t1, t2).\
-            filter(t1.author_id==t2.id).\
-            all()
+            filter(or_(
+                Blog.title.like(likeString),
+                Blog.contenido.like(likeString)
+            )).\
+            slice(row, rowperpage)
 
+    # Este método recupera el número total de registros de la tabla blog
+    def getCountWithoutFiltering():
+        return sessionDB.query(Blog).count()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # Este método recupera el número total de registros de la tabla blog, de acuerdo al filtro seleccionado
+    def getCountWithFiltering(likeString):
+        return sessionDB.query(Blog).filter(or_(
+                Blog.title.like(likeString),
+                Blog.contenido.like(likeString)
+            )).\
+            count()
 
     def getById(id):
         return sessionDB.query(Blog).filter(

@@ -17,12 +17,13 @@
 
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 from flaskr.paquetes.backend.controladores.auth import login_required
 from flaskr.paquetes.backend.formularios.blog import BlogFormCreate
 from flaskr.paquetes.backend.modelos.blog import *
+from sqlalchemy import exc
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
 
@@ -33,27 +34,21 @@ bp = Blueprint('blog', __name__, url_prefix='/blog')
 # RUTAS
 @bp.route('/index', methods=['GET'])
 def index():
-    # try:
+    try:
+        return render_template('backend/blog/index.html')
 
-
-    # blogposts = sessionDB.query(Blog).all()
-    blogposts = Blog.getAll()
-    print('Estos son los posts')
-    print(blogposts)
-
-    formulario = BlogFormCreate()
-    return render_template('backend/blog/index.html', blogposts=blogposts)
-    # return render_template('backend/blog/index.html', formulario=formulario)
-
-    # except TypeError as e:
-    #     error = "Excepción TypeError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
-    # except ValueError as e:
-    #     error = "Excepción ValueError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
-    # except Exception as e:
-    #     error = "Excepción general: " + str(e.__class__)
-    #     return render_template('backend/errores/error.html', error=error)
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -137,7 +132,7 @@ def edit():
 
 
 # A diferencia de las vistas que has escrito hasta ahora, la función update toma un argumento ID. Eso corresponde a <int:id>. Se verá asi: /1/update. Flask capturará el 1, se asegurará de que sea un int y lo pasará como argumento ID. Si no especifica int, y en su lugar escribes <id>, se traducirá como cadena. Para generar una URL para la página de actualización, url_for() necesita el ID.
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@bp.route('/<int:id>/update', methods=['POST'])
 @login_required
 def update(id):
     blogpost = getPost(id)
@@ -197,3 +192,75 @@ def getPost(id, check_author=True):
         abort(403)
 
     return blogpost
+
+
+# DOCUMENTACIÓN
+#   https://www.youtube.com/watch?v=2kg_5ttL150
+#   https://tutorial101.blogspot.com/2021/04/datatable-ajax-pagination-using-python.html
+@bp.route('/datatable', methods=['POST'])
+def datatable():
+    # try:
+    if request.method == 'POST':
+        draw = request.form['draw']
+        row = int(request.form['start'])
+        rowperpage = int(request.form['length'])
+        searchValue = request.form["search[value]"]
+        likeString = "%" + searchValue +"%"
+        # likeString = "%Volutpat%"
+
+        print('DRAW: ', draw)
+        print('ROW: ', row)
+        print('ROWPERPAGE: ', rowperpage)
+        print('SEARCHVALUE: ', searchValue)
+
+        # Número total de registros sin filtrar
+        totalRecords = Blog.getCountWithoutFiltering()
+        print('TOTALRECORDS: ', totalRecords)
+        # Número total de registros con filtro
+        totalRecordwithFilter = Blog.getCountWithFiltering(likeString)
+        print('TOTALRECORDWITHFILTER: ', totalRecordwithFilter)
+
+
+
+        if searchValue=='':
+            print('SE LEEEEEEEEEEEEEEEE 1')
+            blogposts = Blog.getAll(row, rowperpage)
+        else:
+            print('SE LEEEEEEEEEEEEEEEE 2')
+            blogposts = Blog.getAll2(row, rowperpage, likeString)
+
+        print('ELEMENTOS TOTALES EN blogposts', len(blogposts))
+
+
+        data = []
+        if len(blogposts) > 0:
+            for fila in blogposts:
+                data.append({
+                    'id': fila.blog.id,
+                    'autor': fila.blog.author_id,
+                    'autor_email': fila.user.email,
+                    'titulo': fila.blog.title,
+                    'editar': 'EDITAR',
+                    'eliminar': 'ELIMINAR'
+                })
+
+        response = {
+            'draw': draw,
+            'iTotalRecords': totalRecords,
+            'iTotalDisplayRecords': totalRecordwithFilter,
+            'aaData': data
+        }
+        return jsonify(response)
+
+    # except exc.SQLAlchemyError as e:
+    #     error = "Excepción SQLAlchemyError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    # except TypeError as e:
+    #     error = "Excepción TypeError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
+    # except ValueError as e:
+    #     error = "Excepción ValueError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
+    # except Exception as e:
+    #     error = "Excepción general: " + str(e.__class__)
+    #     return render_template('backend/errores/error.html', error=error)
