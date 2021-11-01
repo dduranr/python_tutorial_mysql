@@ -20,7 +20,6 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-# from flaskr.db import get_db
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
 from sqlalchemy import exc
 import functools
@@ -38,6 +37,26 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 # RUTAS
 # RUTAS
 # RUTAS
+@bp.route('/index', methods=['GET'])
+def index():
+    try:
+        return render_template('backend/user/index.html')
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
+
+
+
 @bp.route('/create', methods=['GET'])
 def create():
     try:

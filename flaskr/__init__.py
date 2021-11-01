@@ -4,20 +4,19 @@ import os
 from os import environ
 from flask import Flask
 
-
-
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
-    SECRET_KEY = environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
-	# instance_relative_config le dice a la app que los archivos de configuración son relativos a la carpeta de instancia (instance). Ésta esta ubicada fuera del paquete "flaskr" y puede almacenar datos que no deberían entrar en el sistema de control de versiones, tales como key secrets y archivos de BD. El archivo de configuraciones .flaskenv automáticamente es leído si se ubica en la raíz del proyecto.
+	# instance_relative_config le dice a la app que los archivos de configuración son relativos a la carpeta de instancia (instance). Ésta esta ubicada fuera del paquete "flaskr" y puede almacenar datos que no deberían entrar en el sistema de control de versiones, tales como key secrets y archivos de BD. El archivo de configuraciones .flaskenv automáticamente es leído si se ubica en la raíz del proyecto (por lo cual no es necesario declarar sus variables en app.config).
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY = SECRET_KEY,
+        SECRET_KEY = environ.get('SECRET_KEY'),
         # DATABASE es la ruta donde se guarda el archivo de BD SQLite. It’s under app.instance_path, which is the path that Flask has chosen for the instance folder. You’ll learn more about the database in the next section.
         # DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
         SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     )
+
+    # xxx = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
+    # print('xxx: ', xxx)
 
 
     if test_config is None:
@@ -45,11 +44,13 @@ def create_app(test_config=None):
     from . paquetes.backend.controladores import backend
     from . paquetes.backend.controladores import auth
     from . paquetes.backend.controladores import user
+    from . paquetes.backend.controladores import userDatatables
     from . paquetes.backend.controladores import blog
 
     # Anidamos los blueprints del back al blueprint "backend" para que así todas las urls del back tengan como prefijo "backend"
     backend.bp.register_blueprint(auth.bp)
     backend.bp.register_blueprint(user.bp)
+    backend.bp.register_blueprint(userDatatables.bp)
     backend.bp.register_blueprint(blog.bp)
 
     # Registramos los blueprints del back y front

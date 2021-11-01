@@ -9,7 +9,8 @@
 #   datetime            Para manejar fechas y horas
 #   sqlalchemy          ORM para SQL
 
-
+from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
+from flaskr.paquetes.backend.serverside import table_schemas
 
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
@@ -27,6 +28,14 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI)
 Session = sessionmaker(engine)
 sessionDB = Session()
 
+# DATA_SAMPLE = [
+#     {'A': 'Hello!', 'B': 'How is it going?', 'C': 3, 'D': 4},
+#     {'A': 'These are sample texts', 'B': 0, 'C': 5, 'D': 6},
+#     {'A': 'Mmmm', 'B': 'I do not know what to say', 'C': 7, 'D': 16},
+#     {'A': 'Is it enough?', 'B': 'Okay', 'C': 8, 'D': 9},
+#     {'A': 'Just one more', 'B': '...', 'C': 10, 'D': 11},
+#     {'A': 'Thanks!', 'B': 'Goodbye.', 'C': 12, 'D': 13}
+# ]
 
 
 class User(Base):
@@ -38,6 +47,31 @@ class User(Base):
     contrasena = Column(String(255), nullable=False)
     created_at = Column(DateTime(255), default=datetime.now())
     updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
+
+
+    def collect_data_serverside(self, request):
+
+        usersDB = User.getAll()
+        DATA_SAMPLE = []
+
+        for usuario in usersDB:
+            DATA_SAMPLE.append({'A': usuario.id, 'B': usuario.nombre, 'C': usuario.email, 'D': usuario.created_at})
+
+
+        columns = table_schemas.SERVERSIDE_TABLE_COLUMNS
+        return ServerSideTable(request, DATA_SAMPLE, columns).output_result()
+
+    def get20():
+        return sessionDB.query(User).limit(20).all()
+
+    def getAll():
+        return sessionDB.query(User).all()
+
+    def queryCount():
+        return sessionDB.query(User).count()
+
+    def queryOrderBy(order):
+        return sessionDB.query(User).order_by(*order)
 
     def getById(id):
         return sessionDB.query(User).filter(
