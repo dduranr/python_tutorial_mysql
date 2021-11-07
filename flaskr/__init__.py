@@ -44,13 +44,13 @@ def create_app(test_config=None):
     from . paquetes.backend.controladores import backend
     from . paquetes.backend.controladores import auth
     from . paquetes.backend.controladores import user
-    from . paquetes.backend.controladores import userDatatables
+    from . paquetes.backend.controladores import datatables
     from . paquetes.backend.controladores import blog
 
     # Anidamos los blueprints del back al blueprint "backend" para que así todas las urls del back tengan como prefijo "backend"
     backend.bp.register_blueprint(auth.bp)
     backend.bp.register_blueprint(user.bp)
-    backend.bp.register_blueprint(userDatatables.bp)
+    backend.bp.register_blueprint(datatables.bp)
     backend.bp.register_blueprint(blog.bp)
 
     # Registramos los blueprints del back y front

@@ -11,28 +11,14 @@
         {% endif %}
     </div>
     <div class="col-md-12">
-<!--
-        <table id="data" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
- -->
         <table id="table_id">
             <thead>
                 <tr>
-                    <th>Column A</th>
-                    <th>Column B</th>
-                    <th>Column C</th>
-                    <th>Column D</th>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>EMAIL</th>
+                    <th>EDITAR</th>
+                    <th>ELIMINAR</th>
                 </tr>
             </thead>
         </table>
@@ -42,56 +28,30 @@
 
 {% block scripts %}
     <script>
-        $(document).ready(function () {
-          $('#table_id').DataTable({
+        jQuery(document).ready(function () {
+          jQuery('#table_id').DataTable({
             bProcessing: true,
             bServerSide: true,
             sPaginationType: "full_numbers",
             lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
             bjQueryUI: true,
-            sAjaxSource: 'http://localhost:5000/backend/userDatatables/serverside_table',
+            sAjaxSource: 'http://localhost:5000/backend/datatables/serverside_table/users',
             columns: [
-              {"data": "Column A"},
-              {"data": "Column B"},
-              {"data": "Column C"},
-              {"data": "Column D"}
-            ]
+              {"data": "ID"},
+              {"data": "NOMBRE"},
+              {"data": "EMAIL"},
+              {"data": "EDITAR"},
+              {"data": "ELIMINAR"}
+            ],
+            language: {
+                'lengthMenu': 'Mostrar _MENU_ Usuarios',
+                'zeroRecords': 'No hay Usuarios',
+                'info': 'Mostrando pagina _PAGE_ de _PAGES_',
+                'infoEmpty': 'No hay Usuarios disponibles',
+                'infoFiltered': '(Total: _MAX_ Usuarios)',
+                'search': 'Buscar'
+            }
           });
         });
-
-
-
-        // jQuery(document).ready(function() {
-        //     jQuery('#data').DataTable({
-        //         'processing': true,
-        //         'serverSide': true,
-        //         'serverMethod': 'post',
-        //         'dataType': "json",
-        //         'lengthMenu': [
-        //             [5, 10, 50, 100, -1],
-        //             [5, 10, 50, 100, 'Todos']
-        //         ],
-        //         'order': [ [0, 'asc'] ],
-        //         'searching': true,
-        //         'ajax': {
-        //             'url': 'http://localhost:5000/backend/userDatatables/api/data',
-        //         },
-        //         'columns': [
-        //             {data: "name"},
-        //             {data: "age"},
-        //             {data: "address", orderable: false},
-        //             {data: "phone", orderable: false},
-        //             {data: "email"}
-        //         ],
-        //         'language': {
-        //             'lengthMenu': 'Mostrar _MENU_ Usuarios',
-        //             'zeroRecords': 'No hay Usuarios',
-        //             'info': 'Mostrando pagina _PAGE_ de _PAGES_',
-        //             'infoEmpty': 'No hay Usuarios disponibles',
-        //             'infoFiltered': '(Total: _MAX_ Usuarios)',
-        //             'search': 'Buscar'
-        //         }
-        //     });
-        // });
     </script>
 {% endblock %}

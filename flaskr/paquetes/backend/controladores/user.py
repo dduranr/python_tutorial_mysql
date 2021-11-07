@@ -21,6 +21,8 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
+from flaskr.paquetes.backend.modelos.user import User
+from flaskr.paquetes.backend.formularios.user import *
 from sqlalchemy import exc
 import functools
 import bcrypt
@@ -106,6 +108,110 @@ def store():
 
             flash(error, 'danger')
             return redirect(url_for("backend.user.create"))
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
+
+
+
+@bp.route('/edit/<id>', methods=['GET'])
+def edit(id):
+    try:
+        user = User.getById(id)
+        if (request.method == 'GET'):
+            # Generamos el form y le pasamos los values de cada campo (en la vista los values se ponen automáticamente)
+            formulario = UserFormUpdate(request.form, nombre=user.nombre, email=user.email)
+
+            if user:
+                return render_template('backend/user/edit.html', user=user, formulario=formulario)
+            else :
+                flash('Imposible encontrar al usuario', 'danger')
+                return redirect(url_for('backend.user.index', user=user))
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
+
+
+
+@bp.route('/update/<id>', methods=['POST'])
+def update(id):
+    # try:
+    user = User.getById(id)
+    if (request.method == 'POST'):
+        formulario = UserFormUpdate()
+        if formulario.validate_on_submit():
+            nombre = request.form['nombre']
+            email = request.form['email']
+            contrasena = request.form['contrasena']
+
+            userExistente = User.getById(id)
+
+            if not userExistente:
+                flash('Imposible actualizar user, pues el ID '+id+' no existe más en base de datos', 'danger')
+                return redirect(url_for('backend.user.index'))
+            else :
+                if(len(contrasena) > 0):
+                    contrasena_encode = contrasena.encode('utf-8')
+                    contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
+                    dataToSave = {"nombre": nombre, "email": email, "contrasena": contrasena_crypt}
+                    User.put(id, dataToSave)
+                else:
+                    dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena}
+                    User.put(id, dataToSave)
+                    flash('Usuario actualizado', 'success')
+                    return redirect(url_for('backend.user.index'))
+        else:
+            flash('Imposible actualizar usuario. Algún dato es incorrecto', 'danger')
+            return render_template('backend/user/edit.html', user=user, formulario=formulario)
+
+    # except exc.SQLAlchemyError as e:
+    #     error = "Excepción SQLAlchemyError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    # except TypeError as e:
+    #     error = "Excepción TypeError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
+    # except ValueError as e:
+    #     error = "Excepción ValueError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
+    # except Exception as e:
+    #     error = "Excepción general: " + str(e.__class__)
+    #     return render_template('backend/errores/error.html', error=error)
+
+
+
+@bp.route('/delete/<id>')
+def delete(id):
+    try:
+        userExistente = User.getById(id)
+
+        if not userExistente:
+            flash('Imposible eliminar user, pues el ID ('+id+') no coincide con ningún user en base de datos', 'danger')
+            return redirect(url_for('backend.user.index'))
+        else :
+            User.delete(id)
+
+        flash('Usuario eliminado', 'success')
+        return redirect(url_for('backend.user.index'))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)

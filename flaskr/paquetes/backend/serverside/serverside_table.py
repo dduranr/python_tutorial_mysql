@@ -1,5 +1,5 @@
+from flask import url_for
 import re
-
 
 class ServerSideTable(object):
     '''
@@ -14,14 +14,18 @@ class ServerSideTable(object):
                      the name of each column (both in the data and in the
                      table), the default values (if available) and the
                      order in the HTML.
+        edit: Booleano que indica si se imprime el botón Editar
+        delete: Booleano que indica si se imprime el botón Eliminar
     '''
-    def __init__(self, request, data, column_list):
+    def __init__(self, request, data, column_list, edit=True, delete=True):
         self.result_data = None
         self.cardinality_filtered = 0
         self.cardinality = 0
 
         self.request_values = request.values
         self.columns = sorted(column_list, key=lambda col: col['order'])
+        self.edit = edit
+        self.delete = delete
 
         rows = self._extract_rows_from_data(data)
         self._run(rows)
@@ -60,7 +64,22 @@ class ServerSideTable(object):
                 default = column['default']
                 data_name = column['data_name']
                 column_name = column['column_name']
-                row[column_name] = x.get(data_name, default)
+                valor = x.get(data_name, default)
+                row[column_name] = valor
+
+                # Imprimimos botones EDITAR y ELIMINAR si así corresponde
+                if self.edit:
+                    # No sé cómo se comporta Python, pero no me deja ponerle un valor default a row['EDITAR'] y después en el condicional sobreescribir el valor. El valor no se sobreescribe.
+                    if column_name=='ID' and valor==2:
+                        row['EDITAR'] = '<a href="'+url_for('backend.user.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+                    elif column_name == 'ID':
+                        row['EDITAR'] = '<a href="'+url_for('backend.user.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+                if self.delete:
+                    if column_name=='ID' and valor==2:
+                        row['ELIMINAR'] = '<a href="'+url_for('backend.user.delete', id=valor)+'" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>'
+                    elif column_name == 'ID':
+                        row['ELIMINAR'] = '<a href="'+url_for('backend.user.delete', id=valor)+'" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>'
+
             rows.append(row)
         return rows
 

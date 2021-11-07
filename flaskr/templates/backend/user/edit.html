@@ -1,19 +1,54 @@
 {% extends "backend/layout/base.html" %}
 
 {% block header %}
-	<h1>{% block title %}Editando: "{{ post['title'] }}"{% endblock %}</h1>
+    <h1>{% block title %}Editando al usuario <u class="text-muted">{{ user.nombre }}</u>{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-	<form method="post">
-		<label for="title">Título</label>
-		<input name="title" id="title" value="{{ request.form['title'] or post['title'] }}" >
-		<label for="contenido">Contenido</label>
-		<textarea name="contenido" id="contenido">{{ request.form['contenido'] or post['contenido'] }}</textarea>
-		<input type="submit" value="Save">
-	</form>
-	<hr>
-	<form action="{{ url_for('backend.blog.delete', id=post['id']) }}" method="post">
-		<input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-	</form>
+    <div class="col-md-12">
+        <form action="{{ url_for('backend.user.update', id=user.id) }}" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ formulario.nombre.label() }}
+                    {{ formulario.nombre(class="form-control") }}
+                    {% if formulario.nombre.errors %}
+                        <ul class="text-danger">
+                        {% for error in formulario.nombre.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ formulario.email.label() }}
+                    {{ formulario.email(class="form-control") }}
+                    {% if formulario.email.errors %}
+                        <ul class="text-danger">
+                        {% for error in formulario.email.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ formulario.contrasena.label() }}
+                    {{ formulario.contrasena(class="form-control", type="password") }}
+                    {% if formulario.contrasena.errors %}
+                        <ul class="text-danger">
+                        {% for error in formulario.contrasena.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ formulario.submit(class="btn btn-primary") }}
+                    <!--
+                        Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
+                    -->
+                    {{ formulario.hidden_tag() }}
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}
