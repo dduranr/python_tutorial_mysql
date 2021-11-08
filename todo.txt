@@ -1,6 +1,5 @@
 SIGO CON
 SIGO CON
 SIGO CON
-		Crear validación custom para la contraseña, debe servir para los formularios de create y update, uno es obligatorio y el otro no
 		Después copio la funcionalidad de eliminar registro de FLASK-CONTACTS
 		Luego armo datatable de blog

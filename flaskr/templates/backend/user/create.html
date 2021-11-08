@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="col-md-12">
-        <form action="/user/store" method="POST">
+        <form action="{{ url_for('backend.user.store') }}" method="POST">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     {{ formulario.nombre.label() }}

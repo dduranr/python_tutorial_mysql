@@ -23,13 +23,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.formularios.user import *
+from flaskr.paquetes.general.constantes import Constantes
 from sqlalchemy import exc
+from datetime import datetime
 import functools
 import bcrypt
 import sys
 
 bp = Blueprint('user', __name__, url_prefix='/user')
-
+# Semilla para encriptamiento de contraseña
+semilla = bcrypt.gensalt()
 
 
 # session es un dict que almacena datos entre solicitudes. Cuando la validación tiene éxito, el ID de usuario se almacena en una nueva sesión. Los datos se almacenan en una cookie que se envía al navegador y, a continuación, el navegador los devuelve con las solicitudes posteriores. Flask firma los datos de forma segura para que no puedan ser manipulados.
@@ -79,35 +82,35 @@ def create():
 
 @bp.route('/store', methods=['POST'])
 def store():
-    # db = get_db()
     try:
         if request.method == 'POST':
+            error = ''
+            formulario = UserFormCreate()
+            if formulario.validate_on_submit():
+                now = datetime.now()
+                ahora = now.strftime("%Y-%m-%d %H:%M:%S")
 
-            nombre = request.form['nombre']
-            email = request.form['email']
-            contrasena = request.form['contrasena']
-            error = None
+                nombre = request.form['nombre']
+                email = request.form['email']
+                contrasena = request.form['contrasena']
+                contrasena_encode = contrasena.encode('utf-8')
+                contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
 
-            if not nombre:
-                error = 'El nombre es obligatorio.'
-            elif not email:
-                error = 'El email es obligatorio.'
-            elif not contrasena:
-                error = 'La contraseña es obligatoria.'
+                userExistente = User.getByEmail(email)
 
-            if error is None:
-                try:
-                    db.execute(
-                        "INSERT INTO user (nombre, email, contrasena) VALUES (?, ?, ?)",
-                        (nombre, email, generate_password_hash(contrasena)),
-                    )
-                    db.commit()
-                    return redirect(url_for("backend.auth.login"))
-                except db.IntegrityError:
-                    error = f"El usuario {email} ya está registrado."
+                if userExistente:
+                    error = error + 'Imposible crear usuario, pues '+email+' ya existe como usuario en base de datos'
+                else :
+                    usuario = User(nombre=nombre, email=email, contrasena=contrasena_crypt)
+                    usuario.post()
+                    flash('Usuario agregado', 'success')
+                    return redirect(url_for('backend.user.index'))
+            else:
+                error = error+'Imposible crear usuario. Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
 
-            flash(error, 'danger')
-            return redirect(url_for("backend.user.create"))
+            if len(error)>0:
+                flash(error, 'danger')
+            return redirect(url_for('backend.user.create'))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)
@@ -155,47 +158,50 @@ def edit(id):
 
 @bp.route('/update/<id>', methods=['POST'])
 def update(id):
-    # try:
-    user = User.getById(id)
-    if (request.method == 'POST'):
-        formulario = UserFormUpdate()
-        if formulario.validate_on_submit():
-            nombre = request.form['nombre']
-            email = request.form['email']
-            contrasena = request.form['contrasena']
+    try:
+        error = ''
+        user = User.getById(id)
+        if (request.method == 'POST'):
+            formulario = UserFormUpdate()
+            if formulario.validate_on_submit():
+                nombre = request.form['nombre']
+                email = request.form['email']
+                contrasena = request.form['contrasena']
 
-            userExistente = User.getById(id)
+                userExistente = User.getById(id)
 
-            if not userExistente:
-                flash('Imposible actualizar user, pues el ID '+id+' no existe más en base de datos', 'danger')
-                return redirect(url_for('backend.user.index'))
-            else :
-                if(len(contrasena) > 0):
-                    contrasena_encode = contrasena.encode('utf-8')
-                    contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
-                    dataToSave = {"nombre": nombre, "email": email, "contrasena": contrasena_crypt}
-                    User.put(id, dataToSave)
-                else:
-                    dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena}
-                    User.put(id, dataToSave)
+                if not userExistente:
+                    error = error + 'Imposible actualizar user, pues el ID '+id+' no existe más en base de datos'
+                else :
+                    if(len(contrasena) > 0):
+                        contrasena_encode = contrasena.encode('utf-8')
+                        contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
+                        dataToSave = {"nombre": nombre, "email": email, "contrasena": contrasena_crypt}
+                        User.put(id, dataToSave)
+                    else:
+                        dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena}
+                        User.put(id, dataToSave)
                     flash('Usuario actualizado', 'success')
                     return redirect(url_for('backend.user.index'))
-        else:
-            flash('Imposible actualizar usuario. Algún dato es incorrecto', 'danger')
-            return render_template('backend/user/edit.html', user=user, formulario=formulario)
+            else:
+                error = error+'Imposible actualizar usuario. Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
 
-    # except exc.SQLAlchemyError as e:
-    #     error = "Excepción SQLAlchemyError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
-    # except TypeError as e:
-    #     error = "Excepción TypeError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
-    # except ValueError as e:
-    #     error = "Excepción ValueError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
-    # except Exception as e:
-    #     error = "Excepción general: " + str(e.__class__)
-    #     return render_template('backend/errores/error.html', error=error)
+            if len(error)>0:
+                flash(error, 'danger')
+            return redirect(url_for('backend.user.create'))
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
