@@ -7,11 +7,11 @@
 {% block content %}
     <div class="col-md-12 text-end">
         {% if g.user %}
-            <a class="btn btn-success" href="{{ url_for('backend.blog.create') }}">Crear nuevo</a>
+            <a class="btn btn-success" href="{{ url_for('backend.user.create') }}">Crear nuevo</a>
         {% endif %}
     </div>
     <div class="col-md-12">
-        <table id="table_id">
+        <table id="table_users" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -21,6 +21,15 @@
                     <th>ELIMINAR</th>
                 </tr>
             </thead>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>EMAIL</th>
+                    <th>EDITAR</th>
+                    <th>ELIMINAR</th>
+                </tr>
+            </tfoot>
         </table>
 
     </div>
@@ -28,30 +37,30 @@
 
 {% block scripts %}
     <script>
-        jQuery(document).ready(function () {
-          jQuery('#table_id').DataTable({
-            bProcessing: true,
-            bServerSide: true,
-            sPaginationType: "full_numbers",
-            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
-            bjQueryUI: true,
-            sAjaxSource: 'http://localhost:5000/backend/datatables/serverside_table/users',
-            columns: [
-              {"data": "ID"},
-              {"data": "NOMBRE"},
-              {"data": "EMAIL"},
-              {"data": "EDITAR"},
-              {"data": "ELIMINAR"}
-            ],
-            language: {
-                'lengthMenu': 'Mostrar _MENU_ Usuarios',
-                'zeroRecords': 'No hay Usuarios',
-                'info': 'Mostrando pagina _PAGE_ de _PAGES_',
-                'infoEmpty': 'No hay Usuarios disponibles',
-                'infoFiltered': '(Total: _MAX_ Usuarios)',
-                'search': 'Buscar'
-            }
-          });
+        jQuery(document).ready(function() {
+            jQuery('#table_users').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                sPaginationType: "full_numbers",
+                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+                bjQueryUI: true,
+                sAjaxSource: '{{ url_for("backend.datatables.serverside_table", tabla="users") }}',
+                columns: [
+                  {"data": "ID"},
+                  {"data": "NOMBRE"},
+                  {"data": "EMAIL"},
+                  {"data": "EDITAR"},
+                  {"data": "ELIMINAR"}
+                ],
+                language: {
+                    'lengthMenu': 'Mostrar _MENU_ Usuarios',
+                    'zeroRecords': 'No hay Usuarios',
+                    'info': 'Mostrando pagina _PAGE_ de _PAGES_',
+                    'infoEmpty': 'No hay Usuarios disponibles',
+                    'infoFiltered': '(Total: _MAX_ Usuarios)',
+                    'search': 'Buscar'
+                }
+            });
         });
     </script>
 {% endblock %}

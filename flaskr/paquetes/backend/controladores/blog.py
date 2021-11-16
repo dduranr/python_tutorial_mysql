@@ -165,14 +165,56 @@ def update(id):
 
 
 
-@bp.route('/<int:id>/delete', methods=('POST',))
-@login_required
+@bp.route('/delete/<id>', methods=['POST'])
 def delete(id):
-    getPost(id)
-    db = get_db()
-    db.execute('DELETE FROM post WHERE id = ?', (id,))
-    db.commit()
-    return redirect(url_for('backend.blog.index'))
+    try:
+        if (request.method == 'POST'):
+            respuesta = {
+                'estatus': False,
+                'toastrMsg': '...',
+                'toastrType': 'danger',
+                'toastrTitle': '...'
+            }
+            blogpostExistente = Blog.getById(id)
+            blogpostTitle = '?'
+            booleano = bool(blogpostExistente)
+
+            if booleano:
+                blogpostTitle = blogpostExistente.title
+                Blog.delete(id)
+                respuesta = {
+                    'estatus': True,
+                    'toastrMsg': 'Blogpost eliminado ('+blogpostTitle+' con ID: '+id+')',
+                    'toastrType': 'success',
+                    'toastrTitle': '¡Yeeeha!'
+                }
+            else:
+                respuesta = {
+                    'estatus': False,
+                    'toastrMsg': 'Imposible eliminar blogpost, pues no se pudo recuperar el post (ID: '+id+') de la base de datos',
+                    'toastrType': 'danger',
+                    'toastrTitle': '¡Ooops!'
+                }
+
+            return jsonify(respuesta)
+
+    except exc.SQLAlchemyError as e:
+        error = ''
+        if "1451" in str(e):
+            error = 'Al parecer este blogpost está asignado a otro elemento (¿como post de un autor?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro autor.'
+        else:
+            error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error=error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "[6] Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
+
 
 
 
@@ -199,68 +241,68 @@ def getPost(id, check_author=True):
 #   https://tutorial101.blogspot.com/2021/04/datatable-ajax-pagination-using-python.html
 @bp.route('/datatable', methods=['POST'])
 def datatable():
-    # try:
-    if request.method == 'POST':
-        draw = request.form['draw']
-        row = int(request.form['start'])
-        rowperpage = int(request.form['length'])
-        searchValue = request.form["search[value]"]
-        likeString = "%" + searchValue +"%"
-        # likeString = "%Volutpat%"
+    try:
+        if request.method == 'POST':
+            draw = request.form['draw']
+            row = int(request.form['start'])
+            rowperpage = int(request.form['length'])
+            searchValue = request.form["search[value]"]
+            likeString = "%" + searchValue +"%"
+            # likeString = "%Volutpat%"
 
-        print('DRAW: ', draw)
-        print('ROW: ', row)
-        print('ROWPERPAGE: ', rowperpage)
-        print('SEARCHVALUE: ', searchValue)
+            print('DRAW: ', draw)
+            print('ROW: ', row)
+            print('ROWPERPAGE: ', rowperpage)
+            print('SEARCHVALUE: ', searchValue)
 
-        # Número total de registros sin filtrar
-        totalRecords = Blog.getCountWithoutFiltering()
-        print('TOTALRECORDS: ', totalRecords)
-        # Número total de registros con filtro
-        totalRecordwithFilter = Blog.getCountWithFiltering(likeString)
-        print('TOTALRECORDWITHFILTER: ', totalRecordwithFilter)
-
-
-
-        if searchValue=='':
-            print('SE LEEEEEEEEEEEEEEEE 1')
-            blogposts = Blog.getAll(row, rowperpage)
-        else:
-            print('SE LEEEEEEEEEEEEEEEE 2')
-            blogposts = Blog.getAll2(row, rowperpage, likeString)
-
-        print('ELEMENTOS TOTALES EN blogposts', len(blogposts))
+            # Número total de registros sin filtrar
+            totalRecords = Blog.getCountWithoutFiltering()
+            print('TOTALRECORDS: ', totalRecords)
+            # Número total de registros con filtro
+            totalRecordwithFilter = Blog.getCountWithFiltering(likeString)
+            print('TOTALRECORDWITHFILTER: ', totalRecordwithFilter)
 
 
-        data = []
-        if len(blogposts) > 0:
-            for fila in blogposts:
-                data.append({
-                    'id': fila.blog.id,
-                    'autor': fila.blog.author_id,
-                    'autor_email': fila.user.email,
-                    'titulo': fila.blog.title,
-                    'editar': 'EDITAR',
-                    'eliminar': 'ELIMINAR'
-                })
 
-        response = {
-            'draw': draw,
-            'iTotalRecords': totalRecords,
-            'iTotalDisplayRecords': totalRecordwithFilter,
-            'aaData': data
-        }
-        return jsonify(response)
+            if searchValue=='':
+                print('SE LEEEEEEEEEEEEEEEE 1')
+                blogposts = Blog.getAll(row, rowperpage)
+            else:
+                print('SE LEEEEEEEEEEEEEEEE 2')
+                blogposts = Blog.getAll2(row, rowperpage, likeString)
 
-    # except exc.SQLAlchemyError as e:
-    #     error = "Excepción SQLAlchemyError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
-    # except TypeError as e:
-    #     error = "Excepción TypeError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
-    # except ValueError as e:
-    #     error = "Excepción ValueError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
-    # except Exception as e:
-    #     error = "Excepción general: " + str(e.__class__)
-    #     return render_template('backend/errores/error.html', error=error)
+            print('ELEMENTOS TOTALES EN blogposts', len(blogposts))
+
+
+            data = []
+            if len(blogposts) > 0:
+                for fila in blogposts:
+                    data.append({
+                        'id': fila.blog.id,
+                        'autor': fila.blog.author_id,
+                        'autor_email': fila.user.email,
+                        'titulo': fila.blog.title,
+                        'editar': 'EDITAR',
+                        'eliminar': 'ELIMINAR'
+                    })
+
+            response = {
+                'draw': draw,
+                'iTotalRecords': totalRecords,
+                'iTotalDisplayRecords': totalRecordwithFilter,
+                'aaData': data
+            }
+            return jsonify(response)
+
+    except exc.SQLAlchemyError as e:
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)

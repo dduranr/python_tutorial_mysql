@@ -17,7 +17,7 @@
 
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
@@ -35,9 +35,6 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 semilla = bcrypt.gensalt()
 
 
-# session es un dict que almacena datos entre solicitudes. Cuando la validación tiene éxito, el ID de usuario se almacena en una nueva sesión. Los datos se almacenan en una cookie que se envía al navegador y, a continuación, el navegador los devuelve con las solicitudes posteriores. Flask firma los datos de forma segura para que no puedan ser manipulados.
-
-
 
 # RUTAS
 # RUTAS
@@ -48,6 +45,10 @@ def index():
         return render_template('backend/user/index.html')
 
     except exc.SQLAlchemyError as e:
+        # En teoría si se devuelve el siguiente error, la cosa se soluciona con un sessionDB.rollback().
+        if 't reconnect until invalid transaction is rolled back' in str(e):
+            print('Existe error reconnect')
+
         error = "Excepción SQLAlchemyError: " + str(e)
         return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
     except TypeError as e:
@@ -57,7 +58,7 @@ def index():
         error = "Excepción ValueError: " + str(e)
         return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = "[1] Excepción general: " + str(e.__class__)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -75,7 +76,7 @@ def create():
         error = "Excepción ValueError: " + str(e)
         return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = "[2] Excepción general: " + str(e.__class__)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -122,7 +123,7 @@ def store():
         error = "Excepción ValueError: " + str(e)
         return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = "[3] Excepción general: " + str(e.__class__)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -151,7 +152,7 @@ def edit(id):
         error = "Excepción ValueError: " + str(e)
         return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = "[4] Excepción general: " + str(e.__class__)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -188,7 +189,7 @@ def update(id):
 
             if len(error)>0:
                 flash(error, 'danger')
-            return redirect(url_for('backend.user.create'))
+                return redirect(url_for('backend.user.edit',id=id))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)
@@ -200,28 +201,51 @@ def update(id):
         error = "Excepción ValueError: " + str(e)
         return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = "[5] Excepción general: " + str(e.__class__)
         return render_template('backend/errores/error.html', error=error)
 
 
 
-@bp.route('/delete/<id>')
+@bp.route('/delete/<id>', methods=['POST'])
 def delete(id):
     try:
-        userExistente = User.getById(id)
+        if (request.method == 'POST'):
+            respuesta = {
+                'estatus': False,
+                'toastrMsg': '...',
+                'toastrType': 'danger',
+                'toastrTitle': '...'
+            }
+            userExistente = User.getById(id)
+            userNombre = '?'
+            booleano = bool(userExistente)
 
-        if not userExistente:
-            flash('Imposible eliminar user, pues el ID ('+id+') no coincide con ningún user en base de datos', 'danger')
-            return redirect(url_for('backend.user.index'))
-        else :
-            User.delete(id)
+            if booleano:
+                userNombre = userExistente.nombre
+                User.delete(id)
+                respuesta = {
+                    'estatus': True,
+                    'toastrMsg': 'Usuario eliminado ('+userNombre+' con ID: '+id+')',
+                    'toastrType': 'success',
+                    'toastrTitle': '¡Yeeeha!'
+                }
+            else:
+                respuesta = {
+                    'estatus': False,
+                    'toastrMsg': 'Imposible eliminar user, pues no se pudo recuperar el usuario (ID: '+id+') de la base de datos',
+                    'toastrType': 'danger',
+                    'toastrTitle': '¡Ooops!'
+                }
 
-        flash('Usuario eliminado', 'success')
-        return redirect(url_for('backend.user.index'))
+            return jsonify(respuesta)
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = ''
+        if "1451" in str(e):
+            error = 'Al parecer este usuario está asignado a otro elemento (¿como autor de un blogpost?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro usuario.'
+        else:
+            error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
         return render_template('backend/errores/error.html', error="TypeError: "+error)
@@ -229,5 +253,5 @@ def delete(id):
         error = "Excepción ValueError: " + str(e)
         return render_template('backend/errores/error.html', error="ValueError: "+error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = "[6] Excepción general: " + str(e.__class__)
         return render_template('backend/errores/error.html', error=error)

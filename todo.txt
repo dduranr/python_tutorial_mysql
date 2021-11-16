@@ -1,5 +1,40 @@
 SIGO CON
 SIGO CON
 SIGO CON
-		Después copio la funcionalidad de eliminar registro de FLASK-CONTACTS
-		Luego armo datatable de blog
+
+		1. Por fin ya quedaron armados los datatables de Users y Blog
+		2. Documentar el JOIN del modelo blog.py
+			Mencionar que aunque la query indica que existen alias, éstos no existen realmente y no se pueden recuperar los valores mediante su uso
+		3. Buscar forma de poner íconos small en los datatables y de quitar padding a las celdas
+		4. Hacer que funcione el botón EDITAR del datatables de BLOG
+
+
+
+
+    <div class="col-md-12">
+        {% if blogposts is defined %}
+            {% for post in blogposts %}
+                <article>
+                    <header>
+                        <div>
+                            <h1>{{ post.blog.title }}</h1>
+                            <div>Creado por <a href="mailto:{{ post.user.email }}">{{ post.user.nombre }}</a> el {{ post.blog.created_at.strftime('%Y-%m-%d') }}</div>
+                        </div>
+                        {% if g.user['id'] == post.blog.author_id %}
+                        <a href="{{ url_for('backend.blog.edit', id=post['id']) }}">Edit</a>
+                        {% endif %}
+                    </header>
+                    <p>{{ post['contenido'] }}</p>
+                </article>
+                {% if not loop.last %}
+                    <hr>
+                {% endif %}
+
+            {% endfor %}
+
+        {% else %}
+            <p>La variable blogsposts no está definida.</p>
+        {% endif %}
+    </div>
+
+

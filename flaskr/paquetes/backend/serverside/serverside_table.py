@@ -1,4 +1,5 @@
 from flask import url_for
+from pprint import pprint
 import re
 
 class ServerSideTable(object):
@@ -16,16 +17,23 @@ class ServerSideTable(object):
                      order in the HTML.
         edit: Booleano que indica si se imprime el botón Editar
         delete: Booleano que indica si se imprime el botón Eliminar
+        endpoint: Cadena que hace referencia al endpoint parcial al que apuntan los botones editar y eliminar. Por ejemplo: backend.user
+        colForName: Cadena que hace referencia al data_name que contiene el nombre/título de los registros del esquema en cuestión en table_schemas.py
+        table: ID de la <table>
+
+        Los últimos 5 parámetros no vienen con el plugin, los integré yo para extender su funcionalidad.
     '''
-    def __init__(self, request, data, column_list, edit=True, delete=True):
+    def __init__(self, request, data, column_list, edit=True, delete=True, endpoint='', colForName='B', table=''):
         self.result_data = None
         self.cardinality_filtered = 0
         self.cardinality = 0
-
         self.request_values = request.values
         self.columns = sorted(column_list, key=lambda col: col['order'])
         self.edit = edit
         self.delete = delete
+        self.endpoint = endpoint
+        self.colForName = colForName
+        self.table = table
 
         rows = self._extract_rows_from_data(data)
         self._run(rows)
@@ -58,6 +66,16 @@ class ServerSideTable(object):
             List of dicts that represents the table's rows.
         '''
         rows = []
+
+
+        # --> Armamos el diccionario "registros" que contiene como key el ID de cada registro, y como value el nombre del registro.
+        registros = {}
+        for x in data:
+            record_id = x['A']
+            record_nombre = x[self.colForName]
+            registros.update({record_id: record_nombre})
+
+        # --> Aquí es donde se arma la info que va a parar a la tabla
         for x in data:
             row = {}
             for column in self.columns:
@@ -71,14 +89,16 @@ class ServerSideTable(object):
                 if self.edit:
                     # No sé cómo se comporta Python, pero no me deja ponerle un valor default a row['EDITAR'] y después en el condicional sobreescribir el valor. El valor no se sobreescribe.
                     if column_name=='ID' and valor==2:
-                        row['EDITAR'] = '<a href="'+url_for('backend.user.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+                        row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
                     elif column_name == 'ID':
-                        row['EDITAR'] = '<a href="'+url_for('backend.user.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+                        row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
                 if self.delete:
-                    if column_name=='ID' and valor==2:
-                        row['ELIMINAR'] = '<a href="'+url_for('backend.user.delete', id=valor)+'" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>'
-                    elif column_name == 'ID':
-                        row['ELIMINAR'] = '<a href="'+url_for('backend.user.delete', id=valor)+'" class="btn btn-danger"><i class="bi bi-x-lg"></i></a>'
+                    if column_name=='ID':
+                        nombreDelRegistro = ''
+                        # Si el ID del registro actual se encuentra en el diccionario "registros", entonces recuperamos el nombre del registro
+                        if valor in registros:
+                            nombreDelRegistro = registros[valor]
+                        row['ELIMINAR'] = '<a id="registro_'+str(valor)+'" class="btn btn-danger" onclick="eliminarRegistro(this.id)" data-bs-toggle="modal" data-bs-target="#modalEliminarRecord" data-endpoint="'+url_for(self.endpoint+'.delete', id=valor)+'" data-tablaid="'+self.table+'" data-modal-body="'+nombreDelRegistro+', con ID: '+str(valor)+'" data-modal-id-registro="'+str(valor)+'" href="#">Eliminar</a>'
 
             rows.append(row)
         return rows

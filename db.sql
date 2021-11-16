@@ -12,6 +12,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Volcando estructura de base de datos para pythonflaskcontactos
+CREATE DATABASE IF NOT EXISTS `pythonflaskcontactos` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+USE `pythonflaskcontactos`;
+
 -- Volcando estructura para tabla pythonflaskcontactos.blog
 CREATE TABLE IF NOT EXISTS `blog` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -177,14 +182,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=505 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=507 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla pythonflaskcontactos.users: ~503 rows (aproximadamente)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `nombre`, `email`, `contrasena`, `created_at`, `updated_at`) VALUES
 	(1, 'David Durán', 'official.dduran@gmail.com', '$2b$12$ecrObtGA/CTOWqjrU7HSkO2MBOTZYWQ7ggS0IOyW/316jtfelwICC', '2021-09-12 17:07:00', '2021-09-16 15:17:11'),
-	(2, 'Josefino', 'josefino@gmail.com', 'alafa', '2021-10-24 15:03:25', '2021-10-24 15:03:32'),
-	(3, 'Marta', 'marta@gmail.com', 'beta', '2021-10-24 15:03:44', '2021-10-24 15:03:44'),
+	(2, 'Josefino Motasosax', 'josefino@gmail.com.mxsax', '$2b$12$NN1fmPCQZDIx/4DLM76jquVW4GJDiFYqaEGAqBARIg/ideQs0Ijua', '2021-10-24 15:03:25', '2021-11-07 19:12:58'),
+	(3, 'Marta', 'marta@gmail.com', '$2b$12$E/sQSiVumDmwFqOqPpbFSOpZngu4mKljwciSY1MTgwsaSJ1az4nAK', '2021-10-24 15:03:44', '2021-11-13 16:05:59'),
 	(4, 'Craig Summers', 'tellus.nunc.lectus@posuerevulputate.com', '50817', '2021-10-31 00:00:00', '2021-10-31 00:00:00'),
 	(5, 'Mara Shelton', 'parturient.montes@dictummagnaut.com', '68279-27208', '2021-10-31 00:00:00', '2021-10-31 00:00:00'),
 	(6, 'Moses Hess', 'commodo@tristique.ca', '732162', '2021-10-31 00:00:00', '2021-10-31 00:00:00'),
@@ -685,7 +690,9 @@ INSERT INTO `users` (`id`, `nombre`, `email`, `contrasena`, `created_at`, `updat
 	(501, 'Lunea Randolph', 'tincidunt.neque@eget.net', '37502', '2021-10-31 00:00:00', '2021-10-31 00:00:00'),
 	(502, 'Charles Contreras', 'ipsum.dolor.sit@pedepraesent.com', '2306 KY', '2021-10-31 00:00:00', '2021-10-31 00:00:00'),
 	(503, 'Aline Cabrera', 'et.tristique.pellentesque@antevivamus.edu', '48719', '2021-10-31 00:00:00', '2021-10-31 00:00:00'),
-	(504, 'Mefistófeles', 'mefistofeles@gmail.com', 'mefis-tofeles', '2021-10-31 17:34:58', '2021-10-31 17:34:59');
+	(504, 'Mefistófeles', 'mefistofeles@gmail.com', 'mefis-tofeles', '2021-10-31 17:34:58', '2021-10-31 17:34:59'),
+	(505, 'Ramiron', 'ramiron@gmail.com', '$2b$12$yCH/E0d9Ptyg8KcqHblTzOanN5MmbvHyT00x5Ak.gqfpW/Yo9ATdS', '2021-11-07 19:37:29', '2021-11-07 19:37:29'),
+	(506, 'Ramiros', 'official.dduran@gmail.coms', '$2b$12$gVs80Sfrt12YixCx/CV9auvkS.iJMc4P8kggIIEAnEYJKJyWmRMye', '2021-11-07 19:45:44', '2021-11-07 19:45:44');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Volcando estructura para tabla pythonflaskcontactos.usuarios
