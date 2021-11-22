@@ -3,6 +3,7 @@
 import os
 from os import environ
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
@@ -14,10 +15,6 @@ def create_app(test_config=None):
         # DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
         SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     )
-
-    # xxx = environ.get('SQLALCHEMY_TRACK_MODIFICATIONS')
-    # print('xxx: ', xxx)
-
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -33,11 +30,6 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    # Esto sirve para llamar la BD SQLite
-    # from . import db
-    # db.init_app(app)
-
 
     # Recuperamos los archivos blueprints
     from . paquetes.frontend.controladores import frontend
@@ -60,15 +52,34 @@ def create_app(test_config=None):
     # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
     app.add_url_rule('/', endpoint='index')
 
+    """
+        Finalmente hacemos que este función "application factory" devuelva la app.
+        Cómo recuperar la instancia "app"
+            Documentación:
+                https://flask.palletsprojects.com/en/1.1.x/appcontext/#the-application-context
+                https://flask.palletsprojects.com/en/1.1.x/api/#flask.current_app
+            Al usar el patrón de fábrica de aplicaciones (como lo hago aquí) no habrá en absoluto una instancia "app" para importar. Así que olvidar siquiera intentar esto:
+                from flaskr import app
+            Flask resuelve este problema con el contexto de la aplicación. En lugar de referirse directamente a una "app", usa el proxy "current_app", que apunta a la aplicación que maneja la actividad actual.
 
+            Si intenta acceder a current_app, o cualquier cosa que lo use, fuera del contexto de una aplicación, obtendrá este mensaje de error:
+                RuntimeError: Working outside of application context.
+            Si ve ese error, puede enviar un contexto manualmente ya que tiene acceso directo al archivo app. Use app_context() en un bloque "with", y todo lo que se ejecute en el bloque tendrá acceso current_app.
 
+            Ejemplo de recuperar "app"
+                Aquí en __init__.py
+                    1. Afuera del create_app()
+                        db = SQLAlchemy()
+                    2. Dentro del create_app()
+                        with app.app_context():
+                            db = SQLAlchemy(app)
 
+                En el módulo externo
+                    from flaskr import db, create_app
+                    def delete(id):
+                        db.create_all(app=create_app())
+                        db.session.query(MiModelo).filter_by(id=id).delete()
+                        db.session.commit()
 
-    # Finalmente hacemos que este función "application factory" devuelva la app.
-    # IMPORTANTE. Puesto que las variables de configuración son variables de entorno, así presisamente podrán ser recuperadas en cualquier otro lugar de la app:
-    #       import os
-    #       SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
-    # Hasta donde sé, no es posible recuperar la variable app, digamos así:
-    #       from ....__init__ import create_app
-    #       create_app.app
+    """
     return app

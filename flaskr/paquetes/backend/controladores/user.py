@@ -41,25 +41,25 @@ semilla = bcrypt.gensalt()
 # RUTAS
 @bp.route('/index', methods=['GET'])
 def index():
-    try:
-        return render_template('backend/user/index.html')
+    # try:
+    return render_template('backend/user/index.html')
 
-    except exc.SQLAlchemyError as e:
-        # En teoría si se devuelve el siguiente error, la cosa se soluciona con un sessionDB.rollback().
-        if 't reconnect until invalid transaction is rolled back' in str(e):
-            print('Existe error reconnect')
+    # except exc.SQLAlchemyError as e:
+    #     # En teoría si se devuelve el siguiente error, la cosa se soluciona con un sessionDB.rollback().
+    #     if 't reconnect until invalid transaction is rolled back' in str(e):
+    #         print('Existe error reconnect')
 
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
-    except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
-    except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
-    except Exception as e:
-        error = "[1] Excepción general: " + str(e.__class__)
-        return render_template('backend/errores/error.html', error=error)
+    #     error = "Excepción SQLAlchemyError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    # except TypeError as e:
+    #     error = "Excepción TypeError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
+    # except ValueError as e:
+    #     error = "Excepción ValueError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
+    # except Exception as e:
+    #     error = "[1] Excepción general: " + str(e.__class__)
+    #     return render_template('backend/errores/error.html', error=error)
 
 
 

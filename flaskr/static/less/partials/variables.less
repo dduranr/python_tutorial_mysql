@@ -1,0 +1,720 @@
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨ VARIABLES
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+
+// ---> Colores
+	@blue1: #23d1d2;
+	@blue2: #009090;
+
+// ---> Tamaños
+	@fontsize_body: 12px;
+	// @fontfamily_body: @plain_light;
+	@lineheight_body: 1;
+
+
+	@colorInstitucional: @blue1;
+	@colorInstitucionalBold: @blue2;
+
+.caja-popup {
+	.centrar-vertical-y-horizontalmente(none, #fff, fixed, 50%, 50%, center, -50%, -50%, 999);
+	background: @blue1;
+	padding: 30px;
+	margin: 20px 0;
+	font-size: 25px;
+	line-height: 30px;
+	border: 20px solid #fff;
+	color: #fff;
+	p {
+		font-size: 25px;
+		line-height: 30px;
+	}
+}
+
+
+
+
+
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨ MIXINS
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+
+// BOOTSTRAP (poner texto sobre una imagen)
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+
+.txtOverIMG_thumbnail {
+    position: relative;
+}
+.txtOverIMG_caption {
+    .centrar-vertical-y-horizontalmente(inline-block, #fff, absolute, 50%, 50%, left, -50%, -50%, 9);
+}
+// <div class="row" id="box-search">
+//     <div class="txtOverIMG_thumbnail text-center">
+//         <img src="images/header/producto.jpg" alt="" class="img-responsive">
+//         <div class="txtOverIMG_caption">
+// 			<p style="text-align: left;">
+// 				<span class="palanquindark" style="font-size: 29px;color: #fff;">
+// 					<strong>
+// 						Una nueva manera de firmar
+// 						digitalmente documentos de
+// 						forma segura y confiable
+// 					</strong>
+// 				</span>
+// 			</p>
+// 			<p style="text-align: left;">
+// 				<span style="font-size: 10.5px; color: #fff; font-weight: bold;">
+// 					keydok te permite firmar digitalmente documentos y/o contratos de forma segura y confiable, gracias a sus altos estándares de seguridad y cumplimiento.
+// 				</span>
+// 			</p>
+//         </div>
+//     </div>
+// </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// A veces los textos de un menú son largos en una sola línea, y hay necesidad de que el texto quepa en varias líneas, pero sin cambiar el width a un ancho específico
+.romperTextoEnPalabras() {
+	display: table-caption;
+	display: -ms-grid;
+	width: min-intrinsic;
+	width: -webkit-min-content;
+	width: -moz-min-content;
+	width: min-content;
+	-ms-grid-columns: min-content;
+	padding: 0 10px;
+}
+
+
+// Este mixin arma un tooltip con un :after como triángulo
+// <div class="speech-bubble">
+// 	<p class="parrafos p1">
+// 		<img src="assets/images/signo-admiracion.png" alt="Error" />
+// 	</p>
+// 	<p class="parrafos p2">Selecciona esta casilla de verificación si querés continuar</p>
+// </div>
+.bubble1() {
+	.speech-bubble {
+		position: relative;
+		min-width: 250px;
+		max-width: 370px;
+		background: #fff;
+		border-radius: .4em;
+		padding: 9px;
+		box-shadow: 0px 0px 12px rgba(0,0,0,.5);
+
+		.centrar-vertical-y-horizontalmente(none, @blue1, absolute, 0, 50%, left, -50%, 0, 9);
+
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: 0;
+			height: 0;
+			border: 19px solid transparent;
+			border-bottom-color: #e2e2e2;
+			border-top: 0;
+			margin-left: -19px;
+			margin-top: -19px;
+		}
+		.parrafos {
+			display: inline-block;
+			text-align: left;
+			color: @blue1;
+			font-size: 15px;
+			margin: 0;
+			&.p1 {
+				img {
+					width: 13px;
+					vertical-align: middle;
+				}
+			}
+			&.p2 {
+				width: 90%;
+				vertical-align: middle;
+				padding-left: 10px;
+			}
+		}
+	}
+}
+
+
+.borderImage(@imagePath) {
+	border-bottom: 20px solid transparent;
+	-webkit-border-image: url(@imagePath) 30 round;
+	-moz-border-radius: url(@imagePath) 30 round;
+	-ms-border-radius: url(@imagePath) 30 round;
+	-o-border-image: url(@imagePath) 30 round;
+	border-image: url(@imagePath) 30 round;
+}
+
+// Aplica a un contenedor que guarde un A. El mixin debe aplicarse al contenedor
+.dosLineasDeTexto(@altura,@colorellipsis) {
+    overflow: hidden;
+    height: @altura;
+    line-height: 25px;
+    margin: 20px;
+	&:before {
+	    content:"";
+	    float: left;
+	    width: 5px;
+	    height: @altura;
+	}
+	> a {
+	    float: right;
+	    width: 100%;
+	    margin-left: -5px;
+	}
+	&:after {
+	    content:"\02026";
+	    box-sizing: content-box;
+	    -webkit-box-sizing: content-box;
+	    -moz-box-sizing: content-box;
+	    float: right;
+	    position: relative;
+	    top: -23px;
+	    left: 100%;
+	    width: 3em;
+	    margin-left: -3em;
+	    padding-right: 5px;
+	    text-align: right;
+	    color: @colorellipsis;
+	}
+}
+
+// Es un borde con un ancho menor que el del elemento
+.subrayado() {
+	&:after {
+		position: relative;
+		display: block;
+		width: 80px;
+		height: 3px;
+		background: #fff;
+		content: "\00a0";
+		vertical-align: middle;
+		margin: 10px auto 0 auto;
+	}
+}
+
+
+.svg1(@color,@margin) {
+	display: inline-block;
+	margin: @margin;
+	width: 18px;
+	height: 18px;
+	fill: @color;
+}
+
+.fullWidth() {
+    max-width: 100%;
+    padding: 0;
+}
+
+// Esto aplica al div contenedor, y automáticamente los divs hijos tendrán la misma altura
+.displayFlex() {
+	display:flex;
+	// align-items:center;       // Estos van en los divs hijos
+	// justify-content: center;  // Estos van en los divs hijos
+}
+// El mixin "text_marquee" aplica a un HTML así:;
+// 		<div class="text_marquee">
+// 			<div class="img">
+// 				<img src="images/iconos/megaphone.png" alt="" />
+// 			</div>
+// 			<div class="w_txt_animated_marquee">
+// 				<p>El valor del mes de noviembre: "AMABILIDAD"</p>
+// 			</div>
+// 		</div>
+
+.text_marquee(@fontsize,@lineheight,@color,@height) {
+	display: flex;
+	.w_txt_animated_marquee {
+		position: relative;
+		height: @height;
+		width: 90%;
+		overflow: hidden;
+		p {
+			position: absolute;
+			top: 7px;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			line-height: @lineheight;
+			font-size: @fontsize;
+			color: @color;
+			text-align: center;
+			-moz-transform:translateX(100%);
+			-webkit-transform:translateX(100%);
+			transform:translateX(100%);
+			-moz-animation: text_marquee 20s linear infinite;
+			-webkit-animation: text_marquee 20s linear infinite;
+			animation: text_marquee 20s linear infinite;
+		}
+	}
+	@-moz-keyframes text_marquee {
+		0%   { -moz-transform: translateX(100%); }
+		100% { -moz-transform: translateX(-100%); }
+	}
+	@-webkit-keyframes text_marquee {
+		0%   { -webkit-transform: translateX(100%); }
+		100% { -webkit-transform: translateX(-100%); }
+	}
+	@keyframes text_marquee {
+		0%   {
+			-moz-transform: translateX(100%); /* Firefox bug fix */
+			-webkit-transform: translateX(100%); /* Firefox bug fix */
+			transform: translateX(100%);
+		}
+		100% {
+			-moz-transform: translateX(-100%); /* Firefox bug fix */
+			-webkit-transform: translateX(-100%); /* Firefox bug fix */
+			transform: translateX(-100%);
+		}
+	}
+}
+
+
+
+// Lo ocupé en WU-Sembrado
+.radios_custom1() {
+	.courses-list .course .check label i {
+		display: none;
+
+		display: inline-block;
+		border: 2px solid #000;
+		padding: 13px 30px;
+		border-radius: 8px;
+		background-color: #fff;
+	}
+	.courses-list .course .check input[type="radio"] {display: none}
+	.courses-list .course .check input[type="radio"]:checked + label i {background-color: @yellow1;}
+}
+
+
+
+// Lo ocupé en WU-Sembrado
+.radios_custom2() {
+    /* The radio-container */
+    .radio-container {
+        display: inline-block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    /* Hide the browser's default radio button */
+    .radio-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 18px;
+        width: 18px;
+        background-color: #fff;
+        border-radius: 50%;
+        border: 1px solid black;
+    }
+    /* On mouse-over, add a grey background color */
+    .radio-container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+    /* When the radio button is checked, add a blue background */
+    .radio-container input:checked ~ .checkmark {
+        background-color: #000;
+    }
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after, .checkmark:before {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    /* Show the indicator (dot/circle) when checked */
+    .radio-container input:checked ~ .checkmark:after, .radio-container input:checked ~ .checkmark:before {
+        display: block;
+    }
+    /* Style the indicator (dot/circle) */
+    .radio-container .checkmark:after {
+        top: 4px;
+        left: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: @yellow1;
+    }
+    .radio-container .checkmark:before {
+        top: 0px;
+        left: 0px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+    }
+}
+
+
+
+.puntosYseguido(@maxwidth) {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: @maxwidth;
+}
+
+.containerFloatedElems1() {  // Este y el siguiente mixin, en teoría sirven para lo mismo, siu no funciona uno, probar el otro
+	&:after,
+	&:before {
+		display: block;
+		content: "";
+	}
+	&:after {clear:left;}
+}
+
+.containerFloatedElems2() {  // Aplica al elemento que contiene elementos flotantes
+	&:after {
+		content: ".";
+		display: block;
+		clear: both;
+		visibility: hidden;
+		height: 0;
+		line-height: 0;
+	}
+}
+
+
+.vineta(@color) {
+	&:before {
+		.radius(50%);
+		position: relative;
+		display: inline-block;
+		width: 9px;
+		height: 9px;
+		background: @color;
+		content: "\00a0";
+		vertical-align: middle;
+		margin-right: 10px;
+	}
+}
+.vineta2(@color) {
+	&:before {
+		.radius(50%);
+		position: relative;
+		display: inline-block;
+		width: 9px;
+		height: 9px;
+		background: @color;
+		content: "\00a0";
+		vertical-align: middle;
+		margin-right: 10px;
+		margin-left: -20px;
+	}
+}
+
+.separadorvacio() {
+	display: block;
+	width: 100%;
+	height: 1px;
+	padding: 0;
+	margin: 0;
+}
+
+
+// Contenedor + <a> || button
+// (El botón no es el contenedor sino el <a> o <button>)
+.boton-tipo-1(@position, @display, @padding, @margin, @radius, @border, @bg-color, @bg-image, @color, @fuente, @fontsize, @lineheight, @fontweight, @txt-trans, @boxshadow, @hover-bg, @hover-border, @hover-color) {
+	a, button {
+		display: @display;
+		position: @position;
+		padding: @padding;
+		margin: @margin;
+		border-radius: @radius;
+		border: @border;
+		background-color: @bg-color;
+		background-image: @bg-image;
+		color: @color;
+		font-family: @fuente;
+		font-size: @fontsize;
+		line-height: @lineheight;
+		font-weight: @fontweight;
+		text-transform: @txt-trans;
+		box-shadow: @boxshadow;
+		text-decoration: none;
+		&:hover {
+			background-color: @hover-bg;
+			border: @hover-border;
+			color: @hover-color;
+		}
+	}
+}
+
+// Contenedor + <a>
+// (El botón es el contenedor)
+.boton-tipo-2(@position, @display, @padding, @margin, @radius, @border, @bg-color, @color, @fuente, @fontsize, @lineheight, @fontweight, @txt-trans, @boxshadow, @hover-bg, @hover-border, @hover-color) {
+	display: @display;
+	position: @position;
+	padding: @padding;
+	margin: @margin;
+	border-radius: @radius;
+	border: @border;
+	background-color: @bg-color;
+	&:hover {
+		background-color: @hover-bg;
+		border: @hover-border;
+		color: @hover-color;
+		a {
+			color: @hover-color;
+		}
+	}
+	a {
+		color: @color;
+		font-family: @fuente;
+		font-size: @fontsize;
+		line-height: @lineheight;
+		font-weight: @fontweight;
+		text-transform: @txt-trans;
+		box-shadow: @boxshadow;
+	}
+}
+
+
+// Cuando el elemento NO contiene un <a> interno
+.boton-tipo-3(@position, @display, @padding, @margin, @radius, @border, @bg-color, @color, @fuente, @fontsize, @lineheight, @fontweight, @txt-trans, @boxshadow, @hover-bg, @hover-border, @hover-color) {
+	display: @display;
+	position: @position;
+	padding: @padding;
+	margin: @margin;
+	border-radius: @radius;
+	border: @border;
+	background-color: @bg-color;
+	color: @color;
+	font-family: @fuente;
+	font-size: @fontsize;
+	line-height: @lineheight;
+	font-weight: @fontweight;
+	text-transform: @txt-trans;
+	&:hover {
+		background-color: @hover-bg;
+		border: @hover-border;
+		color: @hover-color;
+	}
+}
+
+
+
+.centrar-vertical-y-horizontalmente(@display, @color, @position, @top, @left, @align, @translateX, @translateY, @z-index) {
+	> * {color: @color;}
+	display: @display;
+	position: @position;
+	top: @top;
+	left: @left;
+	text-align: @align;
+	-webkit-transform: translate(@translateX, @translateY);
+	-ms-transform: translate(@translateX, @translateY);
+	transform: translate(@translateX, @translateY);
+	z-index: @z-index;
+}
+
+
+
+
+
+.translate(@porcentajeX, @porcentajeY) {
+    -webkit-transform: translate(@porcentajeX, @porcentajeY);
+    -moz-transform: translate(@porcentajeX, @porcentajeY);
+    -ms-transform: translate(@porcentajeX, @porcentajeY);
+    -o-transform: translate(@porcentajeX, @porcentajeY);
+    transform: translate(@porcentajeX, @porcentajeY);
+}
+
+// El valor para @grados va en formato "45deg", para @grados_ie va en números enteros del 0 al 4 me parece
+.rotate(@grados, @grados_ie) {
+	-webkit-transform: rotate(@grados);
+	-moz-transform: rotate(@grados);
+	-ms-transform: rotate(@grados);
+	-o-transform: rotate(@grados);
+    transform: rotate(@grados);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=@grados_ie);
+}
+
+
+
+.backface-visibility(@value) {
+    -webkit-backface-visibility: @value;
+    -moz-backface-visibility: @value;
+    -ms-backface-visibility: @value;
+    -o-backface-visibility: @value;
+    backface-visibility: (@value);
+}
+
+
+
+
+.opacity(@opacidad) {
+	opacity: @opacidad;
+}
+
+
+
+
+.separador(@display, @width, @height, @bg, @margin) {
+	display: @display;
+	width: @width;
+	height: @height;
+	background: @bg;
+	margin: @margin;
+}
+
+
+
+.placeholder(@color, @fontweight, @fontfamily) {
+	&::-webkit-input-placeholder {color: @color; font-weight: @fontweight; font-family: @fontfamily;}
+	&::-moz-placeholder {color: @color; font-weight: @fontweight; font-family: @fontfamily;}
+	&:-moz-placeholder {color: @color; font-weight: @fontweight; font-family: @fontfamily;}
+	&:-ms-input-placeholder {color: @color; font-weight: @fontweight; font-family: @fontfamily;}
+}
+
+// El siguiente mixin tiene dos posibles valores para el único parámetro:
+// 		- content-box --> Equivale al modelo de caja normal
+// 		- border-box  --> EL padding y border no aumentan el ancho del elemento
+.boxSizing(@borderBox) {
+  -webkit-box-sizing: @borderBox;
+     -moz-box-sizing: @borderBox;
+      -ms-box-sizing: @borderBox;
+       -o-box-sizing: @borderBox;
+          box-sizing: @borderBox;
+}
+
+.transition(@transition) {
+	-webkit-transition: @transition;
+	-moz-transition: @transition;
+	-ms-transition: @transition;
+	-o-transition: @transition;
+	transition: @transition;
+}
+
+
+.transitiondelay(@transition) {
+	-webkit-transition-delay: @transition;
+	-moz-transition-delay: @transition;
+	-ms-transition-delay: @transition;
+	-o-transition-delay: @transition;
+	transition-delay: @transition;
+}
+
+.displayBox() {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-box;
+	display: -o-box;
+    display: box;
+}
+
+
+.radius(@radio) {
+	-webkit-border-radius: @radio;
+	-moz-border-radius: @radio;
+	-ms-border-radius: @radio;
+	-o-border-radius: @radio;
+	border-radius: @radio;
+}
+
+
+// Checkbox custom, el HTML debería ser:
+// 	<input type="checkbox" />
+// 	<label for="">Acepto bases y condiciones<span></span></label>
+// Para cambiar de posición el checkbox, antes o después del texto del label, simplemente ponemos el <span> antes o después del texto
+.checkboxCustom1() {
+	.w-acepto_bases-checkbox {
+		input[type="checkbox"] {
+		    display:none;
+		}
+		input[type="checkbox"] + label span {
+		    display:inline-block;
+		    width:44px;
+		    height:44px;
+		    margin:0px 4px 0 20px;
+		    vertical-align:middle;
+		    background:url(../images/check.png) -39px center no-repeat;
+		    background-color: #fff;
+		    cursor:pointer;
+		    border-radius: 5px;
+		}
+		input[type="checkbox"]:checked + label span {
+		    background:url(../images/check.png) center center no-repeat;
+		    background-color: #fff;
+		}
+	}
+}
+
+.blink1 {
+	animation: blinker1 0.6s linear infinite;
+	color: #1c87c9;
+	font-size: 30px;
+	font-weight: bold;
+	font-family: sans-serif;
+}
+@keyframes blinker1 {
+	50% {opacity: 0;}
+}
+
+.blink2 {
+	animation: blinker2 1s linear infinite;
+}
+@keyframes blinker2 {
+	0% {opacity: 0;}
+}
+
+.blink3 {
+	animation: blinker3 1.4s linear infinite;
+}
+@keyframes blinker3 {
+	100% {opacity: 0;}
+}
+
+
+
+
+
+
+// Esto hace el efecto de un rebote
+.rebotar() {
+	-webkit-animation: smoothBounce 3s infinite ease-in-out;
+	-o-animation: smoothBounce 3s infinite ease-in-out;
+	-ms-animation: smoothBounce 3s infinite ease-in-out;
+	-moz-animation: smoothBounce 3s infinite ease-in-out;
+	animation: smoothBounce 3s infinite ease-in-out;
+}
+@-webkit-keyframes smoothBounce {
+	0% { transform: translateY(-5px)  }
+	50% { transform: translateY(10px) }
+	100% { transform: translateY(-5px) }
+}
+@-moz-keyframes smoothBounce {
+	0% { transform: translateY(-5px)  }
+	50% { transform: translateY(10px) }
+	100% { transform: translateY(-5px) }
+}
+@keyframes smoothBounce {
+	0% { transform: translateY(-5px)  }
+	50% { transform: translateY(10px) }
+	100% { transform: translateY(-5px) }
+}
+

@@ -1,0 +1,30 @@
+
+// ------------------------------------------------------------> POR SISTEMA OPERATIVO/NAVEGADOR
+// ------------------------------------------------------------> POR SISTEMA OPERATIVO/NAVEGADOR
+// ------------------------------------------------------------> POR SISTEMA OPERATIVO/NAVEGADOR
+
+html {
+	&[data-useragent*='Windows'] {
+	    body[data-useragent*='Trident'] {
+	    }
+	}
+	&[data-useragent*='Macintosh'] {
+	    body[data-useragent*='Chrome'] {
+	    }
+	}
+}
+
+
+
+@media screen and (max-width: 480px) {
+	html {
+		&[data-useragent*='Windows'] {
+		    body[data-useragent*='Trident'] {
+		    }
+		}
+		&[data-useragent*='Macintosh'] {
+		    body[data-useragent*='Chrome'] {
+		    }
+		}
+	}
+}

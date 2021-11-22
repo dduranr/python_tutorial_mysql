@@ -2,6 +2,9 @@ from flask import url_for
 from pprint import pprint
 import re
 
+# Este plugin permite integrar Datatables a Python-Flask, y pertenece a:
+#   https://github.com/SergioLlana/datatables-flask-serverside
+
 class ServerSideTable(object):
     '''
     Retrieves the values specified by Datatables in the request and processes
@@ -98,7 +101,7 @@ class ServerSideTable(object):
                         # Si el ID del registro actual se encuentra en el diccionario "registros", entonces recuperamos el nombre del registro
                         if valor in registros:
                             nombreDelRegistro = registros[valor]
-                        row['ELIMINAR'] = '<a id="registro_'+str(valor)+'" class="btn btn-danger" onclick="eliminarRegistro(this.id)" data-bs-toggle="modal" data-bs-target="#modalEliminarRecord" data-endpoint="'+url_for(self.endpoint+'.delete', id=valor)+'" data-tablaid="'+self.table+'" data-modal-body="'+nombreDelRegistro+', con ID: '+str(valor)+'" data-modal-id-registro="'+str(valor)+'" href="#">Eliminar</a>'
+                        row['ELIMINAR'] = '<a id="registro_'+str(valor)+'" class="btn btn-danger" onclick="eliminarRegistro(this.id)" data-bs-toggle="modal" data-bs-target="#modalEliminarRecord" data-endpoint="'+url_for(self.endpoint+'.delete', id=valor)+'" data-tablaid="'+self.table+'" data-modal-body="'+nombreDelRegistro+', con ID: '+str(valor)+'" data-modal-id-registro="'+str(valor)+'" href="#"><i class="bi bi-trash"></a>'
 
             rows.append(row)
         return rows
