@@ -6,37 +6,36 @@
 
 {% block content %}
     <div class="col-md-12">
-        <form action="/blog/store" method="POST">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    {{ formulario.title.label() }}
-                    {{ formulario.title(class="form-control") }}
-                    {% if formulario.title.errors %}
-                        <ul class="text-danger">
-                        {% for error in formulario.title.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-4">
-                    {{ formulario.contenido.label() }}
-                    {{ formulario.contenido(class="form-control", type="textarea") }}
-                    {% if formulario.contenido.errors %}
-                        <ul class="text-danger">
-                        {% for error in formulario.contenido.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-4">
-                    {{ formulario.submit(class="btn btn-primary") }}
-                    <!--
-                        Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
-                    -->
-                    {{ formulario.hidden_tag() }}
-                </div>
+        <form class="row" action="{{ url_for('backend.blog.store') }}" method="POST">
+            <div class="col-md-6 mb-3">
+                {{ formulario.title.label() }}
+                {{ formulario.title(class="form-control") }}
+                {% if formulario.title.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.title.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.contenido.label() }}
+                {{ formulario.contenido(class="form-control") }}
+                {% if formulario.contenido.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.contenido.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-12 mb-3">
+                {{ formulario.submit(class="btn btn-primary float-end") }}
+                <!--
+                    Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
+                -->
+                {{ formulario.hidden_tag() }}
+                <a href="{{ url_for('backend.blog.index') }}" type="button" class="btn btn-danger float-start">Cancelar</a>
             </div>
         </form>
     </div>

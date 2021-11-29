@@ -20,6 +20,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from flaskr.paquetes.backend.controladores.auth import login_required
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.formularios.user import *
@@ -36,34 +37,35 @@ semilla = bcrypt.gensalt()
 
 
 
-# RUTAS
-# RUTAS
-# RUTAS
+# Esta ruta se encarga de mostrar la vista index (listado de registros)
 @bp.route('/index', methods=['GET'])
+@login_required
 def index():
-    # try:
-    return render_template('backend/user/index.html')
+    try:
+        return render_template('backend/user/index.html')
 
-    # except exc.SQLAlchemyError as e:
-    #     # En teoría si se devuelve el siguiente error, la cosa se soluciona con un sessionDB.rollback().
-    #     if 't reconnect until invalid transaction is rolled back' in str(e):
-    #         print('Existe error reconnect')
+    except exc.SQLAlchemyError as e:
+        # En teoría si se devuelve el siguiente error, la cosa se soluciona con un sessionDB.rollback().
+        if 't reconnect until invalid transaction is rolled back' in str(e):
+            print('Existe error reconnect')
 
-    #     error = "Excepción SQLAlchemyError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
-    # except TypeError as e:
-    #     error = "Excepción TypeError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
-    # except ValueError as e:
-    #     error = "Excepción ValueError: " + str(e)
-    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
-    # except Exception as e:
-    #     error = "[1] Excepción general: " + str(e.__class__)
-    #     return render_template('backend/errores/error.html', error=error)
+        error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+    except TypeError as e:
+        error = "Excepción TypeError: " + str(e)
+        return render_template('backend/errores/error.html', error="TypeError: "+error)
+    except ValueError as e:
+        error = "Excepción ValueError: " + str(e)
+        return render_template('backend/errores/error.html', error="ValueError: "+error)
+    except Exception as e:
+        error = "[1] Excepción general: " + str(e.__class__)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
+# Esta ruta se encarga de mostrar la vista para crear registro
 @bp.route('/create', methods=['GET'])
+@login_required
 def create():
     try:
         formulario = UserFormCreate()
@@ -81,7 +83,9 @@ def create():
 
 
 
+# Esta ruta se encarga de crear registro en BD
 @bp.route('/store', methods=['POST'])
+@login_required
 def store():
     try:
         if request.method == 'POST':
@@ -128,7 +132,9 @@ def store():
 
 
 
+# Esta ruta se encarga de mostrar vista para editar registro
 @bp.route('/edit/<id>', methods=['GET'])
+@login_required
 def edit(id):
     try:
         user = User.getById(id)
@@ -140,7 +146,7 @@ def edit(id):
                 return render_template('backend/user/edit.html', user=user, formulario=formulario)
             else :
                 flash('Imposible encontrar al usuario', 'danger')
-                return redirect(url_for('backend.user.index', user=user))
+                return redirect(url_for('backend.user.index'))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)
@@ -157,7 +163,9 @@ def edit(id):
 
 
 
+# Esta ruta se encarga de actualizar registro en BD
 @bp.route('/update/<id>', methods=['POST'])
+@login_required
 def update(id):
     try:
         error = ''
@@ -206,7 +214,9 @@ def update(id):
 
 
 
+# Esta ruta se encarga de eliminar registro en BD
 @bp.route('/delete/<id>', methods=['POST'])
+@login_required
 def delete(id):
     try:
         if (request.method == 'POST'):

@@ -2,9 +2,9 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		1. Hacer que funcione el botón EDITAR del datatables de BLOG
-		2. Ver si efectivamente funciona @login_required que puse en el controlador blog.py
-		3. Que la estructura del modelo user.py sea la misma que la del modelo blog.py
+		1. Poner borde al formulario login
+		2. Agregar FileField a los formularios del blog
+		3. Que el blog en el front, muestre bootstrap cards
 
 
 

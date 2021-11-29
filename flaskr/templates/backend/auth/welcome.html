@@ -7,25 +7,8 @@
 {% block content %}
 	<div class="col-md-12">
 		<div class="alert alert-primary">
-			<p>Datos del usuario logueado (variables de sesión):</p>
-			<table class="table table-small">
-				<tbody>
-					<tr>
-						<td>ID:</td>
-						<td>{{ session['user_id'] }}</td>
-					</tr>
-					<tr>
-						<td>NOMBRE:</td>
-						<td>{{ session['user_nombre'] }}</td>
-					</tr>
-					<tr>
-						<td>EMAIL:</td>
-						<td>{{ session['user_email'] }}</td>
-					</tr>
-				</tbody>
-			</table>
             {% if g.user %}
-				<p>Datos del usuario logueado (objeto G):</p>
+				<h5>Ingresaste como:</h5>
 				<table class="table table-small">
 					<tbody>
 						<tr>

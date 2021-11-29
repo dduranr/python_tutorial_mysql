@@ -1,53 +1,56 @@
 {% extends "backend/layout/base.html" %}
 
+{% block title %}
+    Editando: {{ user.nombre }}
+{% endblock %}
+
 {% block header %}
-    <h1>{% block title %}Editando al usuario <u class="text-muted">{{ user.nombre }}</u>{% endblock %}</h1>
+    <h1>Editando al usuario <u class="text-muted">{{ user.nombre }}</u></h1>
 {% endblock %}
 
 {% block content %}
     <div class="col-md-12">
-        <form action="{{ url_for('backend.user.update', id=user.id) }}" method="POST">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    {{ formulario.nombre.label() }}
-                    {{ formulario.nombre(class="form-control") }}
-                    {% if formulario.nombre.errors %}
-                        <ul class="text-danger">
-                        {% for error in formulario.nombre.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-6">
-                    {{ formulario.email.label() }}
-                    {{ formulario.email(class="form-control") }}
-                    {% if formulario.email.errors %}
-                        <ul class="text-danger">
-                        {% for error in formulario.email.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-6">
-                    {{ formulario.contrasena.label() }}
-                    {{ formulario.contrasena(class="form-control", type="password") }}
-                    {% if formulario.contrasena.errors %}
-                        <ul class="text-danger">
-                        {% for error in formulario.contrasena.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-                <div class="form-group col-md-6">
-                    {{ formulario.submit(class="btn btn-primary") }}
-                    <!--
-                        Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
-                    -->
-                    {{ formulario.hidden_tag() }}
-                </div>
+        <form class="row" action="{{ url_for('backend.user.update', id=user.id) }}" method="POST">
+            <div class="col-md-6 mb-3">
+                {{ formulario.nombre.label() }}
+                {{ formulario.nombre(class="form-control") }}
+                {% if formulario.nombre.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.nombre.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.email.label() }}
+                {{ formulario.email(class="form-control") }}
+                {% if formulario.email.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.contrasena.label() }}
+                {{ formulario.contrasena(class="form-control", type="password") }}
+                {% if formulario.contrasena.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.contrasena.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-12 mb-3">
+                {{ formulario.submit(class="btn btn-primary float-end") }}
+                <!--
+                    Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
+                -->
+                {{ formulario.hidden_tag() }}
+                <a href="{{ url_for('backend.user.index') }}" type="button" class="btn btn-danger float-start">Cancelar</a>
             </div>
         </form>
     </div>

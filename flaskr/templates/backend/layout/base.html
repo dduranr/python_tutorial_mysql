@@ -21,11 +21,6 @@
             <div class="container-fluid">
                 <ul class="nav nav-pills">
                     {% if g.user %}
-                        <li class="nav-item" style="margin-right: 50px;">
-                            <a class="nav-link" href="#">
-                                Hola, {{ g.user['email'] }}
-                            </a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Users</a>
                             <ul class="dropdown-menu">
@@ -48,9 +43,6 @@
                                 <li><a class="dropdown-item" href="#">...</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Contactos</a>
-                        </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link btn btn-success text-black" href="{{ url_for('backend.auth.login') }}">Log In</a>
@@ -63,7 +55,7 @@
                             <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="right: 0; left: auto;">
-                            <li><a class="dropdown-item" href="#">New project...</a></li>
+                            <li><a class="dropdown-item disabled" href="#">Hola, {{ g.user['nombre'] }}</a></li>
                             <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li>

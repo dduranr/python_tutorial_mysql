@@ -16,7 +16,7 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
 from flaskr.paquetes.backend.serverside import table_schemas
 from datetime import datetime
-from sqlalchemy import create_engine, exc, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, exc, Column, Integer, String, DateTime, asc
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
@@ -53,30 +53,56 @@ class User(Base):
         columns = table_schemas.USERS
         return ServerSideTable(request, DATA, columns, True, True, 'backend.user', 'B', 'table_users').output_result()
 
-    def getAll():
-        return sessionDB.query(User).all()
 
-    def queryCount():
-        return sessionDB.query(User).count()
+    # Este método recupera todos los usuarios
+    # Params:
+    #   orderby     String. Opcional. Ordena los resultados por el nombre de la columna pasada aquí. Si no se proporciona, se ordena por ID.
+    def getAll(orderby="id"):
+        engine.dispose()
+        res = sessionDB.query(User).order_by(asc(orderby)).all()
+        sessionDB.close()
+        sessionDB.remove()
+        return res
 
-    def queryOrderBy(order):
-        return sessionDB.query(User).order_by(*order)
 
+    # Este método recupera un registro según su ID
+    # Params:
+    #   id     Int. Identificador del registro
     def getById(id):
-        return sessionDB.query(User).filter(
-            User.id == id
-        ).first()
+        engine.dispose()
+        res = sessionDB.query(User).filter(User.id == id).one_or_none()
+        sessionDB.close()
+        sessionDB.remove()
+        return res
 
+
+    # Este método recupera un registro según su EMAIL
+    # Params:
+    #   email     String. Email del registro
     def getByEmail(email):
-        return sessionDB.query(User).filter(
-            User.email == email
-        ).first()
+        engine.dispose()
+        res = sessionDB.query(User).filter(User.email == email).one_or_none()
+        sessionDB.close()
+        sessionDB.remove()
+        return res
 
+
+    # Este método crea nuevo registro
+    # Params:
+    #   self     Obj. Es el propio registro, y ya debe traer los datos a guardar
     def post(self):
+        engine.dispose()
         if not self.id:
             sessionDB.add(self)
         sessionDB.commit()
+        sessionDB.close()
+        sessionDB.remove()
 
+
+    # Este método actualiza registro
+    # Params:
+    #   id     Int. Identificador del registro
+    #   datos  Obj. Datos a actualizar
     def put(id, datos):
         sessionDB.query(User).filter(User.id == id).update({
             User.nombre: datos['nombre'],
@@ -85,6 +111,10 @@ class User(Base):
         })
         sessionDB.commit()
 
+
+    # Este método elimina un registro
+    # Params:
+    #   id     Int. Identificador del registro
     def delete(id):
         sessionDB.query(User).filter(User.id == id).delete()
         sessionDB.commit()

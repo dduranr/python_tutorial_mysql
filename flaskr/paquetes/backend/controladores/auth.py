@@ -80,10 +80,10 @@ def store():
                         session['user_email'] = usuario.email
                         return redirect(url_for('backend.auth.welcome'))
                     else:
-                        flash('Usuario/contraseña incorrectos', 'danger')
+                        flash('Usuario/contraseña incorrecto', 'danger')
                         return redirect(url_for('backend.auth.login'))
                 else :
-                    flash('Usuario/contraseña incorrectos', 'danger')
+                    flash('Usuario/contraseña incorrecto', 'danger')
                     return redirect(url_for('backend.auth.login'))
             else:
                 flash('Imposible crear sesión. Algún dato es incorrecto', 'danger')
