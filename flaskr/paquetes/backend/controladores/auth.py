@@ -1,28 +1,10 @@
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-# Descripción de las clases importadas en este controlador
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-
-#   flask_sqlalchemy    ORM para SQL
-#   render_template     Permite utilizar archivos HTML
-#   request             Para obtener los datos de la petición de un form
-#   redirect            Para hacer redirecciones
-#   url_for             Para hacer redirecciones
-#   flash               Manda mensajes entre vistas
-#   session             Es un dict que almacena datos entre solicitudes. Cuando la validación tiene éxito, el ID de usuario se almacena en una nueva sesión. Los datos se almacenan en una cookie que se envía al navegador y, a continuación, el navegador los devuelve con las solicitudes posteriores. Flask firma los datos de forma segura para que no puedan ser manipulados.
-#   functools
-#   bcrypt              Para encriptar/desemcriptar contrasaeñas
-#   sys                 Para obtener el tipo de excepción
-#   g                   Es un objecto especial que es único para cada petición. Es usado para almacenar datos que pueden ser accedidos desde múltiples funciones durante la petición. La conexión es almacenada y reusada en vez de crear una nueva conexión.
-
-
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, Markup
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-from flaskr.paquetes.backend.formularios.auth import AuthFormLogin
+from flaskr.paquetes.backend.formularios.auth import *
 from flaskr.paquetes.backend.modelos.user import *
+from flaskr.paquetes.general.helpers import *
 from sqlalchemy import exc
 import functools
 import bcrypt
@@ -60,6 +42,7 @@ def login():
 def store():
     try:
         if request.method == 'POST':
+            errores = ''
             formulario = AuthFormLogin()
             if formulario.validate_on_submit():
                 email = request.form['email']
@@ -80,14 +63,14 @@ def store():
                         session['user_email'] = usuario.email
                         return redirect(url_for('backend.auth.welcome'))
                     else:
-                        flash('Usuario/contraseña incorrecto', 'danger')
-                        return redirect(url_for('backend.auth.login'))
+                        errores = 'Usuario/contraseña incorrecto'
                 else :
-                    flash('Usuario/contraseña incorrecto', 'danger')
-                    return redirect(url_for('backend.auth.login'))
+                    errores += 'Usuario/contraseña incorrecto'
             else:
-                flash('Imposible crear sesión. Algún dato es incorrecto', 'danger')
-                return redirect(url_for('backend.auth.login'))
+                errores += 'Imposible crear sesión: '
+
+            flash(Markup('Imposible loguearse: '+errores+' '+getErrorsFromWTF(formulario.errors)), 'danger')
+            return redirect(url_for('backend.auth.login'))
 
     except exc.SQLAlchemyError as e:
         error = "Excepción SQLAlchemyError: " + str(e)

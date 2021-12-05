@@ -1,21 +1,3 @@
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-# Descripción de las clases importadas en este controlador
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-
-#   flask_sqlalchemy    ORM para SQL
-#   render_template     Permite utilizar archivos HTML
-#   request             Para obtener los datos de la petición de un form
-#   redirect            Para hacer redirecciones
-#   url_for             Para hacer redirecciones
-#   flash               Manda mensajes entre vistas
-#   session             Para gestionar sesiones
-#   functools
-#   bcrypt              Para encriptar/desemcriptar contrasaeñas
-#   sys                 Para obtener el tipo de excepción
-
-
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 )

@@ -1,18 +1,3 @@
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-# Descripción de las clases importadas en este modelo
-# -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-
-#   app                 Es el aplicativo (app.py)
-#   config              Mi archivo que guarda las configuraciones generales del aplicativo
-#   datetime            Para manejar fechas y horas
-#   sqlalchemy          ORM para SQL
-#       create_engine
-#       exc             Para poder recuperar los errores devueltos
-#       or_             Sirve para implementar el operador OR dentro del filter
-
-
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
 from flaskr.paquetes.backend.serverside import table_schemas
 from datetime import datetime

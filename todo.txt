@@ -2,38 +2,45 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		2. Agregar FileField a los formularios del blog
-		3. Que el blog en el front, muestre bootstrap cards
+		1. Que el blog en el front, muestre bootstrap cards
+		    <div class="col-md-12">
+		        {% if blogposts is defined %}
+		            {% for post in blogposts %}
+		                <article>
+		                    <header>
+		                        <div>
+		                            <h1>{{ post.blog.title }}</h1>
+		                            <div>Creado por <a href="mailto:{{ post.user.email }}">{{ post.user.nombre }}</a> el {{ post.blog.created_at.strftime('%Y-%m-%d') }}</div>
+		                        </div>
+		                        {% if g.user['id'] == post.blog.author_id %}
+		                        <a href="{{ url_for('backend.blog.edit', id=post['id']) }}">Edit</a>
+		                        {% endif %}
+		                    </header>
+		                    <p>{{ post['contenido'] }}</p>
+		                </article>
+		                {% if not loop.last %}
+		                    <hr>
+		                {% endif %}
 
-pin proteccion claro video
-57GwK7
+		            {% endfor %}
 
-
-
-    <div class="col-md-12">
-        {% if blogposts is defined %}
-            {% for post in blogposts %}
-                <article>
-                    <header>
-                        <div>
-                            <h1>{{ post.blog.title }}</h1>
-                            <div>Creado por <a href="mailto:{{ post.user.email }}">{{ post.user.nombre }}</a> el {{ post.blog.created_at.strftime('%Y-%m-%d') }}</div>
-                        </div>
-                        {% if g.user['id'] == post.blog.author_id %}
-                        <a href="{{ url_for('backend.blog.edit', id=post['id']) }}">Edit</a>
-                        {% endif %}
-                    </header>
-                    <p>{{ post['contenido'] }}</p>
-                </article>
-                {% if not loop.last %}
-                    <hr>
-                {% endif %}
-
-            {% endfor %}
-
-        {% else %}
-            <p>La variable blogsposts no está definida.</p>
-        {% endif %}
-    </div>
+		        {% else %}
+		            <p>La variable blogsposts no está definida.</p>
+		        {% endif %}
+		    </div>
+		2. Implementar en todos los métodos de todos los controladores la forma de mostrar el return, sólo uno al final, con la variable "errores", igual que como la tengo en auth::store()
+		3. Envío de correo
+		4. Implementar tarea en 2do plano
+			Que mi tarea cargue un Excel con datos que posteriormente se van a graficar
+			https://programmerclick.com/article/8184939433/
+		5. Notificaciones push
+			Que se muestre una notificación cuando termine una tarea en 2do plano, o incluso cuando llegue al 80% para ir avisando al user
+			https://developers.google.com/web/fundamentals/codelabs/push-notifications?hl=es
+		6. Gráficas
+			Graficar los datos cargados en el Excel que se subió como tarea de 2do plano
+			Ver si hay graficadores agradables, si no, usar Google Graph
+		7. Websocket
+			https://flask-socketio.readthedocs.io/en/latest/
+			https://www.youtube.com/watch?v=71DZYl4Q4o8
 
 

@@ -1,9 +1,9 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from flask_wtf import FlaskForm, Recaptcha, RecaptchaField
+from wtforms import StringField, SubmitField, TextField
 from wtforms.validators import DataRequired, Email, Length
 
+
 class AuthFormLogin(FlaskForm):
-	# Cada variable representa un campo de formulario
 	email = StringField("Email", validators=[
 		DataRequired(),
 		Email()
@@ -13,3 +13,6 @@ class AuthFormLogin(FlaskForm):
 		Length(min=3)
 	])
 	submit = SubmitField("Entrar")
+	recaptcha = RecaptchaField(validators=[
+		Recaptcha(message="El captcha no fue contestado satisfactoriamente.")
+	])
