@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
+from flask_wtf.file import FileField, FileRequired
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 class BlogFormCreate(FlaskForm):
 	# Cada variable representa un campo de formulario
@@ -8,7 +10,11 @@ class BlogFormCreate(FlaskForm):
 		DataRequired(),
 		Length(min=3)
 	])
-	contenido = TextAreaField("Contenido", validators=[
+	img = FileField('Imagen', validators=[
+		FileRequired(),
+		FileAllowed(['jpg', 'png'], '¡Sólo se aceptan imágenes!')
+	])
+	contenido = TextAreaField("Contenido", default="Lorem ipsum dolor sit amet.", validators=[
 		DataRequired(),
 		Length(min=3)
 	])
@@ -17,6 +23,9 @@ class BlogFormCreate(FlaskForm):
 class BlogFormEdit(FlaskForm):
 	author_id = IntegerField("Autor", validators=[
 		DataRequired()
+	])
+	img = FileField("Imagen", validators=[
+		FileRequired()
 	])
 	title = StringField("Título", validators=[
 		DataRequired(),

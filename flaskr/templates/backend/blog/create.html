@@ -6,10 +6,10 @@
 
 {% block content %}
     <div class="col-md-12">
-        <form class="row" action="{{ url_for('backend.blog.store') }}" method="POST">
+        <form class="row" action="{{ url_for('backend.blog.store') }}" method="POST" enctype="multipart/form-data">
             <div class="col-md-6 mb-3">
                 {{ formulario.title.label() }}
-                {{ formulario.title(class="form-control") }}
+                {{ formulario.title(class="form-control", value="Blogspot #a1") }}
                 {% if formulario.title.errors %}
                     <ul class="text-danger">
                     {% for error in formulario.title.errors %}
@@ -19,6 +19,17 @@
                 {% endif %}
             </div>
             <div class="col-md-6 mb-3">
+                {{ formulario.img.label() }}
+                {{ formulario.img(class="form-control") }}
+                {% if formulario.img.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.img.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-12 mb-3">
                 {{ formulario.contenido.label() }}
                 {{ formulario.contenido(class="form-control") }}
                 {% if formulario.contenido.errors %}

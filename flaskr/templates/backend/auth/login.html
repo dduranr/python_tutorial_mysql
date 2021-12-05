@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="col-md-4 m-auto">
+    <div class="col-md-4 border rounded p-4 m-auto">
         <form class="row" action="{{ url_for('backend.auth.store') }}" method="POST">
             <div class="col-md-12 mb-3">
                 {{ formulario.email.label() }}

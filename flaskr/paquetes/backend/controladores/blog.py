@@ -17,15 +17,23 @@
 
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Markup
 )
 from werkzeug.exceptions import abort
+from werkzeug.utils import secure_filename
 from flaskr.paquetes.backend.controladores.auth import login_required
 from flaskr.paquetes.backend.formularios.blog import *
 from flaskr.paquetes.backend.modelos.blog import *
+from flaskr.paquetes.general.helpers import *
 from sqlalchemy import exc
+from datetime import datetime
+
+
+# from flask import request
+from werkzeug.datastructures import CombinedMultiDict
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
+INSTANCE_PATH = os.getenv('INSTANCE_PATH')
 
 
 
@@ -55,19 +63,26 @@ def index():
 @bp.route('/create', methods=['GET'])
 @login_required
 def create():
-    try:
-        formulario = BlogFormCreate()
-        return render_template('backend/blog/create.html', formulario=formulario)
+    # try:
+    # tipo = type(INSTANCE_PATH).__name__
+    # print('---------')
+    # print(tipo)
+    # print(INSTANCE_PATH)
+    # print('---------')
+    print('INSTANCE_PATH::: ', INSTANCE_PATH)
 
-    except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
-    except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
-    except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
-        return render_template('backend/errores/error.html', error=error)
+    formulario = BlogFormCreate()
+    return render_template('backend/blog/create.html', formulario=formulario)
+
+    # except TypeError as e:
+    #     error = "Excepción TypeError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="TypeError: "+error)
+    # except ValueError as e:
+    #     error = "Excepción ValueError: " + str(e)
+    #     return render_template('backend/errores/error.html', error="ValueError: "+error)
+    # except Exception as e:
+    #     error = "Excepción general: " + str(e.__class__)
+    #     return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -82,8 +97,18 @@ def store():
             formulario = BlogFormCreate()
 
             if formulario.validate_on_submit():
+                now = datetime.now()
+                ahora = now.strftime("%Y%m%d%H%M%S")
+
                 title = request.form['title']
                 contenido = request.form['contenido']
+
+                img = formulario.img.data
+                filename = secure_filename(img.filename)
+                img.save(os.path.join(
+                    INSTANCE_PATH, 'img', ahora+'_'+filename
+                ))
+
                 error = None
 
                 if not title:
@@ -95,17 +120,21 @@ def store():
                     flash(error, 'danger')
                     return redirect(url_for('backend.blog.create'))
                 else:
-                    blogpost = Blog(author_id=user_id, title=title, contenido=contenido)
+                    blogpost = Blog(author_id=user_id, title=title, contenido=contenido, img=filename)
                     blogpost.post()
                     flash('Post agregado', 'success')
                     return redirect(url_for('backend.blog.create'))
             else:
-                flash('Imposible crear post. Algún dato es incorrecto', 'danger')
+                flash(Markup('Imposible crear post: '+getErrorsFromWTF(formulario.errors)), 'danger')
                 return redirect(url_for('backend.blog.create'))
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = ''
+        if "1406" in str(e):
+            error = 'Al parecer el nombre del archivo es demasiado largo. Por favor intenta con un nombre más corto.'
+        else:
+            error = "Excepción SQLAlchemyError: " + str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = "Excepción TypeError: " + str(e)
         return render_template('backend/errores/error.html', error="TypeError: "+error)

@@ -32,6 +32,7 @@ class Blog(Base):
     author_id = Column(Integer(), nullable=False)
     title = Column(String(255), nullable=False, unique=True)
     contenido = Column(String(255), nullable=False)
+    img = Column(String(10), nullable=True)
     created_at = Column(DateTime(255), default=datetime.now())
     updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
 
@@ -102,6 +103,7 @@ class Blog(Base):
             Blog.author_id: datos['author_id'],
             Blog.title: datos['title'],
             Blog.contenido: datos['contenido'],
+            Blog.img: datos['img'],
         })
         sessionDB.commit()
         sessionDB.close()
