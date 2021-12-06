@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify, Markup
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.paquetes.backend.controladores.auth import login_required
@@ -7,6 +7,7 @@ from flaskr.paquetes.backend.formularios.user import UserFormCreate
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.formularios.user import *
 from flaskr.paquetes.general.constantes import Constantes
+from flaskr.paquetes.general.helpers import *
 from sqlalchemy import exc
 from datetime import datetime
 import functools
@@ -31,16 +32,16 @@ def index():
         if 't reconnect until invalid transaction is rolled back' in str(e):
             print('Existe error reconnect')
 
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "[1] Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -54,13 +55,13 @@ def create():
         return render_template('backend/user/create.html', formulario=formulario)
 
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "[2] Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -71,7 +72,7 @@ def create():
 def store():
     try:
         if request.method == 'POST':
-            error = ''
+            errores = ''
             formulario = UserFormCreate()
             if formulario.validate_on_submit():
                 now = datetime.now()
@@ -86,30 +87,29 @@ def store():
                 userExistente = User.getByEmail(email)
 
                 if userExistente:
-                    error = error + 'Imposible crear usuario, pues '+email+' ya existe como usuario en base de datos'
+                    errores += 'Imposible crear usuario, pues '+email+' ya existe como usuario en base de datos'
                 else :
                     usuario = User(nombre=nombre, email=email, contrasena=contrasena_crypt)
                     usuario.post()
-                    flash('Usuario agregado', 'success')
+                    flash('Usuario agregado ('+email+')', 'success')
                     return redirect(url_for('backend.user.index'))
             else:
-                error = error+'Imposible crear usuario. Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
+                errores += 'Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
 
-            if len(error)>0:
-                flash(error, 'danger')
+            flash(Markup('Imposible crear usuario: '+errores+' '+getErrorsFromWTF(formulario.errors)), 'danger')
             return redirect(url_for('backend.user.create'))
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "[3] Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -131,16 +131,16 @@ def edit(id):
                 return redirect(url_for('backend.user.index'))
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "[4] Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -150,7 +150,7 @@ def edit(id):
 @login_required
 def update(id):
     try:
-        error = ''
+        errores = ''
         user = User.getById(id)
         if (request.method == 'POST'):
             formulario = UserFormUpdate()
@@ -162,7 +162,7 @@ def update(id):
                 userExistente = User.getById(id)
 
                 if not userExistente:
-                    error = error + 'Imposible actualizar user, pues el ID '+id+' no existe más en base de datos'
+                    errores += 'Imposible actualizar user, pues el ID '+id+' no existe más en base de datos'
                 else :
                     if(len(contrasena) > 0):
                         contrasena_encode = contrasena.encode('utf-8')
@@ -172,26 +172,25 @@ def update(id):
                     else:
                         dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena}
                         User.put(id, dataToSave)
-                    flash('Usuario actualizado', 'success')
+                        flash('Usuario actualizado ('+str(id)+': '+userExistente.nombre+')', 'success')
                     return redirect(url_for('backend.user.index'))
             else:
-                error = error+'Imposible actualizar usuario. Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
+                errores += 'Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
 
-            if len(error)>0:
-                flash(error, 'danger')
-                return redirect(url_for('backend.user.edit',id=id))
+            flash(Markup('Imposible actualizar usuario: '+errores+' '+getErrorsFromWTF(formulario.errors)), 'danger')
+            return redirect(url_for('backend.user.edit',id=id))
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "[5] Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -236,14 +235,14 @@ def delete(id):
         if "1451" in str(e):
             error = 'Al parecer este usuario está asignado a otro elemento (¿como autor de un blogpost?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro usuario.'
         else:
-            error = "Excepción SQLAlchemyError: " + str(e)
+            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "[6] Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)

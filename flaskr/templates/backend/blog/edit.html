@@ -10,8 +10,8 @@
 
 {% block content %}
     <div class="col-md-12">
-        <form class="row" action="{{ url_for('backend.blog.update', id=blogpost[1].id) }}" method="POST">
-            <div class="col-md-6 mb-3">
+        <form class="row" action="{{ url_for('backend.blog.update', id=blogpost[1].id) }}" method="POST" enctype="multipart/form-data">
+            <div class="col-md-4 mb-3">
                 {{ formulario.author_id.label() }}
             	<select class="form-control" name="author_id">
             		<option value="">:: Elige autor ::</option>
@@ -31,12 +31,23 @@
                     </ul>
                 {% endif %}
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 {{ formulario.title.label() }}
                 {{ formulario.title(class="form-control") }}
                 {% if formulario.title.errors %}
                     <ul class="text-danger">
                     {% for error in formulario.title.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ formulario.img.label() }}
+                {{ formulario.img(class="form-control") }}
+                {% if formulario.img.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.img.errors %}
                         <li>{{ error }}</li>
                     {% endfor %}
                     </ul>

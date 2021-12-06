@@ -11,8 +11,7 @@ class BlogFormCreate(FlaskForm):
 		Length(min=3)
 	])
 	img = FileField('Imagen', validators=[
-		FileRequired(),
-		FileAllowed(['jpg', 'png'], '¡Sólo se aceptan imágenes!')
+		FileAllowed(['jpg', 'png'], 'El archivo a subir no corresponde con un tipo permitido de imagen.')
 	])
 	contenido = TextAreaField("Contenido", default="Lorem ipsum dolor sit amet.", validators=[
 		DataRequired(),
@@ -24,12 +23,12 @@ class BlogFormEdit(FlaskForm):
 	author_id = IntegerField("Autor", validators=[
 		DataRequired()
 	])
-	img = FileField("Imagen", validators=[
-		FileRequired()
-	])
 	title = StringField("Título", validators=[
 		DataRequired(),
 		Length(min=3)
+	])
+	img = FileField('Imagen', validators=[
+		FileAllowed(['jpg', 'png'], 'El archivo a subir no corresponde con un tipo permitido de imagen.')
 	])
 	contenido = TextAreaField("Contenido", validators=[
 		DataRequired(),

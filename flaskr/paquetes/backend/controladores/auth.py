@@ -14,9 +14,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 
-# RUTAS
-# RUTAS
-# RUTAS
+# Esta ruta se encarga de mostrar formulario para hacer login
 @bp.route('/login', methods=['GET'])
 def login():
     try:
@@ -27,17 +25,18 @@ def login():
             return render_template('backend/auth/login.html', formulario=formulario)
 
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
 
+# Esta ruta se encarga de iniciar sesión
 @bp.route('/store', methods=['POST'])
 def store():
     try:
@@ -63,7 +62,7 @@ def store():
                         session['user_email'] = usuario.email
                         return redirect(url_for('backend.auth.welcome'))
                     else:
-                        errores = 'Usuario/contraseña incorrecto'
+                        errores += 'Usuario/contraseña incorrecto'
                 else :
                     errores += 'Usuario/contraseña incorrecto'
             else:
@@ -73,20 +72,25 @@ def store():
             return redirect(url_for('backend.auth.login'))
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = ''
+        if "2002" in str(e):
+            error = 'Al parecer la base de datos está caída.'
+        else:
+            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
 
+# Esta ruta se encarga de mostrar vista de bienvenida en caso de logueo satisfactorio
 @bp.route('/welcome', methods=['GET'])
 def welcome():
     try:
@@ -94,13 +98,13 @@ def welcome():
             return render_template('backend/auth/welcome.html')
 
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -118,22 +122,21 @@ def load_logged_in_user():
             g.user = User.getById(user_id)
 
     except exc.SQLAlchemyError as e:
-        error = "Excepción SQLAlchemyError: " + str(e)
-        return render_template('backend/errores/error.html', error="SQLAlchemyError: "+error)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
 
-
-# Para cerrar la sesión, debe eliminar la identificación de usuario del archivo session. Entonces load_logged_in_user() no cargará un usuario en solicitudes posteriores.
+# Esta ruta se encarga de cerrar la sesión
 @bp.route('/logout', methods=['GET'])
 def logout():
     try:
@@ -142,23 +145,18 @@ def logout():
             return redirect(url_for('index'))
 
     except TypeError as e:
-        error = "Excepción TypeError: " + str(e)
-        return render_template('backend/errores/error.html', error="TypeError: "+error)
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
-        error = "Excepción ValueError: " + str(e)
-        return render_template('backend/errores/error.html', error="ValueError: "+error)
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        error = "Excepción general: " + str(e.__class__)
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
 
 
 
-
-
-
-# Requerir autenticación en otras vistas
-# Crear, editar y eliminar publicaciones de blog requerirá que un usuario inicie sesión. Se puede usar un decorador para verificar esto para cada vista a la que se aplica.
-# Este decorador devuelve una nueva función de vista que envuelve la vista original a la que se aplica. La nueva función comprueba si un usuario está cargado y, de lo contrario, redirige a la página de inicio de sesión. Si se carga un usuario, se llama a la vista original y continúa normalmente. Utilizará este decorador al escribir las vistas del blog.
+# Esta ruta se encarga de requerir autenticación para cualquier ruta en donde se indique
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):

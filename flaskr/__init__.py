@@ -2,6 +2,7 @@
 
 import os
 from os import environ
+# from os import environ, path
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,6 +18,11 @@ def create_app(test_config=None):
         RECAPTCHA_PUBLIC_KEY = environ.get('RECAPTCHA_PUBLIC_KEY'),
         RECAPTCHA_PRIVATE_KEY = environ.get('RECAPTCHA_PRIVATE_KEY'),
     )
+
+    # log_file_path = path.join(path.dirname(path.abspath(__file__)), 'log.config')
+    # print('RUTA AL log.config: '+log_file_path)
+
+
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
