@@ -13,45 +13,32 @@ import os
 # import os.path
 from os import environ, path
 import logging, logging.config
+from flaskr.paquetes.general.helpers import *
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
 INSTANCE_PATH = os.getenv('INSTANCE_PATH')
 
 # -------------------------------------start - LOG
-log_file_path1 = 'C:\\laragon\\www\\python\\web\\flask-tutorial-mysql\\flaskr\\log.ini'
 
-# FORMA 1. Funciona a medias, porque guarda INFOs auqnue le digas que sólo guarde a partir de ERROR
-# now = datetime.now()
-# hoy = now.strftime("%Y%m%d")
-# logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', datefmt='%Y-%m-%d %H:%M:%S', filename=hoy+'_log.log', filemode='a', level=logging.ERROR)
+# Ver la forma de meter estas líneas dentro de una clase o algo, y que simplemente se llame todo con una línea
 
-# FORMA 2
-# Cómo configurar log.config: https://docs.python.org/3.3/howto/logging.html#configuring-logging
-# No lanza error, pero igual no guarda nada en el log
-# log_file_path2 = 'C:\\laragon\\www\\python\\web\\flask-tutorial-mysql\\flaskr\\logs.log'
-# logging.config.fileConfig(log_file_path1, disable_existing_loggers=False)
-# # logging.config.fileConfig(log_file_path1, defaults={'logfilename': log_file_path2})
+# FOLDER_ROOT = environ.get('FOLDER_ROOT')
+# FOLDER_LOGS = environ.get('FOLDER_LOGS')
 
-# FORMA 3. Finalmente parece que sí sirve
-# https://michaelheap.com/using-ini-config-with-python-logger/
-# SIGO CON
-# SIGO CON
-# SIGO CON. Ver si efectivamente guarda sólo de ERROR para arriba
-logging.config.fileConfig(log_file_path1)
-logger = logging.getLogger('sLogger')
+# logging.config.fileConfig(FOLDER_ROOT+'\\log.ini')
+# logger = logging.getLogger('MainLogger')
 
-logger.debug('debug message')
-logger.info('info message')
-logger.warn('warn message')
-logger.error('error message')
-logger.critical('critical message')
+# fh = logging.FileHandler(FOLDER_LOGS+'\\{:%Y%m%d}.log'.format(datetime.now()))
+# formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(filename)s (%(lineno)04d): %(message)s')
+# fh.setFormatter(formatter)
+# logger.addHandler(fh)
 
-# logging.debug('[0] Esto es un DEBUG')
-# logging.info('[0] Esto es un INFO')
-# logging.warning('[0] Esto es un WARNING')
-# logging.error('[0] Esto es un ERROR')
-# logging.critical('[0] Esto es un CRITICAL')
 
+# SIGO AQUÍ
+# SIGO AQUÍ
+# SIGO AQUÍ
+#           Ok, al parecer todo funciona correctamente metiendo todas las líneas que se encargan de armar el log, dentro de una función, la cual simplemente se llama como se ve aquí abajo, y así queda too más limpio:
+logger = getSystemLog()
 
 # -------------------------------------end - LOG
 
@@ -60,21 +47,28 @@ logger.critical('critical message')
 @bp.route('/index', methods=['GET'])
 @login_required
 def index():
-    try:
-        return render_template('backend/blog/index.html')
+    # try:
 
-    except exc.SQLAlchemyError as e:
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
-    except TypeError as e:
-        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
-    except ValueError as e:
-        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
-    except Exception as e:
-        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
+    logger.debug('Desde blog::index: debug')
+    logger.info('Desde blog::index: info')
+    logger.warn('Desde blog::index: warn')
+    logger.error('Desde blog::index: error')
+    logger.critical('Desde blog::index: critical')
+
+    return render_template('backend/blog/index.html')
+
+    # except exc.SQLAlchemyError as e:
+    #     error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
+    # except TypeError as e:
+    #     error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
+    # except ValueError as e:
+    #     error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
+    # except Exception as e:
+    #     error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -82,19 +76,26 @@ def index():
 @bp.route('/create', methods=['GET'])
 @login_required
 def create():
-    try:
-        formulario = BlogFormCreate()
-        return render_template('backend/blog/create.html', formulario=formulario)
+    # try:
 
-    except TypeError as e:
-        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
-    except ValueError as e:
-        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
-    except Exception as e:
-        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-        return render_template('backend/errores/error.html', error=error)
+    logger.debug('Desde blog::create: debug')
+    logger.info('Desde blog::create: info')
+    logger.warn('Desde blog::create: warn')
+    logger.error('Desde blog::create: error')
+    logger.critical('Desde blog::create: critical')
+
+    formulario = BlogFormCreate()
+    return render_template('backend/blog/create.html', formulario=formulario)
+
+    # except TypeError as e:
+    #     error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
+    # except ValueError as e:
+    #     error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
+    # except Exception as e:
+    #     error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+    #     return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -159,20 +160,11 @@ def store():
 def edit(id):
     # try:
 
-
-    logging.debug('[1] Esto es un DEBUG')
-    logging.info('[1] Esto es un INFO')
-    logging.warning('[1] Esto es un WARNING')
-    logging.error('[1] Esto es un ERROR')
-    logging.critical('[1] Esto es un CRITICAL')
-
-    current_app.logger.debug('[2] Esto es un DEBUG')
-    current_app.logger.info('[2] Esto es un INFO')
-    current_app.logger.warning('[2] Esto es un WARNING')
-    current_app.logger.error('[2] Esto es un ERROR')
-    current_app.logger.critical('[2] Esto es un CRITICAL')
-
-
+    logger.debug('Desde blog::edit: debug')
+    logger.info('Desde blog::edit: info')
+    logger.warn('Desde blog::edit: warn')
+    logger.error('Desde blog::edit: error')
+    logger.critical('Desde blog::edit: critical')
 
     blogpost = Blog.getById(id)
     users = User.getAll("nombre")
