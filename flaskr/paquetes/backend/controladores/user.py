@@ -32,7 +32,7 @@ def index():
         if 't reconnect until invalid transaction is rolled back' in str(e):
             print('Existe error reconnect')
 
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción [1] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
@@ -100,7 +100,7 @@ def store():
             return redirect(url_for('backend.user.create'))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción [2] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
@@ -131,7 +131,7 @@ def edit(id):
                 return redirect(url_for('backend.user.index'))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción [3] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
@@ -181,7 +181,7 @@ def update(id):
             return redirect(url_for('backend.user.edit',id=id))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción [4] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
@@ -235,7 +235,7 @@ def delete(id):
         if "1451" in str(e):
             error = 'Al parecer este usuario está asignado a otro elemento (¿como autor de un blogpost?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro usuario.'
         else:
-            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción [5] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)

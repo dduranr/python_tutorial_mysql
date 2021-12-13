@@ -2,11 +2,8 @@
 
 import os
 from os import environ
-# from os import environ, path
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import logging, logging.config
-from datetime import datetime
 from flaskr.paquetes.general.constantes import Constantes
 
 # create_app() es la función de "application factory"
@@ -21,32 +18,6 @@ def create_app(test_config=None):
         RECAPTCHA_PUBLIC_KEY = environ.get('RECAPTCHA_PUBLIC_KEY'),
         RECAPTCHA_PRIVATE_KEY = environ.get('RECAPTCHA_PRIVATE_KEY'),
     )
-
-
-    FOLDER_ROOT = environ.get('FOLDER_ROOT')
-    FOLDER_LOGS = environ.get('FOLDER_LOGS')
-
-    logging.config.fileConfig(FOLDER_ROOT+'\\log.ini')
-    logger = logging.getLogger('MainLogger')
-
-    fh = logging.FileHandler(FOLDER_LOGS+'\\{:%Y%m%d}.log'.format(datetime.now()))
-    formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(filename)s (%(lineno)04d): %(message)s')
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-
-    logger.debug('ERste es el debug message')
-    logger.info('ERste es el info message')
-    logger.warn('ERste es el warn message')
-    logger.error('ERste es el error message')
-    logger.critical('ERste es el critical message')
-
-
-
-
-
-
-
-
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

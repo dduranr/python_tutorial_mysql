@@ -2,6 +2,10 @@ SIGO CON
 SIGO CON
 SIGO CON
 
+		Cuando sale el error "Can't connect to MySQL" la excepción es de auth.py.
+		Usar el flamante sistema de logueo en todos los controladores.
+
+
 		0. En el controlador blog.py finalmente logré hacer que se guarden los logs
 			Antes que nada, borrar carpetas caché
 			1. Primero ver si efectivamente se guardan los ERRORS para arriba y no INFOS

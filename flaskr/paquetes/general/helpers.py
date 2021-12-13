@@ -1,9 +1,10 @@
-# import os
 from os import environ
 from datetime import datetime
 import logging, logging.config
 
-# Cuando un formulario WTForms no valida bien, a veces me veo en la necesidad de hacer un redirect (en lugar de hacer un render_template), con lo cual los errores WTF no se plasman debajo de cada campo del formulario, es decir, se pierden. En cualquier caso siempre devuelvo un flash(). La idea es que en este flash se muestren siempre los errores que devuelve WTF (si los hay). Esta función se encarga de recuperar esos errores y devolverlos en una cadena. Params:
+
+
+# Esta función se encarga de armar una cadena HTML con los errores devueltos cuando no valida un formulario WTForms. Params:
 #   errores. Diccionario. Corresponde con el diccionario formularioWTForms.errors
 def getErrorsFromWTF(errores):
     r = '<ul>'
@@ -15,7 +16,10 @@ def getErrorsFromWTF(errores):
     r += '</ul>'
     return r
 
-def getSystemLog():
+
+
+# Esta función se encarga de armar toda la configuración relacionada con guardar los logs en archivos de texto. Devuelve el logger, que es el que permite hacer los logs.
+def fileLogSystem():
     FOLDER_ROOT = environ.get('FOLDER_ROOT')
     FOLDER_LOGS = environ.get('FOLDER_LOGS')
 

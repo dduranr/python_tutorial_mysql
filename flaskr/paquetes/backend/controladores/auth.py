@@ -11,6 +11,7 @@ import bcrypt
 import sys
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+logger = fileLogSystem()
 
 
 
@@ -76,7 +77,7 @@ def store():
         if "2002" in str(e):
             error = 'Al parecer la base de datos está caída.'
         else:
-            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción [10] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
@@ -122,16 +123,20 @@ def load_logged_in_user():
             g.user = User.getById(user_id)
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción [11] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 

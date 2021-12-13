@@ -10,65 +10,39 @@ from flaskr.paquetes.general.helpers import *
 from sqlalchemy import exc
 from datetime import datetime
 import os
-# import os.path
 from os import environ, path
-import logging, logging.config
 from flaskr.paquetes.general.helpers import *
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
 INSTANCE_PATH = os.getenv('INSTANCE_PATH')
-
-# -------------------------------------start - LOG
-
-# Ver la forma de meter estas líneas dentro de una clase o algo, y que simplemente se llame todo con una línea
-
-# FOLDER_ROOT = environ.get('FOLDER_ROOT')
-# FOLDER_LOGS = environ.get('FOLDER_LOGS')
-
-# logging.config.fileConfig(FOLDER_ROOT+'\\log.ini')
-# logger = logging.getLogger('MainLogger')
-
-# fh = logging.FileHandler(FOLDER_LOGS+'\\{:%Y%m%d}.log'.format(datetime.now()))
-# formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(filename)s (%(lineno)04d): %(message)s')
-# fh.setFormatter(formatter)
-# logger.addHandler(fh)
-
-
-# SIGO AQUÍ
-# SIGO AQUÍ
-# SIGO AQUÍ
-#           Ok, al parecer todo funciona correctamente metiendo todas las líneas que se encargan de armar el log, dentro de una función, la cual simplemente se llama como se ve aquí abajo, y así queda too más limpio:
-logger = getSystemLog()
-
-# -------------------------------------end - LOG
-
+logger = fileLogSystem()
 
 # Esta ruta se encarga de mostrar la vista index (listado de registros)
 @bp.route('/index', methods=['GET'])
 @login_required
 def index():
-    # try:
-
-    logger.debug('Desde blog::index: debug')
-    logger.info('Desde blog::index: info')
-    logger.warn('Desde blog::index: warn')
-    logger.error('Desde blog::index: error')
-    logger.critical('Desde blog::index: critical')
-
-    return render_template('backend/blog/index.html')
+    try:
+        return render_template('backend/blog/index.html')
 
     # except exc.SQLAlchemyError as e:
-    #     error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+    #     error = 'Excepción [6] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+    #     logger.error(error)
+    #     logging.exception(error, exc_info=True)
     #     return render_template('backend/errores/error.html', error=error)
     # except TypeError as e:
     #     error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+    #     logger.exception(error)
     #     return render_template('backend/errores/error.html', error=error)
     # except ValueError as e:
     #     error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+    #     logger.exception(error)
     #     return render_template('backend/errores/error.html', error=error)
-    # except Exception as e:
-    #     error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
+    except Exception as e:
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        # logger.error(error)
+        # logger.exception(error)
+        logging.exception('Esto es una excepción', exc_info=True)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -76,26 +50,22 @@ def index():
 @bp.route('/create', methods=['GET'])
 @login_required
 def create():
-    # try:
+    try:
+        formulario = BlogFormCreate()
+        return render_template('backend/blog/create.html', formulario=formulario)
 
-    logger.debug('Desde blog::create: debug')
-    logger.info('Desde blog::create: info')
-    logger.warn('Desde blog::create: warn')
-    logger.error('Desde blog::create: error')
-    logger.critical('Desde blog::create: critical')
-
-    formulario = BlogFormCreate()
-    return render_template('backend/blog/create.html', formulario=formulario)
-
-    # except TypeError as e:
-    #     error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
-    # except ValueError as e:
-    #     error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
-    # except Exception as e:
-    #     error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
+    except TypeError as e:
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except ValueError as e:
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except Exception as e:
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -140,16 +110,20 @@ def store():
         if "1406" in str(e):
             error = 'Al parecer el nombre del archivo es demasiado largo. Por favor intenta con un nombre más corto.'
         else:
-            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción [7] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -158,36 +132,32 @@ def store():
 @bp.route('/edit/<id>', methods=['GET'])
 @login_required
 def edit(id):
-    # try:
+    try:
+        blogpost = Blog.getById(id)
+        users = User.getAll("nombre")
 
-    logger.debug('Desde blog::edit: debug')
-    logger.info('Desde blog::edit: info')
-    logger.warn('Desde blog::edit: warn')
-    logger.error('Desde blog::edit: error')
-    logger.critical('Desde blog::edit: critical')
+        if (request.method == 'GET'):
+            # Generamos el form y le pasamos los values de cada campo (en la vista los values se ponen automáticamente)
+            formulario = BlogFormEdit(request.form, author_id=blogpost[1].author_id, title=blogpost[1].title, contenido=blogpost[1].contenido)
 
-    blogpost = Blog.getById(id)
-    users = User.getAll("nombre")
+            if blogpost:
+                return render_template('backend/blog/edit.html', blogpost=blogpost, formulario=formulario, users=users)
+            else :
+                flash('Imposible encontrar el post', 'danger')
+                return redirect(url_for('backend.blog.index'))
 
-    if (request.method == 'GET'):
-        # Generamos el form y le pasamos los values de cada campo (en la vista los values se ponen automáticamente)
-        formulario = BlogFormEdit(request.form, author_id=blogpost[1].author_id, title=blogpost[1].title, contenido=blogpost[1].contenido)
-
-        if blogpost:
-            return render_template('backend/blog/edit.html', blogpost=blogpost, formulario=formulario, users=users)
-        else :
-            flash('Imposible encontrar el post', 'danger')
-            return redirect(url_for('backend.blog.index'))
-
-    # except TypeError as e:
-    #     error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
-    # except ValueError as e:
-    #     error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
-    # except Exception as e:
-    #     error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-    #     return render_template('backend/errores/error.html', error=error)
+    except TypeError as e:
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except ValueError as e:
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except Exception as e:
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -210,16 +180,11 @@ def update(id):
                 filename = None
                 postExistente = Blog.getById(id)
 
-                filename = secure_filename(img.filename)
-                img.save(os.path.join(
-                    INSTANCE_PATH, 'img', ahora+'_'+filename
-                ))
-
-                # if type(img).__name__ != 'NoneType':
-                #     filename = secure_filename(img.filename)
-                #     img.save(os.path.join(
-                #         INSTANCE_PATH, 'img', ahora+'_'+filename
-                #     ))
+                if type(img).__name__ != 'NoneType':
+                    filename = secure_filename(img.filename)
+                    img.save(os.path.join(
+                        INSTANCE_PATH, 'img', ahora+'_'+filename
+                    ))
 
                 if not postExistente:
                     errores += 'Imposible actualizar post, pues el ID '+id+' no existe'
@@ -235,29 +200,21 @@ def update(id):
             return redirect(url_for('backend.blog.edit',id=id))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción [8] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
-        if environ.get('FLASK_DEBUG') == True:
-            print('----------------------')
-            print('FLASK_DEBUG = True')
-            print('----------------------')
-            raise
-        else:
-            print('----------------------')
-            print('FLASK_DEBUG = False')
-            print('----------------------')
-            error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-            return render_template('backend/errores/error.html', error=error)
-
-        # logger.exception('Error ')
-        current_app.logger.info('Esto es un mensaje informativo via LOGGER')
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
 
 
 
@@ -301,14 +258,18 @@ def delete(id):
         if "1451" in str(e):
             error = 'Al parecer este blogpost está asignado a otro elemento (¿como post de un autor?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro autor.'
         else:
-            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción [9] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
