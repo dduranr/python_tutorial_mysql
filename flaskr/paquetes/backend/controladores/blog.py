@@ -10,11 +10,11 @@ from flaskr.paquetes.general.helpers import *
 from sqlalchemy import exc
 from datetime import datetime
 import os
-from os import environ, path
-from flaskr.paquetes.general.helpers import *
+from os import path
+# from os import environ, path
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
-INSTANCE_PATH = os.getenv('INSTANCE_PATH')
+FOLDER_STATIC = os.getenv('FOLDER_STATIC')
 logger = fileLogSystem()
 
 # Esta ruta se encarga de mostrar la vista index (listado de registros)
@@ -24,24 +24,22 @@ def index():
     try:
         return render_template('backend/blog/index.html')
 
-    # except exc.SQLAlchemyError as e:
-    #     error = 'Excepción [6] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
-    #     logger.error(error)
-    #     logging.exception(error, exc_info=True)
-    #     return render_template('backend/errores/error.html', error=error)
-    # except TypeError as e:
-    #     error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
-    #     logger.exception(error)
-    #     return render_template('backend/errores/error.html', error=error)
-    # except ValueError as e:
-    #     error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
-    #     logger.exception(error)
-    #     return render_template('backend/errores/error.html', error=error)
+    except exc.SQLAlchemyError as e:
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.error(error)
+        logging.exception(error, exc_info=True)
+        return render_template('backend/errores/error.html', error=error)
+    except TypeError as e:
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except ValueError as e:
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
-        # logger.error(error)
-        # logger.exception(error)
-        logging.exception('Esto es una excepción', exc_info=True)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -84,6 +82,8 @@ def store():
                 now = datetime.now()
                 ahora = now.strftime("%Y%m%d%H%M%S")
 
+                print('AHORA 1: '+ahora)
+
                 title = request.form['title']
                 contenido = request.form['contenido']
                 img = formulario.img.data
@@ -92,10 +92,10 @@ def store():
                 if type(img).__name__ != 'NoneType':
                     filename = secure_filename(img.filename)
                     img.save(os.path.join(
-                        INSTANCE_PATH, 'img', ahora+'_'+filename
+                        FOLDER_STATIC, 'img', ahora+'_'+filename
                     ))
 
-                blogpost = Blog(author_id=user_id, title=title, contenido=contenido, img=filename)
+                blogpost = Blog(author_id=user_id, title=title, contenido=contenido, img=ahora+'_'+filename)
                 blogpost.post()
                 flash('Post agregado', 'success')
                 return redirect(url_for('backend.blog.index'))
@@ -110,7 +110,7 @@ def store():
         if "1406" in str(e):
             error = 'Al parecer el nombre del archivo es demasiado largo. Por favor intenta con un nombre más corto.'
         else:
-            error = 'Excepción [7] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
@@ -183,13 +183,13 @@ def update(id):
                 if type(img).__name__ != 'NoneType':
                     filename = secure_filename(img.filename)
                     img.save(os.path.join(
-                        INSTANCE_PATH, 'img', ahora+'_'+filename
+                        FOLDER_STATIC, 'img', ahora+'_'+filename
                     ))
 
                 if not postExistente:
                     errores += 'Imposible actualizar post, pues el ID '+id+' no existe'
                 else :
-                    dataToSave = {"author_id": author_id, "title": title, "contenido": contenido, "img": filename}
+                    dataToSave = {"author_id": author_id, "title": title, "contenido": contenido, "img": ahora+'_'+filename}
                     Blog.put(id, dataToSave)
                     flash('Post actualizado ('+str(id)+': '+postExistente[1].title+')', 'success')
                     return redirect(url_for('backend.blog.index'))
@@ -200,7 +200,7 @@ def update(id):
             return redirect(url_for('backend.blog.edit',id=id))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción [8] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
@@ -258,7 +258,7 @@ def delete(id):
         if "1451" in str(e):
             error = 'Al parecer este blogpost está asignado a otro elemento (¿como post de un autor?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro autor.'
         else:
-            error = 'Excepción [9] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:

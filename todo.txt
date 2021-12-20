@@ -2,71 +2,26 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		Cuando sale el error "Can't connect to MySQL" la excepción es de auth.py.
-		Usar el flamante sistema de logueo en todos los controladores.
-
-
-		0. En el controlador blog.py finalmente logré hacer que se guarden los logs
-			Antes que nada, borrar carpetas caché
-			1. Primero ver si efectivamente se guardan los ERRORS para arriba y no INFOS
-			3. Ver si es posible hacer que se guarde un archivo por día
-				[handler_fileHandler]
-				class=FileHandler
-				level=ERROR
-				formatter=logFormatter
-				# This causes a new file to be created for each script
-				# Change time.strftime("%Y%m%d%H%M%S") to time.strftime("%Y%m%d")
-				# And only one log per day will be created. All messages will be amended to it.
-				args=("C:\\laragon\\www\\python\\web\\flask-tutorial-mysql\\" + time.strftime("%Y%m%d%H%M%S")+'.log', 'a')
-			2. Si todo funciona bien, ver cómo integrárlo fácil sin repetición de código en cada controlador
-		1. Que el blog en el front, muestre bootstrap cards
-		    <div class="col-md-12">
-		        {% if blogposts is defined %}
-		            {% for post in blogposts %}
-		                <article>
-		                    <header>
-		                        <div>
-		                            <h1>{{ post.blog.title }}</h1>
-		                            <div>Creado por <a href="mailto:{{ post.user.email }}">{{ post.user.nombre }}</a> el {{ post.blog.created_at.strftime('%Y-%m-%d') }}</div>
-		                        </div>
-		                        {% if g.user['id'] == post.blog.author_id %}
-		                        <a href="{{ url_for('backend.blog.edit', id=post['id']) }}">Edit</a>
-		                        {% endif %}
-		                    </header>
-		                    <p>{{ post['contenido'] }}</p>
-		                </article>
-		                {% if not loop.last %}
-		                    <hr>
-		                {% endif %}
-
-		            {% endfor %}
-
-		        {% else %}
-		            <p>La variable blogsposts no está definida.</p>
-		        {% endif %}
-		    </div>
-		2. Poner comentarios a los métodos
-		2. ACL
-		3. En los formularios, no poner 2 formularios si lo único que cambia es el value del submit (el submit ponerlo manualmente)
-		4. Poner thumbnail de imagen del post que se está editando
-		2. Implementar en todos los métodos de todos los controladores la forma de mostrar el return, sólo uno al final, con la variable "errores", igual que como la tengo en auth::store()
-		3. Envío de correo
-		4. Phonenumbers
+		1. En los formularios, no poner 2 formularios si lo único que cambia es el value del submit (el submit ponerlo manualmente)
+		2. Poner thumbnail de imagen del post que se está editando
+		3. Implementar en todos los métodos de todos los controladores la forma de mostrar el return, sólo uno al final, con la variable "errores", igual que como la tengo en auth::store()
+		4. Envío de correo
+		5. Phonenumbers
 			A ver si es posible integrarlo con WTForms
 			https://stackoverflow.com/questions/36251149/validating-us-phone-number-in-wtforms
 			https://wtforms.readthedocs.io/en/2.3.x/fields/
 				TelephoneForm
-		4. Implementar tarea en 2do plano
+		6. ACL
+		7. Implementar tarea en 2do plano
 			Que mi tarea cargue un Excel con datos que posteriormente se van a graficar
 			https://programmerclick.com/article/8184939433/
-		5. Notificaciones push
+		8. Notificaciones push
 			Que se muestre una notificación cuando termine una tarea en 2do plano, o incluso cuando llegue al 80% para ir avisando al user
 			https://developers.google.com/web/fundamentals/codelabs/push-notifications?hl=es
-		6. Gráficas
+		9. Gráficas
 			Graficar los datos cargados en el Excel que se subió como tarea de 2do plano
 			Ver si hay graficadores agradables, si no, usar Google Graph
-		7. Websocket
+		10. Websocket
 			https://flask-socketio.readthedocs.io/en/latest/
 			https://www.youtube.com/watch?v=71DZYl4Q4o8
-
-
+		11. Deploy en servidor productivo (obviamente debe permanecer el servicio arriba siempre, quizá usar Supervisor)

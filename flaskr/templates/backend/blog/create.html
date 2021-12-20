@@ -9,7 +9,7 @@
         <form class="row" action="{{ url_for('backend.blog.store') }}" method="POST" enctype="multipart/form-data">
             <div class="col-md-6 mb-3">
                 {{ formulario.title.label() }}
-                {{ formulario.title(class="form-control", value="Blogspot #a1") }}
+                {{ formulario.title(class="form-control", value="") }}
                 {% if formulario.title.errors %}
                     <ul class="text-danger">
                     {% for error in formulario.title.errors %}

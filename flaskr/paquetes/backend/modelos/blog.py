@@ -35,7 +35,7 @@ class Blog(Base):
         return ServerSideTable(request, DATA, columns, True, True, 'backend.blog', 'C', 'table_blogposts').output_result()
 
 
-    # Este método recupera todos los usuarios
+    # Este método recupera todos los registros
     # Params:
     #   orderby     String. Opcional. Ordena los resultados por el nombre de la columna pasada aquí. Si no se proporciona, se ordena por ID.
     def getAll(orderby="id"):

@@ -13,7 +13,7 @@ class BlogFormCreate(FlaskForm):
 	img = FileField('Imagen', validators=[
 		FileAllowed(['jpg', 'png'], 'El archivo a subir no corresponde con un tipo permitido de imagen.')
 	])
-	contenido = TextAreaField("Contenido", default="Lorem ipsum dolor sit amet.", validators=[
+	contenido = TextAreaField("Contenido", default="", validators=[
 		DataRequired(),
 		Length(min=3)
 	])

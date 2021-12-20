@@ -1,0 +1,23 @@
+{% extends "frontend/layout/base.html" %}
+
+{% block header %}
+    <h1>{% block title %}{{ post[1].title }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <p class="disabled">
+            Creado por <a href="mailto:{{ post[0].email }}">{{ post[0].nombre }}</a> el {{ post[1].created_at.strftime('%Y-%m-%d') }}
+        </p>
+    </div>
+    <div class="col-md-4">
+        {% if post[1].img %}
+            <img src="{{ url_for('static', filename='img/') }}{{ post[1].img }}" class="card-img-top" alt="{{ post[1].title }}">
+        {% else %}
+            <img src="{{ url_for('static', filename='img/placeholder-imagen.jpg') }}" class="card-img-top" alt="{{ post[1].title }}">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <p class="card-text">{{ post[1].contenido }}</p>
+    </div>
+{% endblock %}

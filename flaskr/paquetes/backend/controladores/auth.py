@@ -27,12 +27,15 @@ def login():
 
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -77,16 +80,20 @@ def store():
         if "2002" in str(e):
             error = 'Al parecer la base de datos está caída.'
         else:
-            error = 'Excepción [10] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -100,12 +107,15 @@ def welcome():
 
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -123,7 +133,7 @@ def load_logged_in_user():
             g.user = User.getById(user_id)
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción [11] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
         logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
@@ -151,12 +161,15 @@ def logout():
 
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 

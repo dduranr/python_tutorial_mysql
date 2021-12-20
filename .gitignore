@@ -293,18 +293,7 @@ $RECYCLE.BIN/
 # CUSTOM
 # CUSTOM
 
-# Ignoro los archivos de configuración
 /.flaskenv
 /.env
-
-
-
-
-
-
-
-
-
-
-
-
+/flaskr/static/css
+/flaskr/static/img

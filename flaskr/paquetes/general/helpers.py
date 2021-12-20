@@ -5,7 +5,7 @@ import logging, logging.config
 
 
 # Esta función se encarga de armar una cadena HTML con los errores devueltos cuando no valida un formulario WTForms. Params:
-#   errores. Diccionario. Corresponde con el diccionario formularioWTForms.errors
+#   errores. Diccionario. Corresponde con el diccionario devuelto por formularioWTForms.errors
 def getErrorsFromWTF(errores):
     r = '<ul>'
     for err in errores:
@@ -19,6 +19,7 @@ def getErrorsFromWTF(errores):
 
 
 # Esta función se encarga de armar toda la configuración relacionada con guardar los logs en archivos de texto. Devuelve el logger, que es el que permite hacer los logs.
+# Uso: simplemente se instancia logger = fileLogSystem() y se genera log: logger.exception(error)
 def fileLogSystem():
     FOLDER_ROOT = environ.get('FOLDER_ROOT')
     FOLDER_LOGS = environ.get('FOLDER_LOGS')

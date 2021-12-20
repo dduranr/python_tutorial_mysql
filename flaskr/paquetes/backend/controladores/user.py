@@ -17,6 +17,7 @@ import sys
 bp = Blueprint('user', __name__, url_prefix='/user')
 # Semilla para encriptamiento de contraseña
 semilla = bcrypt.gensalt()
+logger = fileLogSystem()
 
 
 
@@ -31,17 +32,20 @@ def index():
         # En teoría si se devuelve el siguiente error, la cosa se soluciona con un sessionDB.rollback().
         if 't reconnect until invalid transaction is rolled back' in str(e):
             print('Existe error reconnect')
-
-        error = 'Excepción [1] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -56,12 +60,15 @@ def create():
 
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -100,16 +107,20 @@ def store():
             return redirect(url_for('backend.user.create'))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción [2] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -131,16 +142,20 @@ def edit(id):
                 return redirect(url_for('backend.user.index'))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción [3] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -181,16 +196,20 @@ def update(id):
             return redirect(url_for('backend.user.edit',id=id))
 
     except exc.SQLAlchemyError as e:
-        error = 'Excepción [4] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
 
 
@@ -235,14 +254,18 @@ def delete(id):
         if "1451" in str(e):
             error = 'Al parecer este usuario está asignado a otro elemento (¿como autor de un blogpost?). Por tanto, antes de intentar eliminarlo deberás borrar todos los elementos a los que está asignado, o si no borrarlos, al menos sí reasignarlos a otro usuario.'
         else:
-            error = 'Excepción [5] SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+            error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except ValueError as e:
         error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
     except Exception as e:
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
         return render_template('backend/errores/error.html', error=error)

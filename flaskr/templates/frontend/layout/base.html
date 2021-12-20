@@ -26,7 +26,7 @@
                     </li>
                     <li class="nav-item ms-5">
                         {% if g.user %}
-                            <a class="nav-link btn btn-success text-white" href="{{ url_for('backend.auth.welcome') }}">Dashboard</a>
+                            <a class="nav-link btn btn-success text-white" href="{{ url_for('backend.auth.welcome') }}" target="_blank">Dashboard</a>
                         {% else %}
                             <a class="nav-link btn btn-success text-white" href="{{ url_for('backend.auth.login') }}">Log In</a>
                         {% endif %}
@@ -42,7 +42,7 @@
         </header>
     </div>
 
-    <div class="container my-5">
+    <div class="container my-2">
         <div class="row">
             {% with mensajesFlash = get_flashed_messages(with_categories=true) %}
                 {% if mensajesFlash %}
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div class="container my-5">
+    <div class="container mb-5">
         <div class="row">
             {% block content %}{% endblock %}
         </div>
