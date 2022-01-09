@@ -10,19 +10,28 @@ logger = fileLogSystem()
 
 
 
-# Esta ruta se encarga de mostrar la vista principal del blog
+# Esta ruta se encarga de mostrar la home
 @bp.route('/')
 def index():
     return render_template('frontend/home/index.html')
 
 
 
+# Esta ruta se encarga de mostrar a) la vista principal del blog y b) la vista full de un blogspot
 @bp.route('/blog', defaults={'id': None})
 @bp.route('/blog/<id>')
 def blog(id):
     try:
         if id is None:
-            posts = Blog.getAll()
+            posts = Blog.getAll('created_at', False)
+            # SIGO AQUÍ
+            # SIGO AQUÍ
+            # SIGO AQUÍ
+            #           Paginación:
+            #               1. Recuperar el número total de posts
+            #               2. Con el número anterior, armar el paginador HTML aqui mismo
+            #               3. Agregar parámetro al render_template: paginacion=paginacionHTML
+            #               4. Finalmente, en la vista simplemente {{ paginacion }}
             return render_template('frontend/blog/index.html', posts=posts)
         else:
             post = Blog.getById(id)

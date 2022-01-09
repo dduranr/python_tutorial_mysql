@@ -37,10 +37,33 @@ class Blog(Base):
 
     # Este método recupera todos los registros
     # Params:
-    #   orderby     String. Opcional. Ordena los resultados por el nombre de la columna pasada aquí. Si no se proporciona, se ordena por ID.
-    def getAll(orderby="id"):
+    #   orderby     String. Opcional. Ordena los resultados por el nombre de la columna pasada aquí
+    #   ascendente  Bool. Opcional. Ordena los resultados por ASC si es True, por DESC si es False
+    def getAll(orderby="id", ascendente=True):
         engine.dispose()
-        res = sessionDB.query(Blog).order_by(asc(orderby)).all()
+
+        blog = aliased(Blog)
+        user = aliased(User)
+        query = (
+            sessionDB.query(user, blog)
+            .select_from(blog)
+            .join(user, user.id == blog.author_id)
+        )
+
+        ordenamiento = None
+        if orderby == 'id':
+            if ascendente:
+                ordenamiento = blog.id.asc()
+            else:
+                ordenamiento = blog.id.desc()
+        elif orderby == 'created_at':
+            if ascendente:
+                ordenamiento = blog.created_at.asc()
+            else:
+                ordenamiento = blog.created_at.desc()
+
+        res = query.order_by(ordenamiento).all()
+
         sessionDB.close()
         sessionDB.remove()
         return res

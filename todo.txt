@@ -2,9 +2,7 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		1. En los formularios, no poner 2 formularios si lo único que cambia es el value del submit (el submit ponerlo manualmente)
-		2. Poner thumbnail de imagen del post que se está editando
-		3. Implementar en todos los métodos de todos los controladores la forma de mostrar el return, sólo uno al final, con la variable "errores", igual que como la tengo en auth::store()
+		2. Implementar paginación al blog en el front
 		4. Envío de correo
 		5. Phonenumbers
 			A ver si es posible integrarlo con WTForms

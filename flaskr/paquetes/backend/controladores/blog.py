@@ -144,7 +144,8 @@ def edit(id):
                 return render_template('backend/blog/edit.html', blogpost=blogpost, formulario=formulario, users=users)
             else :
                 flash('Imposible encontrar el post', 'danger')
-                return redirect(url_for('backend.blog.index'))
+
+            return redirect(url_for('backend.blog.index'))
 
     except TypeError as e:
         error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)

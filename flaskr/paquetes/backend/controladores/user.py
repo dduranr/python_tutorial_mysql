@@ -139,7 +139,8 @@ def edit(id):
                 return render_template('backend/user/edit.html', user=user, formulario=formulario)
             else :
                 flash('Imposible encontrar al usuario', 'danger')
-                return redirect(url_for('backend.user.index'))
+
+            return redirect(url_for('backend.user.index'))
 
     except exc.SQLAlchemyError as e:
         error = 'Excepción SQLAlchemyError ('+str(e.__class__)+'): '+str(e)
