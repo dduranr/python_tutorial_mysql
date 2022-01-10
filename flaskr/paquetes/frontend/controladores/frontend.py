@@ -23,16 +23,11 @@ def index():
 def blog(id):
     try:
         if id is None:
-            posts = Blog.getAll('created_at', False)
-            # SIGO AQUÍ
-            # SIGO AQUÍ
-            # SIGO AQUÍ
-            #           Paginación:
-            #               1. Recuperar el número total de posts
-            #               2. Con el número anterior, armar el paginador HTML aqui mismo
-            #               3. Agregar parámetro al render_template: paginacion=paginacionHTML
-            #               4. Finalmente, en la vista simplemente {{ paginacion }}
-            return render_template('frontend/blog/index.html', posts=posts)
+            # ORIGINAL
+            # posts = Blog.getAll('created_at', False)
+            posts = Blog.all_paginated()
+
+            return render_template('frontend/blog/index.html', posts=posts.items)
         else:
             post = Blog.getById(id)
             return render_template('frontend/blog/full.html', post=post)

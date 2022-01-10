@@ -1,4 +1,5 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
+from flaskr import db
 from flaskr.paquetes.backend.serverside import table_schemas
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -132,3 +133,17 @@ class Blog(Base):
     # Cuando se hace print() al objeto devuelto por esta clase, por defecto devolverá el title (no es que sólo contenga ese dato)
     def __str__(self):
         return self.title
+
+
+    @staticmethod
+    def all_paginated(page=1, per_page=20):
+        # Aquí no sirve el sessionDB. Necesito un objeto tipo Flask-Sqlalchemy, el cual dispone del método paginate()
+
+        # SIGO AQUÍ
+        # SIGO AQUÍ
+        # SIGO AQUÍ
+        #           Hacer un join para recuperar datos de los posts y los usuarios, para así obtener el nombre del autor:
+        #               Googlearle: join con objeto Flask-Sqlalchemy
+
+        res = db.session.query(Blog).order_by(Blog.created_at.asc()).paginate(page=page, per_page=per_page, error_out=False)
+        return res

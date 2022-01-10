@@ -2,7 +2,14 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		2. Implementar paginación al blog en el front
+		1. En el modelo Blog::all_paginated implementar JOIN con users
+			Sigo con tutorial: https://j2logo.com/tutorial-flask-leccion-13-paginar-las-consultas-de-base-de-datos/
+		2. Al usar with app.app_context(): en __init__.py, la consola siempre devuelve:
+
+			C:\laragon\www\python\web\flask-tutorial-mysql\venv\lib\site-packages\flask_sqlalchemy\__init__.py:872: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
+  			warnings.warn(FSADeprecationWarning(
+
+		3. Implementar paginación al blog en el front
 		4. Envío de correo
 		5. Phonenumbers
 			A ver si es posible integrarlo con WTForms

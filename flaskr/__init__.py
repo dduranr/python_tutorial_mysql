@@ -6,6 +6,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flaskr.paquetes.general.constantes import Constantes
 
+# Esta línea genera un objeto BaseQuery de Flask-Sqlalchemy, no de Sqlalchemy solo. Este objeto es el que necesitaremos para usar el método paginate() en los modelos
+db = SQLAlchemy()
+
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
 	# instance_relative_config le dice a la app que los archivos de configuración son relativos a la carpeta de instancia (instance). Ésta esta ubicada fuera del paquete "flaskr" y puede almacenar datos que no deberían entrar en el sistema de control de versiones, tales como key secrets y archivos de BD. El archivo de configuraciones .flaskenv automáticamente es leído si se ubica en la raíz del proyecto (por lo cual no es necesario declarar sus variables en app.config).
@@ -18,6 +21,10 @@ def create_app(test_config=None):
         RECAPTCHA_PUBLIC_KEY = environ.get('RECAPTCHA_PUBLIC_KEY'),
         RECAPTCHA_PRIVATE_KEY = environ.get('RECAPTCHA_PRIVATE_KEY'),
     )
+
+    # Con este par de líneas logramos que la variable db esté disponible en toda la app: from flaskr import db
+    with app.app_context():
+        db = SQLAlchemy(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -55,34 +62,4 @@ def create_app(test_config=None):
     # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
     app.add_url_rule('/', endpoint='index')
 
-    """
-        Finalmente hacemos que este función "application factory" devuelva la app.
-        Cómo recuperar la instancia "app"
-            Documentación:
-                https://flask.palletsprojects.com/en/1.1.x/appcontext/#the-application-context
-                https://flask.palletsprojects.com/en/1.1.x/api/#flask.current_app
-            Al usar el patrón de fábrica de aplicaciones (como lo hago aquí) no habrá en absoluto una instancia "app" para importar. Así que olvidar siquiera intentar esto:
-                from flaskr import app
-            Flask resuelve este problema con el contexto de la aplicación. En lugar de referirse directamente a una "app", usa el proxy "current_app", que apunta a la aplicación que maneja la actividad actual.
-
-            Si intenta acceder a current_app, o cualquier cosa que lo use, fuera del contexto de una aplicación, obtendrá este mensaje de error:
-                RuntimeError: Working outside of application context.
-            Si ve ese error, puede enviar un contexto manualmente ya que tiene acceso directo al archivo app. Use app_context() en un bloque "with", y todo lo que se ejecute en el bloque tendrá acceso current_app.
-
-            Ejemplo de recuperar "app"
-                Aquí en __init__.py
-                    1. Afuera del create_app()
-                        db = SQLAlchemy()
-                    2. Dentro del create_app()
-                        with app.app_context():
-                            db = SQLAlchemy(app)
-
-                En el módulo externo
-                    from flaskr import db, create_app
-                    def delete(id):
-                        db.create_all(app=create_app())
-                        db.session.query(MiModelo).filter_by(id=id).delete()
-                        db.session.commit()
-
-    """
     return app
