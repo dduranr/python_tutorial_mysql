@@ -2,15 +2,12 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		1. En el modelo Blog::all_paginated implementar JOIN con users
-			Sigo con tutorial: https://j2logo.com/tutorial-flask-leccion-13-paginar-las-consultas-de-base-de-datos/
-		2. Al usar with app.app_context(): en __init__.py, la consola siempre devuelve:
+		3. Envío de correo
+			https://j2logo.com/tutorial-flask-leccion-14-enviar-emails-con-flask/#:~:text=install%20flask%2Dmail-,Configurar%20Flask%2DMail%20para%20enviar%20emails%20en%20Flask,nuestro%20servidor%20smtp%20de%20correo.
 
-			C:\laragon\www\python\web\flask-tutorial-mysql\venv\lib\site-packages\flask_sqlalchemy\__init__.py:872: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
-  			warnings.warn(FSADeprecationWarning(
+			Sigo en la línea 28 de frontend.py
 
-		3. Implementar paginación al blog en el front
-		4. Envío de correo
+		4. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
 		5. Phonenumbers
 			A ver si es posible integrarlo con WTForms
 			https://stackoverflow.com/questions/36251149/validating-us-phone-number-in-wtforms

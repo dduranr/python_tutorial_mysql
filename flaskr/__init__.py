@@ -5,9 +5,13 @@ from os import environ
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flaskr.paquetes.general.constantes import Constantes
+from flask_mail import Mail, Message
 
 # Esta línea genera un objeto BaseQuery de Flask-Sqlalchemy, no de Sqlalchemy solo. Este objeto es el que necesitaremos para usar el método paginate() en los modelos
 db = SQLAlchemy()
+
+# Para envío de correo
+mail = Mail()
 
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
@@ -20,11 +24,24 @@ def create_app(test_config=None):
         SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI'),
         RECAPTCHA_PUBLIC_KEY = environ.get('RECAPTCHA_PUBLIC_KEY'),
         RECAPTCHA_PRIVATE_KEY = environ.get('RECAPTCHA_PRIVATE_KEY'),
+        SQLALCHEMY_TRACK_MODIFICATIONS = False,
+        MAIL_SERVER = 'smtp.gmail.com',
+        MAIL_PORT = 465,
+        MAIL_USERNAME = environ.get('MAIL_USERNAME'),
+        MAIL_PASSWORD = environ.get('MAIL_PASSWORD'),
+        MAIL_USE_TLS = False,
+        MAIL_USE_SSL = True,
+        MAIL_DEBUG = True,
     )
 
     # Con este par de líneas logramos que la variable db esté disponible en toda la app: from flaskr import db
     with app.app_context():
         db = SQLAlchemy(app)
+
+
+    # Inicializamos el objeto mail
+    mail.init_app(app)
+
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

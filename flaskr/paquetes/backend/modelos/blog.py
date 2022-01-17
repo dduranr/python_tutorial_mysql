@@ -36,6 +36,20 @@ class Blog(Base):
         return ServerSideTable(request, DATA, columns, True, True, 'backend.blog', 'C', 'table_blogposts').output_result()
 
 
+    # Este método recupera los registros paginados.
+    # El sessionDB no sirve porque no tiene acceso al método paginate(). Para esto se necesita un objeto tipo Flask-Sqlalchemy.
+    # Params:
+    #   page        Int. Número de página a recuperar
+    #   per_page    Int. Número de registros por página
+    @staticmethod
+    def all_paginated(page=1, per_page=20):
+        res = db.session.query(Blog, User)\
+            .join(User, Blog.author_id==User.id)\
+            .order_by(Blog.created_at.asc())\
+            .paginate(page=page, per_page=per_page, error_out=False)
+        return res
+
+
     # Este método recupera todos los registros
     # Params:
     #   orderby     String. Opcional. Ordena los resultados por el nombre de la columna pasada aquí
@@ -133,17 +147,3 @@ class Blog(Base):
     # Cuando se hace print() al objeto devuelto por esta clase, por defecto devolverá el title (no es que sólo contenga ese dato)
     def __str__(self):
         return self.title
-
-
-    @staticmethod
-    def all_paginated(page=1, per_page=20):
-        # Aquí no sirve el sessionDB. Necesito un objeto tipo Flask-Sqlalchemy, el cual dispone del método paginate()
-
-        # SIGO AQUÍ
-        # SIGO AQUÍ
-        # SIGO AQUÍ
-        #           Hacer un join para recuperar datos de los posts y los usuarios, para así obtener el nombre del autor:
-        #               Googlearle: join con objeto Flask-Sqlalchemy
-
-        res = db.session.query(Blog).order_by(Blog.created_at.asc()).paginate(page=page, per_page=per_page, error_out=False)
-        return res
