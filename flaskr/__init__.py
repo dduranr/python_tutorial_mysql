@@ -19,8 +19,6 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY = environ.get('SECRET_KEY'),
-        # DATABASE es la ruta donde se guarda el archivo de BD SQLite. It’s under app.instance_path, which is the path that Flask has chosen for the instance folder. You’ll learn more about the database in the next section.
-        # DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
         SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI'),
         RECAPTCHA_PUBLIC_KEY = environ.get('RECAPTCHA_PUBLIC_KEY'),
         RECAPTCHA_PRIVATE_KEY = environ.get('RECAPTCHA_PRIVATE_KEY'),

@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
-from flask_wtf.file import FileField, FileRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 class BlogFormCreate(FlaskForm):

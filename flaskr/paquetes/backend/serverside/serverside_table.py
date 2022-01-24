@@ -22,7 +22,7 @@ class ServerSideTable(object):
         delete: Booleano que indica si se imprime el botón Eliminar
         endpoint: Cadena que hace referencia al endpoint parcial al que apuntan los botones editar y eliminar. Por ejemplo: backend.user
         colForName: Cadena que hace referencia al data_name que contiene el nombre/título de los registros del esquema en cuestión en table_schemas.py
-        table: ID de la <table>
+        table: ID de la <table> del datatables
 
         Los últimos 5 parámetros no vienen con el plugin, los integré yo para extender su funcionalidad.
     '''

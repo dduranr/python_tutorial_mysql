@@ -1,0 +1,65 @@
+{% extends "frontend/layout/base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Contacto{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <form class="row" action="{{ url_for('frontend.submissioncontacto') }}" method="POST" enctype="multipart/form-data">
+            <div class="col-md-6 mb-3">
+                {{ formulario.nombre.label() }}
+                {{ formulario.nombre(class="form-control", value="") }}
+                {% if formulario.nombre.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.nombre.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.email.label() }}
+                {{ formulario.email(class="form-control", value="official.dduran@gmail.com") }}
+                {% if formulario.email.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.mensaje.label() }}
+                {{ formulario.mensaje(class="form-control") }}
+                {% if formulario.mensaje.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.mensaje.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.documento.label() }}
+                {{ formulario.documento(class="form-control") }}
+                {% if formulario.documento.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.documento.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-12 mb-3">
+                {{ formulario.submit(class="btn btn-primary float-end") }}
+                <!--
+                    Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
+                -->
+                {{ formulario.hidden_tag() }}
+                {{ formulario.forma() }}
+                <a href="{{ url_for('backend.blog.index') }}" type="button" class="btn btn-danger float-start">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

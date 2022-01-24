@@ -297,3 +297,4 @@ $RECYCLE.BIN/
 /.env
 /flaskr/static/css
 /flaskr/static/img
+/flaskr/static/submissions

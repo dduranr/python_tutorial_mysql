@@ -82,8 +82,6 @@ def store():
                 now = datetime.now()
                 ahora = now.strftime("%Y%m%d%H%M%S")
 
-                print('AHORA 1: '+ahora)
-
                 title = request.form['title']
                 contenido = request.form['contenido']
                 img = formulario.img.data

@@ -61,3 +61,34 @@ BLOG = [
         "searchable": False
     }
 ]
+
+CONTACTO = [
+    {
+        "data_name": "A",
+        "column_name": "ID",
+        "default": "",
+        "order": 1,
+        "searchable": True
+    },
+    {
+        "data_name": "B",
+        "column_name": "NOMBRE",
+        "default": "",
+        "order": 2,
+        "searchable": True
+    },
+    {
+        "data_name": "C",
+        "column_name": "EMAIL",
+        "default": "",
+        "order": 3,
+        "searchable": True
+    },
+    {
+        "data_name": "D",
+        "column_name": "CREADO",
+        "default": 0,
+        "order": 5,
+        "searchable": False
+    }
+]
