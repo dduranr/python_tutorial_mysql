@@ -13,12 +13,12 @@ class ContactoForm(FlaskForm):
 		DataRequired(),
 		Email()
 	])
-	mensaje = TextAreaField("mensaje", default="", validators=[
+	mensaje = TextAreaField("Mensaje", default="", validators=[
 		DataRequired(),
 		Length(min=3)
 	])
 	documento = FileField('Documento', validators=[
-		FileAllowed(['jpg', 'png'], 'El archivo a subir no corresponde con un tipo permitido de imagen (sólo se permiten JPG y PNG).')
+		FileAllowed(['jpg', 'jpeg', 'png'], 'El archivo a subir no corresponde con un tipo permitido de imagen (sólo se permiten JPG y PNG).')
 	])
 	forma = HiddenField("forma", default="contacto", validators=[
 		DataRequired()

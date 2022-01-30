@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="col-md-12">
-        <form class="row" action="{{ url_for('frontend.submissioncontacto') }}" method="POST" enctype="multipart/form-data">
+        <form id="form_contacto" class="row" action="{{ url_for('frontend.submissioncontacto') }}" method="POST" enctype="multipart/form-data">
             <div class="col-md-6 mb-3">
                 {{ formulario.nombre.label() }}
                 {{ formulario.nombre(class="form-control", value="") }}

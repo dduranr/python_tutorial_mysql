@@ -32,7 +32,7 @@ def create_app(test_config=None):
         MAIL_DEBUG = True,
     )
 
-    # Con este par de líneas logramos que la variable db esté disponible en toda la app: from flaskr import db
+    # Con este par de líneas logramos que la variable db esté disponible en toda la app (para ello hay que usar: from flaskr import db)
     with app.app_context():
         db = SQLAlchemy(app)
 

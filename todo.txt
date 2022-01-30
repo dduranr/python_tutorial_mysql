@@ -2,13 +2,7 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		1. Ver la forma de agregar un atatchment al mensaje enviado por correo tras la submission del formulario de contacto
 		2. Quitar el uso de "from datetime import datetime" en los modelos por lo mencionado en mi documentación python.txt > DATETIMES
-		3. Envío de correo
-			https://j2logo.com/tutorial-flask-leccion-14-enviar-emails-con-flask/#:~:text=install%20flask%2Dmail-,Configurar%20Flask%2DMail%20para%20enviar%20emails%20en%20Flask,nuestro%20servidor%20smtp%20de%20correo.
-
-			Sigo en la línea 28 de frontend.py
-
 		4. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
 		5. Phonenumbers
 			A ver si es posible integrarlo con WTForms

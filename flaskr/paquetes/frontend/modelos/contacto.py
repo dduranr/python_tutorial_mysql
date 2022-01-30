@@ -1,5 +1,4 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
-from flaskr import db
 from flaskr.paquetes.backend.serverside import table_schemas
 from sqlalchemy.sql import func
 from flask_sqlalchemy import SQLAlchemy

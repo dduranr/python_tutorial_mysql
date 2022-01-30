@@ -31,14 +31,6 @@
             </div>
             <div class="col-md-12 mb-3">
                 <label>.</label>
-                {{ formulario.submit(class="btn btn-primary w-100") }}
-                <!--
-                    Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
-                -->
-                {{ formulario.hidden_tag() }}
-            </div>
-            <div class="col-md-12 mb-3">
-                <label>.</label>
                 {{ formulario.recaptcha }}
                 {% if formulario.recaptcha.errors %}
                     <ul class="text-danger">
@@ -47,6 +39,14 @@
                     {% endfor %}
                     </ul>
                 {% endif %}
+            </div>
+            <div class="col-md-12 mb-3">
+                <label>.</label>
+                {{ formulario.submit(class="btn btn-primary w-100") }}
+                <!--
+                    Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
+                -->
+                {{ formulario.hidden_tag() }}
             </div>
         </form>
     </div>
