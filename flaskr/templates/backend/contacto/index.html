@@ -1,0 +1,60 @@
+{% extends "backend/layout/base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Contacto submissions{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <table id="table_contacto" class="table table-striped table-hover table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Mensaje</th>
+                    <th>Creado</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Mensaje</th>
+                    <th>Creado</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        jQuery(document).ready(function() {
+            jQuery('#table_contacto').DataTable({
+                bProcessing: true,
+                bServerSide: true,
+                sPaginationType: "full_numbers",
+                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+                bjQueryUI: true,
+                sAjaxSource: '{{ url_for("backend.datatables.serverside_table", tabla="submissions") }}',
+                columns: [
+                  {"data": "ID"},
+                  {"data": "DATOS"},
+                  {"data": "DATOS"},
+                  {"data": "DATOS"},
+                  {"data": "CREADO"}
+                ],
+                language: {
+                    'lengthMenu': 'Mostrar _MENU_ Submissions',
+                    'zeroRecords': 'No hay Submissions',
+                    'info': 'Mostrando pagina _PAGE_ de _PAGES_',
+                    'infoEmpty': 'No hay Submissions disponibles',
+                    'infoFiltered': '(Total: _MAX_ Submissions)',
+                    'search': 'Buscar'
+                }
+            });
+        });
+    </script>
+{% endblock %}

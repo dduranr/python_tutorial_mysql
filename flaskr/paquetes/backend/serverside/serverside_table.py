@@ -1,6 +1,6 @@
 from flask import url_for
 from pprint import pprint
-import re
+import re, json
 
 # Este plugin permite integrar Datatables a Python-Flask, y pertenece a:
 #   https://github.com/SergioLlana/datatables-flask-serverside
@@ -71,22 +71,57 @@ class ServerSideTable(object):
         rows = []
 
 
+
+
         # --> Armamos el diccionario "registros" que contiene como key el ID de cada registro, y como value el nombre del registro.
         registros = {}
         for x in data:
-            record_id = x['A']
+            record_id = x['A'] # La columna A siempre contendrá el ID de los registros
             record_nombre = x[self.colForName]
             registros.update({record_id: record_nombre})
 
         # --> Aquí es donde se arma la info que va a parar a la tabla
         for x in data:
             row = {}
+            vuelta = 0
             for column in self.columns:
+                vuelta += 1
                 default = column['default']
                 data_name = column['data_name']
                 column_name = column['column_name']
                 valor = x.get(data_name, default)
-                row[column_name] = valor
+                # row[column_name] = valor
+
+                # if self.table == 'table_contacto' and column_name == 'DATOS':
+                #     print('Es table_contacto y la columna es DATOS')
+
+
+                if self.table == 'table_contacto':
+                    if column_name == 'DATOS':
+                        json_object = json.loads(valor)
+
+                        # Si ponemos un break en el 1er if, debería sólo imprimirse la columna NOMBRE, pero no es así, el valor "NOMBRE" se pone en todas las columnas. Esto significa que como la el nombre de la columna es el mismo en todas, por eso si no ponemos continue ni break, el último if es el bueno, y su valor es el que se pone a otdas las columnas DATOS.
+
+                        if vuelta==2:
+                            # row[column_name] = json_object['nombre']
+                            row[column_name] = 'nombre'
+                            print('Se lee vuelta 2')
+                        elif vuelta==3:
+                            # row[column_name] = json_object['email']
+                            row[column_name] = 'email'
+                            print('Se lee vuelta 3')
+                        elif vuelta==4:
+                            # row[column_name] = json_object['mensaje']
+                            row[column_name] = 'mensaje'
+                            print('Se lee vuelta 4')
+                        else:
+                            row[column_name] = ':)'
+
+                    else:
+                        row[column_name] = valor
+                else:
+                    row[column_name] = valor
+
 
                 # Imprimimos botones EDITAR y ELIMINAR si así corresponde
                 if self.edit:

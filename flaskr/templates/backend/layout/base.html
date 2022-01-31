@@ -44,6 +44,16 @@
                                 <li><a class="dropdown-item" href="#">...</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Submissions</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('backend.contacto.index') }}">Contacto</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">...</a></li>
+                            </ul>
+                        </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link btn btn-success text-black" href="{{ url_for('backend.auth.login') }}">Log In</a>

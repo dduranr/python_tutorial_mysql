@@ -3,10 +3,12 @@
 from flask import Blueprint, request, jsonify
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.modelos.blog import Blog
+from flaskr.paquetes.frontend.modelos.contacto import Contacto
 
 
 modeloUser = User()
 modeloBlog = Blog()
+modeloContacto = Contacto()
 
 
 bp = Blueprint('datatables', __name__, url_prefix='/datatables')
@@ -18,5 +20,7 @@ def serverside_table(tabla):
         data = modeloUser.collect_data_serverside(request)
     elif tabla=='blog':
         data = modeloBlog.collect_data_serverside(request)
+    elif tabla=='submissions':
+        data = modeloContacto.collect_data_serverside(request)
 
     return jsonify(data)

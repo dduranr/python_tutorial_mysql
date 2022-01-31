@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS `blog` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_blog_users` (`author_id`),
   CONSTRAINT `FK_blog_users` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 -- Volcando datos para la tabla pythonflaskcontactos.blog: ~30 rows (aproximadamente)
 /*!40000 ALTER TABLE `blog` DISABLE KEYS */;
 INSERT INTO `blog` (`id`, `author_id`, `title`, `contenido`, `img`, `created_at`, `updated_at`) VALUES
-	(69, 211, 'El congreso ultrasónico', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rhoncus odio ut molestie luctus. Duis vel metus lorem. Aliquam eleifend lorem et erat faucibus tristique. In sit amet est arcu. Duis aliquet felis nisi, venenatis luctus ligula venenatis in. Donec a dui vulputate, cursus nunc a, varius lacus. Mauris vestibulum placerat quam, eget egestas ligula porta sit amet. Curabitur venenatis lacus sit amet aliquam dapibus. Pellentesque nec nisl eu felis tincidunt porttitor. Aenean ut turpis egestas turpis ornare ultricies. Ut non magna quis augue interdum sollicitudin. Vestibulum laoreet, metus vel pretium euismod, lorem risus aliquet risus, sit amet mollis est leo ac erat. In sit amet leo et sapien porttitor interdum quis ut elit. Nunc posuere nibh in enim hendrerit, vel vestibulum nibh vestibulum.', '20211204175906_comenzamos.jpg', '2021-10-17 19:23:39', '2021-11-28 12:43:43'),
+	(69, 211, 'El congreso ultrasónico', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In rhoncus odio ut molestie luctus. Duis vel metus lorem. Aliquam eleifend lorem et erat faucibus tristique. In sit amet est arcu. Duis aliquet felis nisi, venenatis luctus ligula venenatis in. Donec a dui vulputate, cursus nunc a, varius lacus. Mauris vestibulum placerat quam, eget egestas ligula porta sit amet. Curabitur venenatis lacus sit amet aliquam dapibus. Pellentesque nec nisl eu felis tincidunt porttitor. Aenean ut turpis egestas turpis ornare ultricies. Ut non magna quis augue interdum sollicitudin. Vestibulum laoreet, metus vel pretium euismod, lorem risus aliquet risus, sit amet mollis est leo ac erat. In sit amet leo et sapien porttitor interdum quis ut elit. Nunc posuere nibh in enim hendrerit, vel vestibulum nibh vestibulum.', '20211204175906_comenzamos.jpg', '2020-01-01 23:59:59', '2021-11-28 12:43:43'),
 	(76, 407, 'Isabella post12', 'Aliquam eleifend lorem et erat faucibus tristique.', '20211204180414_asombro.png', '2021-10-17 19:23:39', '2021-12-05 14:11:25'),
 	(77, 2, 'Lorem Luctus Ut Foundation', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', '', '2021-10-17 19:23:39', NULL),
 	(82, 3, 'Adipiscing Lacus Ut Associates', 'Donec a dui vulputate, cursus nunc a, varius lacus.', '', '2021-10-17 19:23:39', NULL),
@@ -58,7 +58,11 @@ INSERT INTO `blog` (`id`, `author_id`, `title`, `contenido`, `img`, `created_at`
 	(109, 1, 'Blogspot #a18', 'Curabitur ullamcorper elementum tortor sit amet sodales.\r\nDonec ac nibh libero.\r\nAliquam vel convallis metus.\r\nNullam tempor bibendum velit.\r\nPhasellus pretium finibus consequat.\r\nPhasellus aliquet commodo tellus eu bibendum.', NULL, '2021-12-04 18:25:51', '2021-12-04 18:25:51'),
 	(110, 1, 'Blogspot #a19', 'Fusce et faucibus ante, nec lacinia urna.\r\nCurabitur lobortis, quam in dignissim laoreet, dolor diam pellentesque dui, id consectetur velit dui rhoncus velit.\r\nAliquam mauris mi, aliquam sit amet lacinia vel, luctus ut massa.', NULL, '2021-12-04 18:31:03', '2021-12-04 18:31:03'),
 	(111, 1, 'Blogspot 1', 'Duis sit amet turpis a elit varius gravida quis vitae tortor.\r\nVivamus at urna elementum, imperdiet mauris vitae, facilisis sem.\r\nNunc augue ipsum, porta at tellus ac, dictum feugiat velit.\r\n\r\nVestibulum id sem vel enim consectetur hendrerit tincidunt in augue.', NULL, '2021-12-05 13:40:45', '2021-12-05 13:40:45'),
-	(112, 401, 'Blogspot 222', 'Curabitur tempor lectus vel auctor scelerisque.\r\nAliquam euismod tempus purus sit amet dapibus.\r\n\r\nAenean ac vestibulum massa.\r\nUt id sem risus.\r\nDuis quis erat faucibus tellus consequat luctus.\r\nNam ut tellus mi.', NULL, '2021-12-05 13:43:34', '2021-12-05 13:57:54');
+	(112, 401, 'Blogspot 222', 'Curabitur tempor lectus vel auctor scelerisque.\r\nAliquam euismod tempus purus sit amet dapibus.\r\n\r\nAenean ac vestibulum massa.\r\nUt id sem risus.\r\nDuis quis erat faucibus tellus consequat luctus.\r\nNam ut tellus mi.', NULL, '2021-12-05 13:43:34', '2021-12-05 13:57:54'),
+	(113, 1, 'Gamma Ray', 'El contenido de este post está relacionado con el grupo musical llamado Gamma Ray, cuya expresión musical se enmarca en el género Power Metal. La revista.', '20211204180908_a.jpg', '2021-12-19 19:13:35', '2021-12-19 19:13:35'),
+	(114, 1, 'abc', 'abc', '20211204180908_a.jpg', '2022-01-07 19:36:05', '2021-12-19 19:36:05'),
+	(115, 1, '2022', 'El abecedario comienza con las primeras dos letras del alfabeto.', '20211219194017_bienhecho.jpg', '2022-01-08 18:47:00', '2022-01-08 18:47:00'),
+	(116, 1, 'Romansky', 'El post romansky', '20220122195841_composer.jpg', '2022-01-22 19:57:38', '2022-01-22 19:57:38');
 /*!40000 ALTER TABLE `blog` ENABLE KEYS */;
 
 -- Volcando estructura para tabla pythonflaskcontactos.contactos
@@ -68,11 +72,11 @@ CREATE TABLE IF NOT EXISTS `contactos` (
   `telefono` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla pythonflaskcontactos.contactos: ~6 rows (aproximadamente)
+-- Volcando datos para la tabla pythonflaskcontactos.contactos: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `contactos` DISABLE KEYS */;
 INSERT INTO `contactos` (`id`, `nombre`, `telefono`, `email`, `created_at`, `updated_at`) VALUES
 	(1, 'José David', '77777772', 'roberto@gmail.com', '2021-09-16 13:19:44', '2021-09-16 13:19:44'),
@@ -82,22 +86,43 @@ INSERT INTO `contactos` (`id`, `nombre`, `telefono`, `email`, `created_at`, `upd
 	(6, 'Sandra Gómez', '+12344656789', 'sandara@gmail.com', '2021-09-19 19:40:50', '2021-09-19 19:40:50');
 /*!40000 ALTER TABLE `contactos` ENABLE KEYS */;
 
--- Volcando estructura para tabla pythonflaskcontactos.testwtf
-CREATE TABLE IF NOT EXISTS `testwtf` (
+-- Volcando estructura para tabla pythonflaskcontactos.submissions
+CREATE TABLE IF NOT EXISTS `submissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `forma` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `datos` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla pythonflaskcontactos.testwtf: ~2 rows (aproximadamente)
-/*!40000 ALTER TABLE `testwtf` DISABLE KEYS */;
-INSERT INTO `testwtf` (`id`, `nombre`, `email`, `created_at`, `updated_at`) VALUES
-	(1, 'Otro', 'otro@gmail.com', '2021-09-12 17:21:15', '2021-09-12 17:21:15'),
-	(4, 'Otros', 'otros@gmail.com', '2021-09-16 13:19:44', '2021-09-16 13:19:44');
-/*!40000 ALTER TABLE `testwtf` ENABLE KEYS */;
+-- Volcando datos para la tabla pythonflaskcontactos.submissions: ~11 rows (aproximadamente)
+/*!40000 ALTER TABLE `submissions` DISABLE KEYS */;
+INSERT INTO `submissions` (`id`, `forma`, `datos`, `created_at`) VALUES
+	(1, 'contacto', '{"nombre": "Jonás", "email": "jonas@gmail.com", "mensaje": "Mensaje de Jonás", "documento": null}', '2022-01-23 17:54:11'),
+	(2, 'contacto', '{"nombre": "Sandra Gómez", "email": "sandra.gomez@gmail.com", "mensaje": "Mensaje de Sandra Gómez", "documento": "20220123175833_a.jpg"}', '2022-01-23 17:58:32'),
+	(3, 'contacto', '{"nombre": "Ron", "email": "ron@gmail.com", "mensaje": "Mensaje de Ron Ron", "documento": null}', '2022-01-23 17:58:32'),
+	(4, 'contacto', '{"nombre": "Mariana", "email": "mariana@gmail.com", "mensaje": "Este es el mensaje de Mariana, enviado a las 5:59", "documento": "20220123175959_abcdefghijklmnnopqrstuvwxyz123456789_ABCDEFGHIJKLMNNOPQRSTUVWXYZ.jpg"}', '2022-01-23 17:58:32'),
+	(5, 'contacto', '{"nombre": "Joe", "email": "joe@gmail.com", "mensaje": "Mensaje provisional de Joe", "documento": null}', '2022-01-23 17:58:32'),
+	(6, 'contacto', '{"nombre": "Robert", "email": "robert@gmail.com", "mensaje": "Mensaje de robert", "documento": null}', '2022-01-23 18:07:28'),
+	(7, 'contacto', '{"nombre": "Alfa", "email": "alfa@gmail.com", "mensaje": "Mensaje alfañero", "documento": null}', '2022-01-23 18:07:49'),
+	(8, 'contacto', '{"nombre": "Beta", "email": "betaa@gmail.com", "mensaje": "Mensaje betancio", "documento": "20220123181142_asombro.png"}', '2022-01-23 18:11:42'),
+	(9, 'contacto', '{"nombre": "David", "email": "david@gmail.com", "mensaje": "Esto es una prueba de envío de formulario, veamos qué tal funciona.", "documento": "20220123182346_bienhecho.jpg"}', '2022-01-23 18:23:46'),
+	(10, 'contacto', '{"nombre": "David", "email": "david@gmail.com", "mensaje": "Esto es una prueba de envío de formulario, veamos qué tal funciona.", "documento": "20220123182540_bienhecho.jpg"}', '2022-01-23 18:25:40'),
+	(11, 'contacto', '{"nombre": "David", "email": "david@gmail.com", "mensaje": "Esto es una prueba de envío de formulario, veamos qué tal funciona.", "documento": "20220123182836_bienhecho.jpg"}', '2022-01-23 18:28:36'),
+	(12, 'contacto', '{"nombre": "Rigoberto", "email": "rigoberto@gmail.com", "mensaje": "Hola, presento una denuncia administrativa contra el encargado del website, que supongo es un webmaster, porque no sabe hacer nada, es un inútil.", "documento": "20220123204414_comenzamos.jpg"}', '2022-01-23 20:44:14'),
+	(13, 'contacto', '{"nombre": "Rigoberto", "email": "rigoberto@gmail.com", "mensaje": "Hola, presento una denuncia administrativa contra el encargado del website, que supongo es un webmaster, porque no sabe hacer nada, es un inútil.", "documento": "20220123204610_comenzamos.jpg"}', '2022-01-23 20:46:10'),
+	(14, 'contacto', '{"nombre": "Alfa", "email": "official.dduran@gmail.com", "mensaje": "Mensaje alfa", "documento": null}', '2022-01-29 18:25:45'),
+	(15, 'contacto', '{"nombre": "Alfa", "email": "official.dduran@gmail.com", "mensaje": "Mensaje alfa", "documento": null}', '2022-01-29 18:41:54'),
+	(16, 'contacto', '{"nombre": "Rigoberto González", "email": "official.dduran@gmail.com", "mensaje": "Envío adjunto en JPG", "documento": "20220129185411_composer.jpg"}', '2022-01-29 18:54:11'),
+	(17, 'contacto', '{"nombre": "Rongo", "email": "rongo@gmail.com", "mensaje": "Mensaje de Rongo. Viene adjunto una imagen JPG", "documento": "20220129190002_composer.jpg"}', '2022-01-29 19:00:02'),
+	(18, 'contacto', '{"nombre": "Ronquero", "email": "ronquero@gmail.com", "mensaje": "Mensaje ronquero. Viene adjunto un archivo composer de las 7:05 pm.", "documento": "20220129190502_composer.jpg"}', '2022-01-29 19:05:02'),
+	(19, 'contacto', '{"nombre": "Sandra Gómez", "email": "sandra@gmail.com", "mensaje": "Snadra envía un archivo en JPEG", "documento": "20220129193708_archivo.jpeg"}', '2022-01-29 19:37:08'),
+	(20, 'contacto', '{"nombre": "Sandra Gómez", "email": "sandra@gmail.com", "mensaje": "Snadra envía un archivo en JPEG", "documento": "20220129194028_archivo.jpeg"}', '2022-01-29 19:40:28'),
+	(21, 'contacto', '{"nombre": "Sandra Gómez", "email": "sandra@gmail.com", "mensaje": "Snadra envía un archivo en JPEG", "documento": "20220129194121_archivo.jpeg"}', '2022-01-29 19:41:21'),
+	(22, 'contacto', '{"nombre": "Pensativo", "email": "pensativo@gmail.com", "mensaje": "Este mensaje lo envío desde mi iPhone. Adjunto un archivo en formato PNG, que es más pesado que un JPG.", "documento": "20220129195757_asombro.png"}', '2022-01-29 19:57:57'),
+	(23, 'contacto', '{"nombre": "Ron", "email": "official.dduran@gmail.com", "mensaje": "Roño dice hola", "documento": "20220129204238_a.jpg"}', '2022-01-29 20:42:38'),
+	(24, 'contacto', '{"nombre": "Saramiento", "email": "sarmiento@gmail.com", "mensaje": "Envío documento adjunto. En teoría debería deshabilitarse el botón submit después que validó el formulario.", "documento": "20220129204625_a.jpg"}', '2022-01-29 20:46:25');
+/*!40000 ALTER TABLE `submissions` ENABLE KEYS */;
 
 -- Volcando estructura para tabla pythonflaskcontactos.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -106,11 +131,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `contrasena` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=507 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Volcando datos para la tabla pythonflaskcontactos.users: ~374 rows (aproximadamente)
+-- Volcando datos para la tabla pythonflaskcontactos.users: ~334 rows (aproximadamente)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `nombre`, `email`, `contrasena`, `created_at`, `updated_at`) VALUES
 	(1, 'David Durán', 'official.dduran@gmail.com', '$2b$12$ecrObtGA/CTOWqjrU7HSkO2MBOTZYWQ7ggS0IOyW/316jtfelwICC', '2021-09-12 17:07:00', '2021-09-16 15:17:11'),

@@ -4,79 +4,82 @@ Este proyecto está basado en el tutorial oficial de Flask: https://flask.pallet
 	3. Una estructura más ordenada para los módulos
 
 La aplicación se ejecuta con:
-	flask run
+	Modo desarrollo
+		source venv/Scripts/activate (en Windows)
+		flask run
 
-Sólo hay un tema con datatables
-	De las múltiples integraciones Datatables con Python-Flask que encontré en internet, la de SergioLlana es la única que funcionó perfecto. Las otras funcionaban pero estaban armadas para trabajar todo dentro de un único archivo app.py, de tal modo que al intentar integrarlas con mi proyecto que usa Blueprints, la consola del navegador indicaba: net::ERR CONTENT LENGTH MISMATCH. Nunca encontré la causa de este problema.
+Temas pendientes
+	1. Datatables
+		De las múltiples integraciones Datatables con Python-Flask que encontré en internet, la de SergioLlana es la única que funcionó perfecto. Las otras funcionaban pero estaban armadas para trabajar todo dentro de un único archivo app.py, de tal modo que al intentar integrarlas con mi proyecto que usa Blueprints, la consola del navegador indicaba: net::ERR CONTENT LENGTH MISMATCH. Nunca encontré la causa de este problema.
 
-	La única integración que funcionó es la de SergioLlana, que también usa Blueprints:
-		https://github.com/SergioLlana/datatables-flask-serverside
+		La única integración que funcionó es la de SergioLlana, que también usa Blueprints:
+			https://github.com/SergioLlana/datatables-flask-serverside
 
-	Con la integración de SergioLlana, la consola Linux o Windows devuelve una cadena de este tamaño cada vez que se llena la tabla:
-		127.0.0.1 - - [31/Oct/2021 16:05:47] "GET /backend/userDatatables/serverside_table?sEcho=3&iColumns=4&sColumns=%2C%2C%2C&iDisplayStart=0&iDisplayLength=10&mDataProp_0=Column%20A&sSearch_0=&bRegex_0=false&bSearchable_0=true&bSortable_0=true&mDataProp_1=Column%20B&sSearch_1=&bRegex_1=false&bSearchable_1=true&bSortable_1=true&mDataProp_2=Column%20C&sSearch_2=&bRegex_2=false&bSearchable_2=true&bSortable_2=true&mDataProp_3=Column%20D&sSearch_3=&bRegex_3=false&bSearchable_3=true&bSortable_3=true&sSearch=he&bRegex=false&iSortCol_0=0&sSortDir_0=asc&iSortingCols=1&_=1635712629287 HTTP/1.1" 200 -
-	Recuerdo que las otras integraciones (las que no funcionaron), devolvían una cadena del doble de largo, quizá desde ahí radicaba el problema, que la petición estaba mal hecha, aunque no creo, porque, sí funcionaban en su modo en un solo archivo.
+		Con la integración de SergioLlana, la consola Linux o Windows devuelve una cadena de este tamaño cada vez que se llena la tabla:
+			127.0.0.1 - - [31/Oct/2021 16:05:47] "GET /backend/userDatatables/serverside_table?sEcho=3&iColumns=4&sColumns=%2C%2C%2C&iDisplayStart=0&iDisplayLength=10&mDataProp_0=Column%20A&sSearch_0=&bRegex_0=false&bSearchable_0=true&bSortable_0=true&mDataProp_1=Column%20B&sSearch_1=&bRegex_1=false&bSearchable_1=true&bSortable_1=true&mDataProp_2=Column%20C&sSearch_2=&bRegex_2=false&bSearchable_2=true&bSortable_2=true&mDataProp_3=Column%20D&sSearch_3=&bRegex_3=false&bSearchable_3=true&bSortable_3=true&sSearch=he&bRegex=false&iSortCol_0=0&sSortDir_0=asc&iSortingCols=1&_=1635712629287 HTTP/1.1" 200 -
+		Recuerdo que las otras integraciones (las que no funcionaron), devolvían una cadena del doble de largo, quizá desde ahí radicaba el problema, que la petición estaba mal hecha, aunque no creo, porque, sí funcionaban en su modo en un solo archivo.
 
-	Sólo encuentro un tema con la integración de SergioLlana, y es la siguiente. Este archivo: https://github.com/SergioLlana/datatables-flask-serverside/blob/master/app/mod_tables/models.py. Los datos de prueba se meten en DATA_SAMPLE. En total son 6 elementos dentro de esa lista. ¿Pero qué pasa si mi base de datos contiene digamos 20 millones de registros? En este caso sería imposible meterlos todos dentro de DATA_SAMPLE, bueno, sí se puede, pero seguro habría un tema de performance ahí. De tal modo que cada vez que se llame a models.py (al cargar la tabla o al hacer una búsqueda dentro del campo Search, se hará una petición a la BD para recuperar los 20 millones de registros para guardarlos en DATA_SAMPLE.
+		Sólo encuentro un tema con la integración de SergioLlana, y es la siguiente. Este archivo: https://github.com/SergioLlana/datatables-flask-serverside/blob/master/app/mod_tables/models.py. Los datos de prueba se meten en DATA_SAMPLE. En total son 6 elementos dentro de esa lista. ¿Pero qué pasa si mi base de datos contiene digamos 20 millones de registros? En este caso sería imposible meterlos todos dentro de DATA_SAMPLE, bueno, sí se puede, pero seguro habría un tema de performance ahí. De tal modo que cada vez que se llame a models.py (al cargar la tabla o al hacer una búsqueda dentro del campo Search, se hará una petición a la BD para recuperar los 20 millones de registros para guardarlos en DATA_SAMPLE.
 
-	Por lo que veo, el proyecto de SergioLlana está hecho para funcionar con bases de datos más bien pequeñas, lo suficiente como para que models.py recupere sin problema todos los registros deseados de la BD sin que el performance se vea afectado.
+		Por lo que veo, el proyecto de SergioLlana está hecho para funcionar con bases de datos más bien pequeñas, lo suficiente como para que models.py recupere sin problema todos los registros deseados de la BD sin que el performance se vea afectado.
 
-	Alternativa
-		La mejor alternativa es armar yo de cero mi propia integración. Así ya no dependo de nadie más que de mi propio código. Para hacer esto, tengo que lograr que el servidor (en mi controlador) devuelva los registros solicitados según lo que se seleccione en la tabla. Para ello tengo que recuperar todos los parámetros que vienen en la petición y trabajarlos para devolver lo que se espera. Esta es la documentación acerca de los parámetros que vienen en una petición datatables: https://datatables.net/manual/server-side
+		Alternativa
+			La mejor alternativa es armar yo de cero mi propia integración. Así ya no dependo de nadie más que de mi propio código. Para hacer esto, tengo que lograr que el servidor (en mi controlador) devuelva los registros solicitados según lo que se seleccione en la tabla. Para ello tengo que recuperar todos los parámetros que vienen en la petición y trabajarlos para devolver lo que se espera. Esta es la documentación acerca de los parámetros que vienen en una petición datatables: https://datatables.net/manual/server-side
 
-		Para lograr esto, tengo dos alternativas:
+			Para lograr esto, tengo dos alternativas:
 
-		1. Seguir con el tutorial de https://tutorial101.blogspot.com/2021/04/datatable-ajax-pagination-using-python.html?m=1 AJAJajajaja, de hecho aquí está el código que necesito:
-			@app.route("/ajaxfile",methods=["POST","GET"])
-				def ajaxfile():
-					conn = mysql.connect()
-					cursor = conn.cursor(pymysql.cursors.DictCursor)
+			1. Seguir con el tutorial de https://tutorial101.blogspot.com/2021/04/datatable-ajax-pagination-using-python.html?m=1 AJAJajajaja, de hecho aquí está el código que necesito:
+				@app.route("/ajaxfile",methods=["POST","GET"])
+					def ajaxfile():
+						conn = mysql.connect()
+						cursor = conn.cursor(pymysql.cursors.DictCursor)
 
-					if request.method == 'POST':
-						draw = request.form['draw']
-						row = int(request.form['start'])
-						rowperpage = int(request.form['length'])
-						searchValue = request.form["search[value]"]
+						if request.method == 'POST':
+							draw = request.form['draw']
+							row = int(request.form['start'])
+							rowperpage = int(request.form['length'])
+							searchValue = request.form["search[value]"]
 
-						## Total number of records without filtering
-						cursor.execute("select count(*) as allcount from employee")
-						rsallcount = cursor.fetchone()
-						totalRecords = rsallcount['allcount']
+							## Total number of records without filtering
+							cursor.execute("select count(*) as allcount from employee")
+							rsallcount = cursor.fetchone()
+							totalRecords = rsallcount['allcount']
 
-						## Total number of records with filtering
-						likeString = "%" + searchValue +"%"
-						cursor.execute("SELECT count(*) as allcount from employee WHERE name LIKE %s OR position LIKE %s OR office LIKE %s", (likeString, likeString, likeString))
-						rsallcount = cursor.fetchone()
-						totalRecordwithFilter = rsallcount['allcount']
+							## Total number of records with filtering
+							likeString = "%" + searchValue +"%"
+							cursor.execute("SELECT count(*) as allcount from employee WHERE name LIKE %s OR position LIKE %s OR office LIKE %s", (likeString, likeString, likeString))
+							rsallcount = cursor.fetchone()
+							totalRecordwithFilter = rsallcount['allcount']
 
-						## Fetch records
-						if searchValue=='':
-							cursor.execute("SELECT * FROM employee ORDER BY name asc limit %s, %s;", (row, rowperpage))
-							employeelist = cursor.fetchall()
-						else:
-							cursor.execute("SELECT * FROM employee WHERE name LIKE %s OR position LIKE %s OR office LIKE %s limit %s, %s;", (likeString, likeString, likeString, row, rowperpage))
-							employeelist = cursor.fetchall()
+							## Fetch records
+							if searchValue=='':
+								cursor.execute("SELECT * FROM employee ORDER BY name asc limit %s, %s;", (row, rowperpage))
+								employeelist = cursor.fetchall()
+							else:
+								cursor.execute("SELECT * FROM employee WHERE name LIKE %s OR position LIKE %s OR office LIKE %s limit %s, %s;", (likeString, likeString, likeString, row, rowperpage))
+								employeelist = cursor.fetchall()
 
-						data = []
-						for row in employeelist:
-							data.append({
-								'name': row['name'],
-								'position': row['position'],
-								'age': row['age'],
-								'salary': row['salary'],
-								'office': row['office'],
-							})
+							data = []
+							for row in employeelist:
+								data.append({
+									'name': row['name'],
+									'position': row['position'],
+									'age': row['age'],
+									'salary': row['salary'],
+									'office': row['office'],
+								})
 
-						response = {
-							'draw': draw,
-							'iTotalRecords': totalRecords,
-							'iTotalDisplayRecords': totalRecordwithFilter,
-							'aaData': data,
-						}
+							response = {
+								'draw': draw,
+								'iTotalRecords': totalRecords,
+								'iTotalDisplayRecords': totalRecordwithFilter,
+								'aaData': data,
+							}
 
-						return jsonify(response)
+							return jsonify(response)
 
-		2. En este video https://www.youtube.com/watch?v=cDlo4v2LKmQ&t=1318s se hace justo lo que necesito: leer cada parámetro enviado en la petición datatables y devolver una respuesta de acuerdo a dichos parámetros. Todo esto se hace en un CodeIgniter. Una vez que ya haya armado ese Codeigniter, ahora sí regresar a Python e intentar replicarlo. Sólo recordar que para devolver un jSON en Python, hay que hacerlo con:
-			import json
-			json.dumps(resultado)
+			2. En este video https://www.youtube.com/watch?v=cDlo4v2LKmQ&t=1318s se hace justo lo que necesito: leer cada parámetro enviado en la petición datatables y devolver una respuesta de acuerdo a dichos parámetros. Todo esto se hace en un CodeIgniter. Una vez que ya haya armado ese Codeigniter, ahora sí regresar a Python e intentar replicarlo. Sólo recordar que para devolver un jSON en Python, hay que hacerlo con:
+				import json
+				json.dumps(resultado)
 
 

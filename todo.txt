@@ -2,6 +2,7 @@ SIGO CON
 SIGO CON
 SIGO CON
 
+		1. Completar el módulo CONTACTO (agregar ítem menú "Contacto")
 		2. Quitar el uso de "from datetime import datetime" en los modelos por lo mencionado en mi documentación python.txt > DATETIMES
 		4. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
 		5. Phonenumbers
