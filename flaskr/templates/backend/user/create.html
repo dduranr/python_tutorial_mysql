@@ -40,6 +40,17 @@
                     </ul>
                 {% endif %}
             </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.rol.label() }}
+                {{ formulario.rol(class="form-control") }}
+                {% if formulario.rol.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.rol.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
             <div class="col-md-12 mb-3">
                 {{ formulario.submit(class="btn btn-primary float-end") }}
                 <!--

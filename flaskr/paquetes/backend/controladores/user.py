@@ -90,13 +90,14 @@ def store():
                 contrasena = request.form['contrasena']
                 contrasena_encode = contrasena.encode('utf-8')
                 contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
+                rol = request.form['rol']
 
                 userExistente = User.getByEmail(email)
 
                 if userExistente:
                     errores += 'Imposible crear usuario, pues '+email+' ya existe como usuario en base de datos'
                 else :
-                    usuario = User(nombre=nombre, email=email, contrasena=contrasena_crypt)
+                    usuario = User(nombre=nombre, email=email, contrasena=contrasena_crypt, rol=rol)
                     usuario.post()
                     flash('Usuario agregado ('+email+')', 'success')
                     return redirect(url_for('backend.user.index'))
@@ -133,7 +134,7 @@ def edit(id):
         user = User.getById(id)
         if (request.method == 'GET'):
             # Generamos el form y le pasamos los values de cada campo (en la vista los values se ponen automáticamente)
-            formulario = UserFormUpdate(request.form, nombre=user.nombre, email=user.email)
+            formulario = UserFormUpdate(request.form, nombre=user.nombre, email=user.email, rol=user.rol)
 
             if user:
                 return render_template('backend/user/edit.html', user=user, formulario=formulario)
@@ -174,6 +175,7 @@ def update(id):
                 nombre = request.form['nombre']
                 email = request.form['email']
                 contrasena = request.form['contrasena']
+                rol = request.form['rol']
 
                 userExistente = User.getById(id)
 
@@ -183,10 +185,10 @@ def update(id):
                     if(len(contrasena) > 0):
                         contrasena_encode = contrasena.encode('utf-8')
                         contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
-                        dataToSave = {"nombre": nombre, "email": email, "contrasena": contrasena_crypt}
+                        dataToSave = {"nombre": nombre, "email": email, "contrasena": contrasena_crypt, "rol":rol}
                         User.put(id, dataToSave)
                     else:
-                        dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena}
+                        dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena, "rol":rol}
                         User.put(id, dataToSave)
                         flash('Usuario actualizado ('+str(id)+': '+userExistente.nombre+')', 'success')
                     return redirect(url_for('backend.user.index'))

@@ -1,7 +1,8 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
 from flaskr import db
 from flaskr.paquetes.backend.serverside import table_schemas
-from datetime import datetime
+# from datetime import datetime
+from sqlalchemy.sql import func
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, exc, or_, Column, Integer, String, DateTime
 from sqlalchemy.orm import scoped_session, sessionmaker, aliased
@@ -19,8 +20,10 @@ class Blog(Base):
     title = Column(String(255), nullable=False, unique=True)
     contenido = Column(String(255), nullable=False)
     img = Column(String(10), nullable=True)
-    created_at = Column(DateTime(255), default=datetime.now())
-    updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
+    created_at = Column(DateTime(255), default=func.now())
+    updated_at = Column(DateTime(255), default=func.now(), onupdate=func.now())
+    # created_at = Column(DateTime(255), default=datetime.now())
+    # updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
 
 
     # Este método se encarga de recuperar los datos que van a parar al datatables

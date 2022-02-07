@@ -27,7 +27,7 @@ USERS = [
         "column_name": "EMAIL",
         "default": "",
         "order": 3,
-        "searchable": False
+        "searchable": True
     }
 ]
 
@@ -58,7 +58,7 @@ BLOG = [
         "column_name": "CREADO",
         "default": 0,
         "order": 4,
-        "searchable": False
+        "searchable": True
     }
 ]
 
@@ -79,23 +79,9 @@ CONTACTO = [
     },
     {
         "data_name": "C",
-        "column_name": "DATOS",
-        "default": "",
-        "order": 3,
-        "searchable": True
-    },
-    {
-        "data_name": "D",
-        "column_name": "DATOS",
-        "default": "",
-        "order": 4,
-        "searchable": True
-    },
-    {
-        "data_name": "E",
         "column_name": "CREADO",
         "default": 0,
-        "order": 5,
-        "searchable": False
+        "order": 3,
+        "searchable": True
     }
 ]

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flaskr.paquetes.general.constantes import Constantes
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, Length
 from wtforms import ValidationError
 import re
@@ -28,7 +28,23 @@ class UserFormCreate(FlaskForm):
 				raise ValidationError(passErrorMsg)
 		else:
 			raise ValidationError('La contraseña es obligatoria.')
+	rol = SelectField(
+		u'Rol',
+		validators=[DataRequired()],
+		choices=[
+			('', ':: Elige ::'),
+			('admin', 'Administrador'),
+			('editor', 'Editor')
+		]
+	)
 	submit = SubmitField("Crear")
+
+
+	def edit_user(request, id):
+		user = User.query.get(id)
+		form = UserDetails(request.POST, obj=user)
+		form.group_id.choices = [(g.id, g.name) for g in Group.query.order_by('name')]
+
 
 class UserFormUpdate(FlaskForm):
 	# Cada variable representa un campo de formulario
@@ -48,5 +64,13 @@ class UserFormUpdate(FlaskForm):
 				return True
 			else:
 				raise ValidationError(passErrorMsg)
-
+	rol = SelectField(
+		u'Rol',
+		validators=[DataRequired()],
+		choices=[
+			('', ':: Elige ::'),
+			('admin', 'Administrador'),
+			('editor', 'Editor')
+		]
+	)
 	submit = SubmitField("Actualizar")

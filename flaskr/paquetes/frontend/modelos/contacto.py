@@ -1,9 +1,7 @@
 from flaskr.paquetes.backend.serverside import table_schemas
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
-# from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, exc, or_, Column, Integer, String, DateTime
-# from sqlalchemy.orm import scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
 from flaskr.paquetes.backend.modelos.user import *
 from sqlalchemy.dialects import postgresql
@@ -26,7 +24,7 @@ class Contacto(Base):
         DATA = []
         query = sessionDB.query(Contacto)
         for c in query.all():
-            DATA.append({'A': c.id, 'B': c.datos, 'C': c.datos, 'D': c.datos, 'E': c.created_at})
+            DATA.append({'A': c.id, 'B': c.datos, 'C': c.created_at})
         columns = table_schemas.CONTACTO
         sessionDB.close()
         sessionDB.remove()

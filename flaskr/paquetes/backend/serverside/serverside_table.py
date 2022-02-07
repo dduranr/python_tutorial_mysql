@@ -90,35 +90,16 @@ class ServerSideTable(object):
                 data_name = column['data_name']
                 column_name = column['column_name']
                 valor = x.get(data_name, default)
-                # row[column_name] = valor
-
-                # if self.table == 'table_contacto' and column_name == 'DATOS':
-                #     print('Es table_contacto y la columna es DATOS')
 
 
+                # Sólo si es la tabla de contacto metemos info custom a las columnas.
                 if self.table == 'table_contacto':
                     if column_name == 'DATOS':
                         json_object = json.loads(valor)
-
-                        # Si ponemos un break en el 1er if, debería sólo imprimirse la columna NOMBRE, pero no es así, el valor "NOMBRE" se pone en todas las columnas. Esto significa que como la el nombre de la columna es el mismo en todas, por eso si no ponemos continue ni break, el último if es el bueno, y su valor es el que se pone a otdas las columnas DATOS.
-
-                        if vuelta==2:
-                            # row[column_name] = json_object['nombre']
-                            row[column_name] = 'nombre'
-                            print('Se lee vuelta 2')
-                        elif vuelta==3:
-                            # row[column_name] = json_object['email']
-                            row[column_name] = 'email'
-                            print('Se lee vuelta 3')
-                        elif vuelta==4:
-                            # row[column_name] = json_object['mensaje']
-                            row[column_name] = 'mensaje'
-                            print('Se lee vuelta 4')
-                        else:
-                            row[column_name] = ':)'
-
+                        row[column_name] = json_object['email']
                     else:
                         row[column_name] = valor
+                # De lo contrario metemos en las columnas el valor tal cual viene de la BD
                 else:
                     row[column_name] = valor
 

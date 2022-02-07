@@ -40,6 +40,7 @@
                     </ul>
                 {% endif %}
             </div>
+            <div class="col-md-12 mb-3">{{ formulario.remember_me() }} {{ formulario.remember_me.label }}</div>
             <div class="col-md-12 mb-3">
                 <label>.</label>
                 {{ formulario.submit(class="btn btn-primary w-100") }}

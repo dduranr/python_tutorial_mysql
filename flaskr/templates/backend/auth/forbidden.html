@@ -1,0 +1,20 @@
+{% extends "backend/layout/base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Forbidden{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+	<div class="col-md-12">
+		<div class="alert alert-primary">
+            {% if g.user %}
+				<h5>Forbidden</h5>
+				<p>No tienes permitido ver esta sección</p>
+            {% else %}
+            {% endif %}
+			<p></p>
+			<p></p>
+			<p></p>
+		</div>
+	</div>
+{% endblock %}

@@ -2,6 +2,8 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, Markup
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.urls import url_parse
+from flask_login import login_required, logout_user, current_user, login_user
 from flaskr.paquetes.backend.formularios.auth import *
 from flaskr.paquetes.backend.modelos.user import *
 from flaskr.paquetes.general.helpers import *
@@ -19,7 +21,7 @@ logger = fileLogSystem()
 @bp.route('/login', methods=['GET'])
 def login():
     try:
-        if 'user_id' in session:
+        if current_user.is_authenticated:
             return redirect(url_for('backend.auth.welcome'))
         else:
             formulario = AuthFormLogin()
@@ -37,6 +39,35 @@ def login():
         error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
         logger.exception(error)
         return render_template('backend/errores/error.html', error=error)
+
+
+
+
+# Esta ruta se encarga de mostrar formulario para hacer login
+@bp.route('/forbidden', methods=['GET'])
+def forbidden():
+    try:
+        return redirect(url_for('backend.auth.forbidden'))
+
+    except TypeError as e:
+        error = 'Excepción TypeError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except ValueError as e:
+        error = 'Excepción ValueError ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+    except Exception as e:
+        error = 'Excepción general ('+str(e.__class__)+'): '+str(e)
+        logger.exception(error)
+        return render_template('backend/errores/error.html', error=error)
+
+
+
+
+
+
+
 
 
 
@@ -60,6 +91,10 @@ def store():
 
                     # Si en la BD se guarda un texto cualquiera y no un hash (p.e. abc), el navegador devuelve: ValueError: Invalid salt
                     if(bcrypt.checkpw(contrasena_encode, bd_contrasena)):
+
+                        # Flask-Login
+                        login_user(usuario)
+
                         session.clear()
                         session['user_id'] = usuario.id
                         session['user_nombre'] = usuario.nombre
@@ -174,7 +209,7 @@ def logout():
 
 
 
-# Esta ruta se encarga de requerir autenticación para cualquier ruta en donde se indique
+# Esta función se encarga de requerir autenticación para cualquier ruta en donde se indique
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):

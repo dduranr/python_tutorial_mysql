@@ -1,9 +1,13 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
 from flaskr.paquetes.backend.serverside import table_schemas
-from datetime import datetime
+# from datetime import datetime
+from sqlalchemy.sql import func
 from sqlalchemy import create_engine, exc, Column, Integer, String, DateTime, asc
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+# from flaskr import login_manager
 import os
 
 
@@ -17,15 +21,20 @@ sessionDB = scoped_session(session_factory)
 
 
 
-class User(Base):
+# class User(Base):
+# Flask-Login
+class User(Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(Integer(), primary_key=True)
     nombre = Column(String(255), nullable=False)
     email = Column(String(255), nullable=False, unique=True)
     contrasena = Column(String(255), nullable=False)
-    created_at = Column(DateTime(255), default=datetime.now())
-    updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
+    rol = Column(String(255), nullable=False)
+    created_at = Column(DateTime(255), default=func.now())
+    updated_at = Column(DateTime(255), default=func.now(), onupdate=func.now())
+    # created_at = Column(DateTime(255), default=datetime.now())
+    # updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
 
 
     # Este método se encarga de recuperar los datos que van a parar al datatables
@@ -92,7 +101,8 @@ class User(Base):
         sessionDB.query(User).filter(User.id == id).update({
             User.nombre: datos['nombre'],
             User.email: datos['email'],
-            User.contrasena: datos['contrasena']
+            User.contrasena: datos['contrasena'],
+            User.rol: datos['rol']
         })
         sessionDB.commit()
 

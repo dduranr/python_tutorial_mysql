@@ -5,13 +5,24 @@ from os import environ
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flaskr.paquetes.general.constantes import Constantes
+from flaskr.paquetes.backend.modelos.user import User
 from flask_mail import Mail, Message
+from flask_login import LoginManager, login_user, logout_user, login_required
 
 # Esta línea genera un objeto BaseQuery de Flask-Sqlalchemy, no de Sqlalchemy solo. Este objeto es el que necesitaremos para usar el método paginate() en los modelos
 db = SQLAlchemy()
 
 # Para envío de correo
 mail = Mail()
+
+# Instanciamos el objeto para el uso de Flask-Login
+login_manager = LoginManager()
+
+# usuarioActual = User.getById(1)
+# print('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
+# print(usuarioActual)
+# print(usuarioActual.nombre)
+# print(usuarioActual['nombre'])
 
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
@@ -37,8 +48,28 @@ def create_app(test_config=None):
         db = SQLAlchemy(app)
 
 
-    # Inicializamos el objeto mail
+    # Inicializamos el objeto mail (en cualquier otro archivo puede recuperarse: from flaskr import mail)
     mail.init_app(app)
+
+    # Flask-Login
+    login_manager.init_app(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        print('START - ID PASADO COMO PARÁMETRO')
+        print(user_id)
+        print('END - ID PASADO COMO PARÁMETRO')
+
+        if user_id is not None:
+            return User.getById(user_id)
+        return None
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        """Redirect unauthorized users to Login page."""
+        flash('You must be logged in to view that page.')
+        return redirect(url_for('backend.auth.forbidden'))
+
+
 
 
     if test_config is None:
@@ -79,4 +110,7 @@ def create_app(test_config=None):
     # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
     app.add_url_rule('/', endpoint='index')
 
+
+
     return app
+

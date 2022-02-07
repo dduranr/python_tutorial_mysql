@@ -10,18 +10,14 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
                     <th>Email</th>
-                    <th>Mensaje</th>
                     <th>Creado</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
                     <th>Email</th>
-                    <th>Mensaje</th>
                     <th>Creado</th>
                 </tr>
             </tfoot>
@@ -41,8 +37,6 @@
                 sAjaxSource: '{{ url_for("backend.datatables.serverside_table", tabla="submissions") }}',
                 columns: [
                   {"data": "ID"},
-                  {"data": "DATOS"},
-                  {"data": "DATOS"},
                   {"data": "DATOS"},
                   {"data": "CREADO"}
                 ],
