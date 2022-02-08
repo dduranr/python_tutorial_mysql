@@ -1,8 +1,9 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify, Markup
 )
-from werkzeug.security import check_password_hash, generate_password_hash
-from flaskr.paquetes.backend.controladores.auth import login_required
+from werkzeug.security import generate_password_hash
+# from flaskr.paquetes.backend.controladores.auth import login_required
+from flask_login import current_user, login_required
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.formularios.user import *
@@ -13,6 +14,7 @@ from datetime import datetime
 import functools
 import bcrypt
 import sys
+
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 # Semilla para encriptamiento de contraseña
@@ -82,24 +84,17 @@ def store():
             errores = ''
             formulario = UserFormCreate()
             if formulario.validate_on_submit():
-                now = datetime.now()
-                ahora = now.strftime("%Y-%m-%d %H:%M:%S")
-
-                nombre = request.form['nombre']
-                email = request.form['email']
-                contrasena = request.form['contrasena']
-                contrasena_encode = contrasena.encode('utf-8')
-                contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
-                rol = request.form['rol']
-
-                userExistente = User.getByEmail(email)
+                userExistente = User.getByEmail(formulario.email.data)
 
                 if userExistente:
-                    errores += 'Imposible crear usuario, pues '+email+' ya existe como usuario en base de datos'
+                    errores += 'Imposible crear usuario, pues '+formulario.email.data+' ya existe como usuario en base de datos'
                 else :
-                    usuario = User(nombre=nombre, email=email, contrasena=contrasena_crypt, rol=rol)
+                    usuario = User(nombre=formulario.nombre.data, email=formulario.email.data, rol=formulario.rol.data)
+                    usuario.set_password(formulario.contrasena.data)
                     usuario.post()
-                    flash('Usuario agregado ('+email+')', 'success')
+                    # Si existiera un formulario en el frontend donde el user se crea su propia cuenta, con la siguiente línea haríamos que se logueara automáticamente
+                    # login_user(usuario)
+                    flash('Usuario agregado ('+formulario.email.data+')', 'success')
                     return redirect(url_for('backend.user.index'))
             else:
                 errores += 'Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'
@@ -168,29 +163,27 @@ def edit(id):
 def update(id):
     try:
         errores = ''
-        user = User.getById(id)
         if (request.method == 'POST'):
             formulario = UserFormUpdate()
             if formulario.validate_on_submit():
-                nombre = request.form['nombre']
-                email = request.form['email']
-                contrasena = request.form['contrasena']
-                rol = request.form['rol']
-
                 userExistente = User.getById(id)
 
                 if not userExistente:
                     errores += 'Imposible actualizar user, pues el ID '+id+' no existe más en base de datos'
                 else :
-                    if(len(contrasena) > 0):
-                        contrasena_encode = contrasena.encode('utf-8')
-                        contrasena_crypt = bcrypt.hashpw(contrasena_encode, semilla)
-                        dataToSave = {"nombre": nombre, "email": email, "contrasena": contrasena_crypt, "rol":rol}
+                    if(len(formulario.contrasena.data) > 0):
+                        dataToSave = {"nombre": formulario.nombre.data, "email": formulario.email.data, "contrasena": formulario.contrasena.data, "rol": formulario.rol.data}
+                        # Hasheamos la nueva contraseña al formato tal como lo necesita Flask-Login
+                        dataToSave['contrasena'] = generate_password_hash(
+                            dataToSave.pop('contrasena'),
+                            method='sha256'
+                        )
                         User.put(id, dataToSave)
+                        flash('Usuario actualizado con pass ('+str(id)+': '+userExistente.nombre+')', 'success')
                     else:
-                        dataToSave = {"nombre": nombre, "email": email, "contrasena": userExistente.contrasena, "rol":rol}
+                        dataToSave = {"nombre":formulario.nombre.data, "email":formulario.email.data, "contrasena": userExistente.contrasena, "rol":formulario.rol.data}
                         User.put(id, dataToSave)
-                        flash('Usuario actualizado ('+str(id)+': '+userExistente.nombre+')', 'success')
+                        flash('Usuario actualizado sin pass ('+str(id)+': '+userExistente.nombre+')', 'success')
                     return redirect(url_for('backend.user.index'))
             else:
                 errores += 'Algún dato es incorrecto. (Recuerda que: '+Constantes.REQUISITOS_CONTRASENA+')'

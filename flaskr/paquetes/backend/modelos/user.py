@@ -37,6 +37,7 @@ class User(Base, UserMixin):
     # updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
 
 
+
     # Este método se encarga de recuperar los datos que van a parar al datatables
     def collect_data_serverside(self, request):
         usersDB = User.getAll()
@@ -46,6 +47,7 @@ class User(Base, UserMixin):
 
         columns = table_schemas.USERS
         return ServerSideTable(request, DATA, columns, True, True, 'backend.user', 'B', 'table_users').output_result()
+
 
 
     # Este método recupera todos los usuarios
@@ -59,6 +61,7 @@ class User(Base, UserMixin):
         return res
 
 
+
     # Este método recupera un registro según su ID
     # Params:
     #   id     Int. Identificador del registro
@@ -70,6 +73,7 @@ class User(Base, UserMixin):
         return res
 
 
+
     # Este método recupera un registro según su EMAIL
     # Params:
     #   email     String. Email del registro
@@ -79,6 +83,7 @@ class User(Base, UserMixin):
         sessionDB.close()
         sessionDB.remove()
         return res
+
 
 
     # Este método crea nuevo registro
@@ -93,11 +98,13 @@ class User(Base, UserMixin):
         sessionDB.remove()
 
 
+
     # Este método actualiza registro
     # Params:
     #   id     Int. Identificador del registro
     #   datos  Obj. Datos a actualizar
     def put(id, datos):
+        engine.dispose()
         sessionDB.query(User).filter(User.id == id).update({
             User.nombre: datos['nombre'],
             User.email: datos['email'],
@@ -105,6 +112,9 @@ class User(Base, UserMixin):
             User.rol: datos['rol']
         })
         sessionDB.commit()
+        sessionDB.close()
+        sessionDB.remove()
+
 
 
     # Este método elimina un registro
@@ -113,6 +123,30 @@ class User(Base, UserMixin):
     def delete(id):
         sessionDB.query(User).filter(User.id == id).delete()
         sessionDB.commit()
+
+
+
+    # Este método establece la contraseña
+    # Params:
+    #   self        Obj. El objeto usuario al que se le establecerá la contraseña
+    #   password    Str. La contraseña
+    def set_password(self, password):
+        """Create hashed password."""
+        self.contrasena = generate_password_hash(
+            password,
+            method='sha256'
+        )
+
+
+
+    # Este método checa si la contraseña introducida coincide con a de la BD
+    # Params:
+    #   self        Obj. El objeto usuario al que se le establecerá la contraseña
+    #   password    Str. La contraseña
+    def check_password(self, password):
+        """Check hashed password."""
+        return check_password_hash(self.contrasena, password)
+
 
 
     # Cuando se hace print() al objeto devuelto por esta clase, por defecto devolverá el email (no es que sólo contenga ese dato)

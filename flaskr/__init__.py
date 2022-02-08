@@ -2,12 +2,12 @@
 
 import os
 from os import environ
-from flask import Flask
+from flask import Flask, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flaskr.paquetes.general.constantes import Constantes
 from flaskr.paquetes.backend.modelos.user import User
 from flask_mail import Mail, Message
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 # Esta línea genera un objeto BaseQuery de Flask-Sqlalchemy, no de Sqlalchemy solo. Este objeto es el que necesitaremos para usar el método paginate() en los modelos
 db = SQLAlchemy()
@@ -18,11 +18,6 @@ mail = Mail()
 # Instanciamos el objeto para el uso de Flask-Login
 login_manager = LoginManager()
 
-# usuarioActual = User.getById(1)
-# print('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww')
-# print(usuarioActual)
-# print(usuarioActual.nombre)
-# print(usuarioActual['nombre'])
 
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
@@ -43,74 +38,75 @@ def create_app(test_config=None):
         MAIL_DEBUG = True,
     )
 
-    # Con este par de líneas logramos que la variable db esté disponible en toda la app (para ello hay que usar: from flaskr import db)
-    with app.app_context():
-        db = SQLAlchemy(app)
 
-
+    # --------------------------------
+    # ---   Inicializamos plugins  ---
+    # --------------------------------
     # Inicializamos el objeto mail (en cualquier otro archivo puede recuperarse: from flaskr import mail)
     mail.init_app(app)
 
     # Flask-Login
+    # load_useres fundamental para que nuestra aplicación funcione: antes de que se cargue cada página, nuestra aplicación debe verificar si el usuario está conectado o no (o si sigue conectado después de que haya transcurrido el tiempo). user_loadercarga a los usuarios por su ID único. Si se devuelve un usuario, esto significa que se ha desconectado del usuario. De lo contrario, cuando Nonese devuelve, se cierra la sesión del usuario.
     login_manager.init_app(app)
-    @login_manager.user_loader
-    def load_user(user_id):
-        print('START - ID PASADO COMO PARÁMETRO')
-        print(user_id)
-        print('END - ID PASADO COMO PARÁMETRO')
-
-        if user_id is not None:
-            return User.getById(user_id)
-        return None
-
-    @login_manager.unauthorized_handler
-    def unauthorized():
-        """Redirect unauthorized users to Login page."""
-        flash('You must be logged in to view that page.')
-        return redirect(url_for('backend.auth.forbidden'))
 
 
+    # @login_manager.user_loader
+    # def load_user(user_id):
+    #     if user_id is not None:
+    #         return User.getById(user_id)
+    #     return None
+
+    # # Por último, tenemos la unauthorizedruta, que utiliza el unauthorized_handlerdecorador para tratar con usuarios no autorizados. Cada vez que un usuario intente acceder a nuestra aplicación y no esté autorizado, esta ruta se activará.
+    # @login_manager.unauthorized_handler
+    # def unauthorized():
+    #     """Redirect unauthorized users to Login page."""
+    #     return redirect(url_for('backend.auth.forbidden'))
 
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('settings.py')
-        pass
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+    # Todo lo que esté dentro del WITH estará disponible en toda la app (por ejempo: from flaskr import db)
+    with app.app_context():
+
+        db = SQLAlchemy(app)
+
+        if test_config is None:
+            # load the instance config, if it exists, when not testing
+            app.config.from_pyfile('settings.py')
+            pass
+        else:
+            # load the test config if passed in
+            app.config.from_mapping(test_config)
 
 
-    # Flask no crea automáticamente un "instance folder", pero necesita crearse porque el proyecto guardará ahí el archivo de BD SQLite
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+        # Flask no crea automáticamente un "instance folder", pero necesita crearse porque el proyecto guardará ahí el archivo de BD SQLite
+        try:
+            os.makedirs(app.instance_path)
+        except OSError:
+            pass
 
-    # Recuperamos los archivos blueprints
-    from . paquetes.frontend.controladores import frontend
-    from . paquetes.backend.controladores import backend
-    from . paquetes.backend.controladores import auth
-    from . paquetes.backend.controladores import user
-    from . paquetes.backend.controladores import datatables
-    from . paquetes.backend.controladores import blog
-    from . paquetes.backend.controladores import contacto
+        # Recuperamos los archivos blueprints
+        from . paquetes.frontend.controladores import frontend
+        from . paquetes.backend.controladores import backend
+        from . paquetes.backend.controladores import auth
+        from . paquetes.backend.controladores import user
+        from . paquetes.backend.controladores import datatables
+        from . paquetes.backend.controladores import blog
+        from . paquetes.backend.controladores import contacto
 
-    # Anidamos los blueprints del back al blueprint "backend" para que así todas las urls del back tengan como prefijo "backend"
-    backend.bp.register_blueprint(auth.bp)
-    backend.bp.register_blueprint(user.bp)
-    backend.bp.register_blueprint(datatables.bp)
-    backend.bp.register_blueprint(blog.bp)
-    backend.bp.register_blueprint(contacto.bp)
+        # Anidamos los blueprints del back al blueprint "backend" para que así todas las urls del back tengan como prefijo "backend"
+        backend.bp.register_blueprint(auth.bp)
+        backend.bp.register_blueprint(user.bp)
+        backend.bp.register_blueprint(datatables.bp)
+        backend.bp.register_blueprint(blog.bp)
+        backend.bp.register_blueprint(contacto.bp)
 
-    # Registramos los blueprints del back y front
-    app.register_blueprint(frontend.bp)
-    app.register_blueprint(backend.bp)
+        # Registramos los blueprints del back y front
+        app.register_blueprint(frontend.bp)
+        app.register_blueprint(backend.bp)
 
-    # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
-    app.add_url_rule('/', endpoint='index')
+        # La siguiente línea asocia el endpoint 'index' con la URL raíz (/). Así que url_for('index') o url_for('blog.index') harán lo mismo, generando la misma URL de cualquier manera.
+        app.add_url_rule('/', endpoint='index')
 
 
 
-    return app
+        return app
 

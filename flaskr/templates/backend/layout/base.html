@@ -84,13 +84,13 @@
             </div>
         </nav>
 
-        <div class="container my-5">
+        <div class="container mt-5">
             <header>
                 {% block header %}{% endblock %}
             </header>
         </div>
 
-        <div class="container my-5">
+        <div class="container my-1">
             <div class="row">
                 {% with mensajesFlash = get_flashed_messages(with_categories=true) %}
                     {% if mensajesFlash %}
