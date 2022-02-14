@@ -6,9 +6,7 @@
 
 {% block content %}
     <div class="col-md-12 text-end">
-        {% if g.user %}
-            <a class="btn btn-success" href="{{ url_for('backend.blog.create') }}">Crear nuevo</a>
-        {% endif %}
+        <a class="btn btn-success" href="{{ url_for('backend.blog.create') }}">Crear nuevo</a>
     </div>
     <div class="col-md-12">
         <table id="table_blogposts" class="table table-striped table-hover table-sm">

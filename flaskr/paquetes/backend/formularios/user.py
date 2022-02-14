@@ -40,10 +40,11 @@ class UserFormCreate(FlaskForm):
 	submit = SubmitField("Crear")
 
 
-	def edit_user(request, id):
-		user = User.query.get(id)
-		form = UserDetails(request.POST, obj=user)
-		form.group_id.choices = [(g.id, g.name) for g in Group.query.order_by('name')]
+	# No sé por qué puse este método aquí. No se usa en ningún lado
+	# def edit_user(request, id):
+	# 	user = User.query.get(id)
+	# 	form = UserDetails(request.POST, obj=user)
+	# 	form.group_id.choices = [(g.id, g.name) for g in Group.query.order_by('name')]
 
 
 class UserFormUpdate(FlaskForm):

@@ -1,9 +1,9 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Markup, current_app
 )
+from flask_login import current_user, login_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
-from flaskr.paquetes.backend.controladores.auth import login_required
 from flaskr.paquetes.backend.formularios.blog import *
 from flaskr.paquetes.backend.modelos.blog import *
 from flaskr.paquetes.general.helpers import *
@@ -75,7 +75,6 @@ def store():
         if request.method == 'POST':
 
             errores = ''
-            user_id = g.user.id
             formulario = BlogFormCreate()
 
             if formulario.validate_on_submit():
@@ -92,8 +91,10 @@ def store():
                     img.save(os.path.join(
                         FOLDER_STATIC, 'img', ahora+'_'+filename
                     ))
+                    blogpost = Blog(author_id=str(current_user.id), title=title, contenido=contenido, img=ahora+'_'+filename)
+                else:
+                    blogpost = Blog(author_id=str(current_user.id), title=title, contenido=contenido)
 
-                blogpost = Blog(author_id=user_id, title=title, contenido=contenido, img=ahora+'_'+filename)
                 blogpost.post()
                 flash('Post agregado', 'success')
                 return redirect(url_for('backend.blog.index'))

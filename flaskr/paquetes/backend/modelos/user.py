@@ -1,13 +1,11 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
 from flaskr.paquetes.backend.serverside import table_schemas
-# from datetime import datetime
 from sqlalchemy.sql import func
 from sqlalchemy import create_engine, exc, Column, Integer, String, DateTime, asc
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-# from flaskr import login_manager
 import os
 
 
@@ -21,8 +19,6 @@ sessionDB = scoped_session(session_factory)
 
 
 
-# class User(Base):
-# Flask-Login
 class User(Base, UserMixin):
     __tablename__ = 'users'
 

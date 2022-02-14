@@ -2,8 +2,17 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		3. Terminar de ver cómo funciona Flask Login y documentarlo
+		SIGO CON
+		SIGO CON
+		SIGO CON
+
+				https://j2logo.com/tutorial-flask-leccion-10-anadiendo-seguridad-vistas-decoradores/
+
+				... con el fin de armar un decorador que obligue a que ciertas rutas sean accesibles sólo por usuarios administradores
+
+
 		4. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
+		5. Eliminar basura del __init__.py principal, creo que puedo quitar eso de TESTS
 		6. ACL
 		7. Implementar tarea en 2do plano
 			Que mi tarea cargue un Excel con datos que posteriormente se van a graficar
@@ -18,3 +27,5 @@ SIGO CON
 			https://flask-socketio.readthedocs.io/en/latest/
 			https://www.youtube.com/watch?v=71DZYl4Q4o8
 		11. Deploy en servidor productivo (obviamente debe permanecer el servicio arriba siempre, quizá usar Supervisor)
+
+

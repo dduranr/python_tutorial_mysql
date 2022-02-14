@@ -10,10 +10,63 @@ from flaskr.paquetes.frontend.formularios.contacto import *
 from flask_mail import Message
 from flaskr import mail
 import os
+from functools import wraps
 
 bp = Blueprint('frontend', __name__)
 FOLDER_STATIC = os.getenv('FOLDER_STATIC')
 logger = fileLogSystem()
+
+
+def print_hola(f):
+    @wraps(f)
+    def decorated_function(*args, **kws):
+        print('Hola')
+        return f(*args, **kws)
+    return decorated_function
+
+
+
+@print_hola
+def print_nombre(nombre):
+    print(nombre)
+
+
+print_nombre('j2logo')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

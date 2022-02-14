@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Markup, current_app
 )
-from flaskr.paquetes.backend.controladores.auth import login_required
+from flask_login import login_required
 from flaskr.paquetes.frontend.modelos.contacto import *
 from flaskr.paquetes.general.helpers import *
 from sqlalchemy import exc
@@ -12,6 +12,8 @@ from os import path
 bp = Blueprint('contacto', __name__, url_prefix='/contacto')
 FOLDER_STATIC = os.getenv('FOLDER_STATIC')
 logger = fileLogSystem()
+
+
 
 # Esta ruta se encarga de mostrar la vista index (listado de registros)
 @bp.route('/index', methods=['GET'])

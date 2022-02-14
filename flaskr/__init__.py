@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flaskr.paquetes.general.constantes import Constantes
 from flaskr.paquetes.backend.modelos.user import User
 from flask_mail import Mail, Message
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager
 
 # Esta línea genera un objeto BaseQuery de Flask-Sqlalchemy, no de Sqlalchemy solo. Este objeto es el que necesitaremos para usar el método paginate() en los modelos
 db = SQLAlchemy()
@@ -45,23 +45,8 @@ def create_app(test_config=None):
     # Inicializamos el objeto mail (en cualquier otro archivo puede recuperarse: from flaskr import mail)
     mail.init_app(app)
 
-    # Flask-Login
-    # load_useres fundamental para que nuestra aplicación funcione: antes de que se cargue cada página, nuestra aplicación debe verificar si el usuario está conectado o no (o si sigue conectado después de que haya transcurrido el tiempo). user_loadercarga a los usuarios por su ID único. Si se devuelve un usuario, esto significa que se ha desconectado del usuario. De lo contrario, cuando Nonese devuelve, se cierra la sesión del usuario.
+    # Agregamos Flask-Login al aplicativo
     login_manager.init_app(app)
-
-
-    # @login_manager.user_loader
-    # def load_user(user_id):
-    #     if user_id is not None:
-    #         return User.getById(user_id)
-    #     return None
-
-    # # Por último, tenemos la unauthorizedruta, que utiliza el unauthorized_handlerdecorador para tratar con usuarios no autorizados. Cada vez que un usuario intente acceder a nuestra aplicación y no esté autorizado, esta ruta se activará.
-    # @login_manager.unauthorized_handler
-    # def unauthorized():
-    #     """Redirect unauthorized users to Login page."""
-    #     return redirect(url_for('backend.auth.forbidden'))
-
 
     # Todo lo que esté dentro del WITH estará disponible en toda la app (por ejempo: from flaskr import db)
     with app.app_context():

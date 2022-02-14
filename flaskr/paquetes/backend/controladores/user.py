@@ -2,8 +2,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify, Markup
 )
 from werkzeug.security import generate_password_hash
-# from flaskr.paquetes.backend.controladores.auth import login_required
-from flask_login import current_user, login_required
+from flask_login import login_required
 from flaskr.paquetes.backend.formularios.user import UserFormCreate
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.formularios.user import *

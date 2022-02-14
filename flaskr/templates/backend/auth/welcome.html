@@ -7,30 +7,25 @@
 {% block content %}
 	<div class="col-md-12">
 		<div class="alert alert-primary">
-            {% if g.user %}
-				<h5>Bienvenido, {{ current_user.nombre }}</h5>
+            {% if current_user.is_authenticated %}
 				<h5>Ingresaste como:</h5>
 				<table class="table table-small">
 					<tbody>
 						<tr>
 							<td>ID:</td>
-							<td>{{ g.user['id'] }}</td>
+							<td>{{ current_user.id }}</td>
 						</tr>
 						<tr>
 							<td>NOMBRE:</td>
-							<td>{{ g.user['nombre'] }}</td>
+							<td>{{ current_user.nombre }}</td>
 						</tr>
 						<tr>
 							<td>EMAIL:</td>
-							<td>{{ g.user['email'] }}</td>
+							<td>{{ current_user.email }}</td>
 						</tr>
 					</tbody>
 				</table>
-            {% else %}
             {% endif %}
-			<p></p>
-			<p></p>
-			<p></p>
 		</div>
 	</div>
 {% endblock %}
