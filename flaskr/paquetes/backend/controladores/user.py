@@ -8,6 +8,7 @@ from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.formularios.user import *
 from flaskr.paquetes.general.constantes import Constantes
 from flaskr.paquetes.general.helpers import *
+from flaskr.paquetes.general.decorators import *
 from sqlalchemy import exc
 from datetime import datetime
 import functools
@@ -54,6 +55,7 @@ def index():
 # Esta ruta se encarga de mostrar la vista para crear registro
 @bp.route('/create', methods=['GET'])
 @login_required
+@cud_privileges_required('user')
 def create():
     try:
         formulario = UserFormCreate()
@@ -77,6 +79,7 @@ def create():
 # Esta ruta se encarga de crear registro en BD
 @bp.route('/store', methods=['POST'])
 @login_required
+@cud_privileges_required('user')
 def store():
     try:
         if request.method == 'POST':
@@ -123,6 +126,7 @@ def store():
 # Esta ruta se encarga de mostrar vista para editar registro
 @bp.route('/edit/<id>', methods=['GET'])
 @login_required
+@cud_privileges_required('user')
 def edit(id):
     try:
         user = User.getById(id)
@@ -159,6 +163,7 @@ def edit(id):
 # Esta ruta se encarga de actualizar registro en BD
 @bp.route('/update/<id>', methods=['POST'])
 @login_required
+@cud_privileges_required('user')
 def update(id):
     try:
         errores = ''
@@ -212,6 +217,7 @@ def update(id):
 # Esta ruta se encarga de eliminar registro en BD
 @bp.route('/delete/<id>', methods=['POST'])
 @login_required
+@cud_privileges_required('user')
 def delete(id):
     try:
         if (request.method == 'POST'):

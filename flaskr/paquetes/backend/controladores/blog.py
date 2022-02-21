@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from flaskr.paquetes.backend.formularios.blog import *
 from flaskr.paquetes.backend.modelos.blog import *
 from flaskr.paquetes.general.helpers import *
+from flaskr.paquetes.general.decorators import *
 from sqlalchemy import exc
 from datetime import datetime
 import os
@@ -47,6 +48,7 @@ def index():
 # Esta ruta se encarga de mostrar la vista para crear registro
 @bp.route('/create', methods=['GET'])
 @login_required
+@cud_privileges_required('blog')
 def create():
     try:
         formulario = BlogFormCreate()
@@ -70,6 +72,7 @@ def create():
 # Esta ruta se encarga de crear registro en BD
 @bp.route('/store', methods=['POST'])
 @login_required
+@cud_privileges_required('blog')
 def store():
     try:
         if request.method == 'POST':
@@ -130,6 +133,7 @@ def store():
 # Esta ruta se encarga de mostrar vista para editar registro
 @bp.route('/edit/<id>', methods=['GET'])
 @login_required
+@cud_privileges_required('blog')
 def edit(id):
     try:
         blogpost = Blog.getById(id)
@@ -164,6 +168,7 @@ def edit(id):
 # Esta ruta se encarga de actualizar registro en BD
 @bp.route('/update/<int:id>', methods=['POST'])
 @login_required
+@cud_privileges_required('blog')
 def update(id):
     try:
         errores = ''
@@ -221,6 +226,7 @@ def update(id):
 # Esta ruta se encarga de eliminar registro en BD
 @bp.route('/delete/<id>', methods=['POST'])
 @login_required
+@cud_privileges_required('blog')
 def delete(id):
     try:
         if (request.method == 'POST'):

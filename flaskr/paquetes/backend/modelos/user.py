@@ -29,8 +29,6 @@ class User(Base, UserMixin):
     rol = Column(String(255), nullable=False)
     created_at = Column(DateTime(255), default=func.now())
     updated_at = Column(DateTime(255), default=func.now(), onupdate=func.now())
-    # created_at = Column(DateTime(255), default=datetime.now())
-    # updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
 
 
 

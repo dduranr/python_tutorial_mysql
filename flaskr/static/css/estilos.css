@@ -147,3 +147,6 @@ table.table-sm tr td a.btn {
 table.table-sm tr td a.btn .bi {
   font-size: 15px;
 }
+sup {
+  font-size: 0.6em;
+}

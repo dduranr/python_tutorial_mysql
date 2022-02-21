@@ -2,30 +2,24 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-		SIGO CON
-		SIGO CON
-		SIGO CON
 
-				https://j2logo.com/tutorial-flask-leccion-10-anadiendo-seguridad-vistas-decoradores/
-
-				... con el fin de armar un decorador que obligue a que ciertas rutas sean accesibles sólo por usuarios administradores
-
-
-		4. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
-		5. Eliminar basura del __init__.py principal, creo que puedo quitar eso de TESTS
-		6. ACL
-		7. Implementar tarea en 2do plano
+		1. En el listado de submissions, agregar el botón para VER, que sería lo mismo que para EDITAR, y en la página que se abre, los campos estarían DISABLED
+		2. Implementar Flask-Migrate
+			https://j2logo.com/tutorial-flask-leccion-11-actualizar-base-de-datos-sqlalchemy/
+		3. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
+		4. Eliminar basura del __init__.py principal, creo que puedo quitar eso de TESTS
+		5. Implementar tarea en 2do plano
 			Que mi tarea cargue un Excel con datos que posteriormente se van a graficar
 			https://programmerclick.com/article/8184939433/
-		8. Notificaciones push
+		6. Notificaciones push
 			Que se muestre una notificación cuando termine una tarea en 2do plano, o incluso cuando llegue al 80% para ir avisando al user
 			https://developers.google.com/web/fundamentals/codelabs/push-notifications?hl=es
-		9. Gráficas
+		7. Gráficas
 			Graficar los datos cargados en el Excel que se subió como tarea de 2do plano
 			Ver si hay graficadores agradables, si no, usar Google Graph
-		10. Websocket
+		8. Websocket
 			https://flask-socketio.readthedocs.io/en/latest/
 			https://www.youtube.com/watch?v=71DZYl4Q4o8
-		11. Deploy en servidor productivo (obviamente debe permanecer el servicio arriba siempre, quizá usar Supervisor)
+		9. Deploy en servidor productivo (obviamente debe permanecer el servicio arriba siempre, quizá usar Supervisor)
 
 

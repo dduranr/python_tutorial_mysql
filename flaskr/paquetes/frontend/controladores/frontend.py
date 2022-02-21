@@ -17,59 +17,6 @@ FOLDER_STATIC = os.getenv('FOLDER_STATIC')
 logger = fileLogSystem()
 
 
-def print_hola(f):
-    @wraps(f)
-    def decorated_function(*args, **kws):
-        print('Hola')
-        return f(*args, **kws)
-    return decorated_function
-
-
-
-@print_hola
-def print_nombre(nombre):
-    print(nombre)
-
-
-print_nombre('j2logo')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Esta ruta se encarga de mostrar la home
 @bp.route('/')
 def index():
