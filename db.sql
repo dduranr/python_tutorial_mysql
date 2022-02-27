@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `datos` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Volcando datos para la tabla pythonflaskcontactos.submissions: ~23 rows (aproximadamente)
 /*!40000 ALTER TABLE `submissions` DISABLE KEYS */;
@@ -138,7 +138,8 @@ INSERT INTO `submissions` (`id`, `forma`, `datos`, `created_at`) VALUES
 	(21, 'contacto', '{"nombre": "Sandra Gómez", "email": "sandra@gmail.com", "mensaje": "Snadra envía un archivo en JPEG", "documento": "20220129194121_archivo.jpeg"}', '2022-01-29 19:41:21'),
 	(22, 'contacto', '{"nombre": "Pensativo", "email": "pensativo@gmail.com", "mensaje": "Este mensaje lo envío desde mi iPhone. Adjunto un archivo en formato PNG, que es más pesado que un JPG.", "documento": "20220129195757_asombro.png"}', '2022-01-29 19:57:57'),
 	(23, 'contacto', '{"nombre": "Ron", "email": "official.dduran@gmail.com", "mensaje": "Roño dice hola", "documento": "20220129204238_a.jpg"}', '2022-01-29 20:42:38'),
-	(24, 'contacto', '{"nombre": "Saramiento", "email": "sarmiento@gmail.com", "mensaje": "Envío documento adjunto. En teoría debería deshabilitarse el botón submit después que validó el formulario.", "documento": "20220129204625_a.jpg"}', '2022-01-29 20:46:25');
+	(24, 'contacto', '{"nombre": "Saramiento", "email": "sarmiento@gmail.com", "mensaje": "Envío documento adjunto. En teoría debería deshabilitarse el botón submit después que validó el formulario.", "documento": "20220129204625_a.jpg"}', '2022-01-29 20:46:25'),
+	(25, 'contacto', '{"nombre": "Pedro Infante", "email": "pedro.infante@gmail.com", "mensaje": "Pedro Infante no está muerto", "documento": "20220227145230_pedro-infante.jpg"}', '2022-02-27 14:52:30');
 /*!40000 ALTER TABLE `submissions` ENABLE KEYS */;
 
 -- Volcando estructura para tabla pythonflaskcontactos.users

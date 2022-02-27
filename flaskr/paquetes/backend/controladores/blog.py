@@ -12,7 +12,6 @@ from sqlalchemy import exc
 from datetime import datetime
 import os
 from os import path
-# from os import environ, path
 
 bp = Blueprint('blog', __name__, url_prefix='/blog')
 FOLDER_STATIC = os.getenv('FOLDER_STATIC')

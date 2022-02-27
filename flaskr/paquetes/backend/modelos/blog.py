@@ -22,8 +22,6 @@ class Blog(Base):
     img = Column(String(10), nullable=True)
     created_at = Column(DateTime(255), default=func.now())
     updated_at = Column(DateTime(255), default=func.now(), onupdate=func.now())
-    # created_at = Column(DateTime(255), default=datetime.now())
-    # updated_at = Column(DateTime(255), default=datetime.now(), onupdate=datetime.now())
 
 
     # Este método se encarga de recuperar los datos que van a parar al datatables

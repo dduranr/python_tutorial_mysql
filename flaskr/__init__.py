@@ -18,6 +18,9 @@ mail = Mail()
 # Instanciamos el objeto para el uso de Flask-Login
 login_manager = LoginManager()
 
+# Se crea un objeto de tipo Migrate (Flask-Migrate)
+migrate = Migrate()
+
 
 # create_app() es la función de "application factory"
 def create_app(test_config=None):
@@ -47,6 +50,9 @@ def create_app(test_config=None):
 
     # Agregamos Flask-Login al aplicativo
     login_manager.init_app(app)
+
+    # Se inicializa el objeto migrate (Flask-Migrate)
+    migrate.init_app(app, db)
 
     # Todo lo que esté dentro del WITH estará disponible en toda la app (por ejempo: from flaskr import db)
     with app.app_context():

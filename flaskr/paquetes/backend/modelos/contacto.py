@@ -28,7 +28,7 @@ class Contacto(Base):
         columns = table_schemas.CONTACTO
         sessionDB.close()
         sessionDB.remove()
-        return ServerSideTable(request, DATA, columns, False, False, '', 'A', 'table_contacto').output_result()
+        return ServerSideTable(request, DATA, columns, True, False, 'backend.contacto', 'A', 'table_contacto').output_result()
 
 
 
@@ -55,6 +55,18 @@ class Contacto(Base):
 
         res = query.order_by(ordenamiento).all()
 
+        sessionDB.close()
+        sessionDB.remove()
+        return res
+
+
+
+    # Este método recupera un registro según su ID
+    # Params:
+    #   id     Int. Identificador del registro
+    def getById(id):
+        engine.dispose()
+        res = sessionDB.query(Contacto).filter(Contacto.id == id).one_or_none()
         sessionDB.close()
         sessionDB.remove()
         return res

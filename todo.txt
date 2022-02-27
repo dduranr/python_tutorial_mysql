@@ -3,7 +3,6 @@ SIGO CON
 SIGO CON
 
 
-		1. En el listado de submissions, agregar el botón para VER, que sería lo mismo que para EDITAR, y en la página que se abre, los campos estarían DISABLED
 		2. Implementar Flask-Migrate
 			https://j2logo.com/tutorial-flask-leccion-11-actualizar-base-de-datos-sqlalchemy/
 		3. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo

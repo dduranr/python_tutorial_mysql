@@ -1,0 +1,68 @@
+{% extends "backend/layout/base.html" %}
+
+{% block title %}
+	Viendo submission de {{ submission.forma }}
+{% endblock %}
+
+{% block header %}
+    <h1>Viendo submission del formulario de <u class="text-muted">{{ submission.forma }}</u></h1>
+{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <form id="form_contacto" class="row" action="{{ url_for('frontend.submissioncontacto') }}" method="POST" enctype="multipart/form-data">
+            <div class="col-md-12 mb-3">
+                <h4>Mensaje recibido el: {{ submission.created_at }}</h4>
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.nombre.label() }}
+                {{ formulario.nombre(class="form-control", disabled="disabled") }}
+                {% if formulario.nombre.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.nombre.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.email.label() }}
+                {{ formulario.email(class="form-control", disabled="disabled") }}
+                {% if formulario.email.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ formulario.mensaje.label() }}
+                {{ formulario.mensaje(class="form-control", disabled="disabled") }}
+                {% if formulario.mensaje.errors %}
+                    <ul class="text-danger">
+                    {% for error in formulario.mensaje.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {% if documento is not none %}
+                    <img src="{{ url_for('static', filename='submissions/') }}{{ documento }}" class="img-thumbnail" width="100" alt="{{ documento }}">
+                {% else %}
+                    {% set variable="sin-imagen.jpg"%}
+                    <img src="{{ url_for('static', filename='img/') }}{{ variable }}" class="img-thumbnail" width="100" alt="{{ variable }}">
+                {% endif %}
+            </div>
+            <div class="col-md-12 mb-3">
+                <!--
+                    Para evitar ataques CSRF generamos un token mediante la librería WTForms. Para que se genere, previamente debe estar declarada app.secret_key
+                -->
+                {{ formulario.hidden_tag() }}
+                {{ formulario.forma() }}
+                <a href="{{ url_for('backend.contacto.index') }}" type="button" class="btn btn-danger float-start">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

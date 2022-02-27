@@ -3,7 +3,7 @@
 from flask import Blueprint, request, jsonify
 from flaskr.paquetes.backend.modelos.user import User
 from flaskr.paquetes.backend.modelos.blog import Blog
-from flaskr.paquetes.frontend.modelos.contacto import Contacto
+from flaskr.paquetes.backend.modelos.contacto import Contacto
 
 
 modeloUser = User()

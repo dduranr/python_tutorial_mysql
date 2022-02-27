@@ -106,11 +106,18 @@ class ServerSideTable(object):
 
                 # Imprimimos botones EDITAR y ELIMINAR si así corresponde
                 if self.edit:
-                    # No sé cómo se comporta Python, pero no me deja ponerle un valor default a row['EDITAR'] y después en el condicional sobreescribir el valor. El valor no se sobreescribe.
-                    if column_name=='ID' and valor==2:
-                        row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
-                    elif column_name == 'ID':
-                        row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+                    # Sólo si es la tabla de contacto ponemos ícono de VER, en cualquier otro caso va el de EDITAR
+                    if self.table == 'table_contacto':
+                        if column_name=='ID':
+                            row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-eye-fill"></i></a>'
+                    else:
+                        if column_name=='ID' and valor==2:
+                            row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+                        elif column_name == 'ID':
+                            row['EDITAR'] = '<a href="'+url_for(self.endpoint+'.edit', id=valor)+'" class="btn btn-success"><i class="bi bi-pencil-fill"></i></a>'
+
+
+
                 if self.delete:
                     if column_name=='ID':
                         nombreDelRegistro = ''
