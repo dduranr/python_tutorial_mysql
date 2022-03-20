@@ -2,10 +2,6 @@ SIGO CON
 SIGO CON
 SIGO CON
 
-
-		2. Implementar Flask-Migrate
-			https://j2logo.com/tutorial-flask-leccion-11-actualizar-base-de-datos-sqlalchemy/
-		3. Revisar todo el tutorial https://j2logo.com/tutorial-flask-espanol/ y ver si puedo sacar algo
 		4. Eliminar basura del __init__.py principal, creo que puedo quitar eso de TESTS
 		5. Implementar tarea en 2do plano
 			Que mi tarea cargue un Excel con datos que posteriormente se van a graficar

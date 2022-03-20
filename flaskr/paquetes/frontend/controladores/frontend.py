@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from flaskr.paquetes.general.helpers import *
 from flaskr.paquetes.general.constantes import Constantes
 from flaskr.paquetes.backend.modelos.contacto import *
+from flaskr.paquetes.backend.modelos.blog import *
 from flaskr.paquetes.frontend.formularios.contacto import *
 from flask_mail import Message
 from flaskr import mail

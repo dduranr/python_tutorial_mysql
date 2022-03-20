@@ -5,7 +5,6 @@ from os import environ
 from flask import Flask, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flaskr.paquetes.general.constantes import Constantes
-from flaskr.paquetes.backend.modelos.user import User
 from flask_mail import Mail, Message
 from flask_login import LoginManager
 
@@ -18,8 +17,6 @@ mail = Mail()
 # Instanciamos el objeto para el uso de Flask-Login
 login_manager = LoginManager()
 
-# Se crea un objeto de tipo Migrate (Flask-Migrate)
-migrate = Migrate()
 
 
 # create_app() es la función de "application factory"
@@ -42,22 +39,21 @@ def create_app(test_config=None):
     )
 
 
-    # --------------------------------
-    # ---   Inicializamos plugins  ---
-    # --------------------------------
-    # Inicializamos el objeto mail (en cualquier otro archivo puede recuperarse: from flaskr import mail)
-    mail.init_app(app)
 
-    # Agregamos Flask-Login al aplicativo
-    login_manager.init_app(app)
-
-    # Se inicializa el objeto migrate (Flask-Migrate)
-    migrate.init_app(app, db)
-
-    # Todo lo que esté dentro del WITH estará disponible en toda la app (por ejempo: from flaskr import db)
+    # Todo lo que esté dentro del WITH estará disponible en toda la app (por ejemplo: from flaskr import db)
     with app.app_context():
 
+        # --------------------------------
+        # ---   Inicializamos plugins  ---
+        # --------------------------------
         db = SQLAlchemy(app)
+
+        # Inicializamos el objeto mail (en cualquier otro archivo puede recuperarse: from flaskr import mail)
+        mail.init_app(app)
+
+        # Agregamos Flask-Login al aplicativo
+        login_manager.init_app(app)
+
 
         if test_config is None:
             # load the instance config, if it exists, when not testing

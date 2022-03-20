@@ -1,7 +1,6 @@
 from flaskr.paquetes.backend.serverside.serverside_table import ServerSideTable
 from flaskr import db
 from flaskr.paquetes.backend.serverside import table_schemas
-# from datetime import datetime
 from sqlalchemy.sql import func
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, exc, or_, Column, Integer, String, DateTime
